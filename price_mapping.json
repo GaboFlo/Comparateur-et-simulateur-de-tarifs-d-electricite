@@ -1,1107 +1,1092 @@
 [
     {
-        "category": "BLEU",
-        "options": [
+        "name": "Bleu_Base",
+        "abonnements": [
             {
-                "name": "Base",
-                "abonnements": [
-                    {
-                        "puissance": 3,
-                        "mensuel": 969
-                    },
-                    {
-                        "puissance": 6,
-                        "mensuel": 1268
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1589
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 1916
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2207
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2524
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3196
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3768
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4443
-                    }
-                ],
-                "mapping": [
-                    {
-                        "price": 2516,
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6
-                        ]
-                    }
-                ]
+                "puissance": 3,
+                "mensuel": 969
             },
             {
-                "name": "HPHC",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1309
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1670
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 2028
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2357
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2684
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3370
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3897
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4508
-                    }
-                ],
-                "mapping": [
-                    {
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6
-                        ],
-                        "hp_hc_config": {
-                            "hp": {
-                                "price": 2700,
-                                "slots": "BLEU"
-                            },
-                            "hc": {
-                                "price": 2068,
-                                "slots": "BLEU"
-                            }
-                        }
-                    }
-                ]
+                "puissance": 6,
+                "mensuel": 1268
             },
             {
-                "name": "Tempo",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1303
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1625
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 1956
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2245
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2560
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3853
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4471
-                    }
-                ],
-                "tempoMapping": [
-                    {
-                        "tempo_day": 1,
-                        "HEURES_PLEINES": 1609,
-                        "HEURES_CREUSES": 1296
-                    },
-                    {
-                        "tempo_day": 2,
-                        "HEURES_PLEINES": 1894,
-                        "HEURES_CREUSES": 1486
-                    },
-                    {
-                        "tempo_day": 3,
-                        "HEURES_PLEINES": 7562,
-                        "HEURES_CREUSES": 1568
-                    }
+                "puissance": 9,
+                "mensuel": 1589
+            },
+            {
+                "puissance": 12,
+                "mensuel": 1916
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2207
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2524
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3196
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3768
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4443
+            }
+        ],
+        "mapping": [
+            {
+                "price": 2516,
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
                 ]
             }
         ]
     },
     {
-        "category": "ZEN",
-        "options": [
+        "name": "Bleu_HPHC",
+        "abonnements": [
             {
-                "name": "WEEK-END",
-                "abonnements": [
-                    {
-                        "puissance": 3,
-                        "mensuel": 969
-                    },
-                    {
-                        "puissance": 6,
-                        "mensuel": 1268
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1589
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 1916
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2207
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2524
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3196
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3768
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4443
-                    }
-                ],
-                "mapping": [
-                    {
-                        "price": 1932,
-                        "days_of_week": [
-                            5,
-                            6
-                        ],
-                        "include_holidays": true
-                    },
-                    {
-                        "price": 2652,
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3,
-                            4
-                        ]
-                    }
-                ]
+                "puissance": 6,
+                "mensuel": 1309
             },
             {
-                "name": "WEEK-END-HPHC",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1309
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1682
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 2028
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2357
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2684
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3370
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3994
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4624
-                    }
-                ],
-                "mapping": [
-                    {
-                        "price": 2041,
-                        "days_of_week": [
-                            5,
-                            6
-                        ],
-                        "include_holidays": true
-                    },
-                    {
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3,
-                            4
-                        ],
-                        "hp_hc_config": {
-                            "hp": {
-                                "price": 2808
-                            },
-                            "hc": {
-                                "price": 2041
-                            }
-                        }
-                    }
-                ]
+                "puissance": 9,
+                "mensuel": 1670
             },
             {
-                "name": "FLEX-ECO",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1309
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1682
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 2028
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2357
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2684
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3370
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3994
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4624
-                    }
-                ],
-                "mapping": [
-                    {
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6
-                        ],
-                        "hp_hc_config": {
-                            "hp": {
-                                "price": 2700,
-                                "slots": "ZEN"
-                            },
-                            "hc": {
-                                "price": 2068,
-                                "slots": "ZEN"
-                            }
-                        }
-                    }
-                ]
+                "puissance": 12,
+                "mensuel": 2028
             },
             {
-                "name": "FLEX-SOBRIETE",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1309
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1682
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 2028
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2357
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2684
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3370
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3994
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4624
-                    }
-                ],
-                "mapping": [
-                    {
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6
-                        ],
-                        "hp_hc_config": {
-                            "hp": {
-                                "price": 7562,
-                                "slots": "ZEN"
-                            },
-                            "hc": {
-                                "price": 2700,
-                                "slots": "ZEN"
-                            }
-                        }
-                    }
-                ]
+                "puissance": 15,
+                "mensuel": 2357
             },
             {
-                "name": "WEEK-END-PLUS-LUNDI",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1268
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1618
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 1955
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2221
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2524
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3196
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3768
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4443
-                    }
-                ],
-                "mapping": [
-                    {
-                        "price": 2021,
-                        "days_of_week": [
-                            0,
-                            5,
-                            6
-                        ],
-                        "include_holidays": true
-                    },
-                    {
-                        "price": 2778,
-                        "days_of_week": [
-                            1,
-                            2,
-                            3,
-                            4
-                        ]
-                    }
-                ]
+                "puissance": 18,
+                "mensuel": 2684
             },
             {
-                "name": "WEEK-END-PLUS-MERCREDI",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1268
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1618
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 1955
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2221
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2524
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3196
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3768
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4443
-                    }
-                ],
-                "mapping": [
-                    {
-                        "price": 2021,
-                        "days_of_week": [
-                            2,
-                            5,
-                            6
-                        ],
-                        "include_holidays": true
-                    },
-                    {
-                        "price": 2778,
-                        "days_of_week": [
-                            0,
-                            1,
-                            3,
-                            4
-                        ]
-                    }
-                ]
+                "puissance": 24,
+                "mensuel": 3370
             },
             {
-                "name": "WEEK-END-PLUS-VENDREDI",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1268
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1618
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 1955
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2221
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2524
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3196
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3768
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4443
-                    }
-                ],
-                "mapping": [
-                    {
-                        "price": 2021,
-                        "days_of_week": [
-                            4,
-                            5,
-                            6
-                        ],
-                        "include_holidays": true
-                    },
-                    {
-                        "price": 2778,
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3
-                        ]
-                    }
-                ]
+                "puissance": 30,
+                "mensuel": 3897
             },
             {
-                "name": "WEEK-END-PLUS-HPHC-LUNDI",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1309
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1682
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 2028
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2357
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2684
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3370
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3994
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4624
-                    }
+                "puissance": 36,
+                "mensuel": 4508
+            }
+        ],
+        "mapping": [
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
                 ],
-                "mapping": [
-                    {
-                        "days_of_week": [
-                            0,
-                            5,
-                            6
-                        ],
-                        "include_holidays": true,
-                        "hp_hc_config": {
-                            "hp": {
-                                "price": 2098,
-                                "slots": "BLEU"
-                            },
-                            "hc": {
-                                "price": 2098,
-                                "slots": "BLEU"
-                            }
-                        }
+                "hpHcConfig": {
+                    "hp": {
+                        "price": 2700,
+                        "slots": "BLEU"
                     },
-                    {
-                        "days_of_week": [
-                            1,
-                            2,
-                            3,
-                            4
-                        ],
-                        "hp_hc_config": {
-                            "hp": {
-                                "price": 2888,
-                                "slots": "BLEU"
-                            },
-                            "hc": {
-                                "price": 2098,
-                                "slots": "BLEU"
-                            }
-                        }
+                    "hc": {
+                        "price": 2068,
+                        "slots": "BLEU"
                     }
-                ]
+                }
+            }
+        ]
+    },
+    {
+        "name": "Bleu_Tempo",
+        "abonnements": [
+            {
+                "puissance": 6,
+                "mensuel": 1303
             },
             {
-                "name": "WEEK-END-PLUS-HPHC-MERCREDI",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1309
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1682
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 2028
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2357
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2684
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3370
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3994
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4624
-                    }
-                ],
-                "mapping": [
-                    {
-                        "days_of_week": [
-                            2,
-                            5,
-                            6
-                        ],
-                        "include_holidays": true,
-                        "hp_hc_config": {
-                            "hp": {
-                                "price": 2098,
-                                "slots": "BLEU"
-                            },
-                            "hc": {
-                                "price": 2098,
-                                "slots": "BLEU"
-                            }
-                        }
-                    },
-                    {
-                        "days_of_week": [
-                            0,
-                            1,
-                            3,
-                            4
-                        ],
-                        "hp_hc_config": {
-                            "hp": {
-                                "price": 2888,
-                                "slots": "BLEU"
-                            },
-                            "hc": {
-                                "price": 2098,
-                                "slots": "BLEU"
-                            }
-                        }
-                    }
-                ]
+                "puissance": 9,
+                "mensuel": 1625
             },
             {
-                "name": "WEEK-END-PLUS-HPHC-VENDREDI",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1309
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1682
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 2028
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2357
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2684
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3370
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3994
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4624
-                    }
-                ],
-                "mapping": [
-                    {
-                        "days_of_week": [
-                            4,
-                            5,
-                            6
-                        ],
-                        "include_holidays": true,
-                        "hp_hc_config": {
-                            "hp": {
-                                "price": 2098,
-                                "slots": "BLEU"
-                            },
-                            "hc": {
-                                "price": 2098,
-                                "slots": "BLEU"
-                            }
-                        }
-                    },
-                    {
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3
-                        ],
-                        "hp_hc_config": {
-                            "hp": {
-                                "price": 2888,
-                                "slots": "BLEU"
-                            },
-                            "hc": {
-                                "price": 2098,
-                                "slots": "BLEU"
-                            }
-                        }
-                    }
-                ]
+                "puissance": 12,
+                "mensuel": 1956
             },
             {
-                "name": "FIXE-BASE",
-                "abonnements": [
-                    {
-                        "puissance": 3,
-                        "mensuel": 969
-                    },
-                    {
-                        "puissance": 6,
-                        "mensuel": 1267
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1589
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 1916
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2221
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2524
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3196
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3768
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4443
-                    }
-                ],
-                "mapping": [
-                    {
-                        "price": 1753,
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6
-                        ]
-                    }
-                ]
+                "puissance": 15,
+                "mensuel": 2245
             },
             {
-                "name": "FIXE-HPHC",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1309
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1682
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 2028
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2309
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2626
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3292
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3897
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4508
-                    }
-                ],
-                "mapping": [
-                    {
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6
-                        ],
-                        "hp_hc_config": {
-                            "hp": {
-                                "price": 1876,
-                                "slots": "BLEU"
-                            },
-                            "hc": {
-                                "price": 1456,
-                                "slots": "BLEU"
-                            }
-                        }
-                    }
-                ]
+                "puissance": 18,
+                "mensuel": 2560
             },
             {
-                "name": "ONLINE-BASE",
-                "abonnements": [
-                    {
-                        "puissance": 3,
-                        "mensuel": 969
-                    },
-                    {
-                        "puissance": 6,
-                        "mensuel": 1268
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1618
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 1955
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2270
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2583
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3274
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3866
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4443
-                    }
+                "puissance": 30,
+                "mensuel": 3853
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4471
+            }
+        ],
+        "tempoMapping": [
+            {
+                "tempo_day": 1,
+                "HEURES_PLEINES": 1609,
+                "HEURES_CREUSES": 1296
+            },
+            {
+                "tempo_day": 2,
+                "HEURES_PLEINES": 1894,
+                "HEURES_CREUSES": 1486
+            },
+            {
+                "tempo_day": 3,
+                "HEURES_PLEINES": 7562,
+                "HEURES_CREUSES": 1568
+            }
+        ]
+    },
+    {
+        "name": "ZEN_WEEK_END",
+        "abonnements": [
+            {
+                "puissance": 3,
+                "mensuel": 969
+            },
+            {
+                "puissance": 6,
+                "mensuel": 1268
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1589
+            },
+            {
+                "puissance": 12,
+                "mensuel": 1916
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2207
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2524
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3196
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3768
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4443
+            }
+        ],
+        "mapping": [
+            {
+                "price": 1932,
+                "applicableDays": [
+                    5,
+                    6
                 ],
-                "mapping": [
-                    {
-                        "price": 2303,
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6
-                        ]
-                    }
+                "include_holidays": true
+            },
+            {
+                "price": 2652,
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
                 ]
             }
         ]
     },
     {
-        "category": "VERT",
-        "options": [
+        "name": "ZEN_WEEK-END_HPHC",
+        "abonnements": [
             {
-                "name": "BASE",
-                "abonnements": [
-                    {
-                        "puissance": 3,
-                        "mensuel": 969
-                    },
-                    {
-                        "puissance": 6,
-                        "mensuel": 1268
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1589
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 1916
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2221
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2524
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3196
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3768
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4443
-                    }
-                ],
-                "mapping": [
-                    {
-                        "price": 2423,
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6
-                        ]
-                    }
-                ]
+                "puissance": 6,
+                "mensuel": 1309
             },
             {
-                "name": "HPHC",
-                "abonnements": [
-                    {
-                        "puissance": 6,
-                        "mensuel": 1309
-                    },
-                    {
-                        "puissance": 9,
-                        "mensuel": 1682
-                    },
-                    {
-                        "puissance": 12,
-                        "mensuel": 2028
-                    },
-                    {
-                        "puissance": 15,
-                        "mensuel": 2309
-                    },
-                    {
-                        "puissance": 18,
-                        "mensuel": 2626
-                    },
-                    {
-                        "puissance": 24,
-                        "mensuel": 3292
-                    },
-                    {
-                        "puissance": 30,
-                        "mensuel": 3897
-                    },
-                    {
-                        "puissance": 36,
-                        "mensuel": 4508
-                    }
+                "puissance": 9,
+                "mensuel": 1682
+            },
+            {
+                "puissance": 12,
+                "mensuel": 2028
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2357
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2684
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3370
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3994
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4624
+            }
+        ],
+        "mapping": [
+            {
+                "price": 2041,
+                "applicableDays": [
+                    5,
+                    6
                 ],
-                "mapping": [
-                    {
-                        "days_of_week": [
-                            0,
-                            1,
-                            2,
-                            3,
-                            4,
-                            5,
-                            6
-                        ],
-                        "hp_hc_config": {
-                            "hp": {
-                                "price": 2618,
-                                "slots": "BLEU"
-                            },
-                            "hc": {
-                                "price": 1986,
-                                "slots": "BLEU"
-                            }
-                        }
+                "include_holidays": true
+            },
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "hpHcConfig": {
+                    "hp": {
+                        "price": 2808
+                    },
+                    "hc": {
+                        "price": 2041
                     }
+                }
+            }
+        ]
+    },
+    {
+        "name": "ZEN_FLEX_ECO",
+        "abonnements": [
+            {
+                "puissance": 6,
+                "mensuel": 1309
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1682
+            },
+            {
+                "puissance": 12,
+                "mensuel": 2028
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2357
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2684
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3370
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3994
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4624
+            }
+        ],
+        "mapping": [
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "hpHcConfig": {
+                    "hp": {
+                        "price": 2700,
+                        "slots": "ZEN"
+                    },
+                    "hc": {
+                        "price": 2068,
+                        "slots": "ZEN"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "ZEN_FLEX_SOBRIETE",
+        "abonnements": [
+            {
+                "puissance": 6,
+                "mensuel": 1309
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1682
+            },
+            {
+                "puissance": 12,
+                "mensuel": 2028
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2357
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2684
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3370
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3994
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4624
+            }
+        ],
+        "mapping": [
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "hpHcConfig": {
+                    "hp": {
+                        "price": 7562,
+                        "slots": "ZEN"
+                    },
+                    "hc": {
+                        "price": 2700,
+                        "slots": "ZEN"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "ZEN_WEEK_END_PLUS_LUNDI",
+        "abonnements": [
+            {
+                "puissance": 6,
+                "mensuel": 1268
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1618
+            },
+            {
+                "puissance": 12,
+                "mensuel": 1955
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2221
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2524
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3196
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3768
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4443
+            }
+        ],
+        "mapping": [
+            {
+                "price": 2021,
+                "applicableDays": [
+                    0,
+                    5,
+                    6
+                ],
+                "include_holidays": true
+            },
+            {
+                "price": 2778,
+                "applicableDays": [
+                    1,
+                    2,
+                    3,
+                    4
                 ]
+            }
+        ]
+    },
+    {
+        "name": "ZEN_WEEK_END_PLUS_MERCREDI",
+        "abonnements": [
+            {
+                "puissance": 6,
+                "mensuel": 1268
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1618
+            },
+            {
+                "puissance": 12,
+                "mensuel": 1955
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2221
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2524
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3196
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3768
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4443
+            }
+        ],
+        "mapping": [
+            {
+                "price": 2021,
+                "applicableDays": [
+                    2,
+                    5,
+                    6
+                ],
+                "include_holidays": true
+            },
+            {
+                "price": 2778,
+                "applicableDays": [
+                    0,
+                    1,
+                    3,
+                    4
+                ]
+            }
+        ]
+    },
+    {
+        "name": "ZEN_WEEK_END_PLUS_VENDREDI",
+        "abonnements": [
+            {
+                "puissance": 6,
+                "mensuel": 1268
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1618
+            },
+            {
+                "puissance": 12,
+                "mensuel": 1955
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2221
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2524
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3196
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3768
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4443
+            }
+        ],
+        "mapping": [
+            {
+                "price": 2021,
+                "applicableDays": [
+                    4,
+                    5,
+                    6
+                ],
+                "include_holidays": true
+            },
+            {
+                "price": 2778,
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3
+                ]
+            }
+        ]
+    },
+    {
+        "name": "ZEN_WEEK_END_PLUS_HPHC_LUNDI",
+        "abonnements": [
+            {
+                "puissance": 6,
+                "mensuel": 1309
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1682
+            },
+            {
+                "puissance": 12,
+                "mensuel": 2028
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2357
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2684
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3370
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3994
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4624
+            }
+        ],
+        "mapping": [
+            {
+                "applicableDays": [
+                    0,
+                    5,
+                    6
+                ],
+                "include_holidays": true,
+                "hpHcConfig": {
+                    "hp": {
+                        "price": 2098,
+                        "slots": "BLEU"
+                    },
+                    "hc": {
+                        "price": 2098,
+                        "slots": "BLEU"
+                    }
+                }
+            },
+            {
+                "applicableDays": [
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "hpHcConfig": {
+                    "hp": {
+                        "price": 2888,
+                        "slots": "BLEU"
+                    },
+                    "hc": {
+                        "price": 2098,
+                        "slots": "BLEU"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "ZEN_WEEK_END_PLUS_HPHC_MERCREDI",
+        "abonnements": [
+            {
+                "puissance": 6,
+                "mensuel": 1309
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1682
+            },
+            {
+                "puissance": 12,
+                "mensuel": 2028
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2357
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2684
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3370
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3994
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4624
+            }
+        ],
+        "mapping": [
+            {
+                "applicableDays": [
+                    2,
+                    5,
+                    6
+                ],
+                "include_holidays": true,
+                "hpHcConfig": {
+                    "hp": {
+                        "price": 2098,
+                        "slots": "BLEU"
+                    },
+                    "hc": {
+                        "price": 2098,
+                        "slots": "BLEU"
+                    }
+                }
+            },
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    3,
+                    4
+                ],
+                "hpHcConfig": {
+                    "hp": {
+                        "price": 2888,
+                        "slots": "BLEU"
+                    },
+                    "hc": {
+                        "price": 2098,
+                        "slots": "BLEU"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "ZEN_WEEK_END_PLUS_HPHC_VENDREDI",
+        "abonnements": [
+            {
+                "puissance": 6,
+                "mensuel": 1309
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1682
+            },
+            {
+                "puissance": 12,
+                "mensuel": 2028
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2357
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2684
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3370
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3994
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4624
+            }
+        ],
+        "mapping": [
+            {
+                "applicableDays": [
+                    4,
+                    5,
+                    6
+                ],
+                "include_holidays": true,
+                "hpHcConfig": {
+                    "hp": {
+                        "price": 2098,
+                        "slots": "BLEU"
+                    },
+                    "hc": {
+                        "price": 2098,
+                        "slots": "BLEU"
+                    }
+                }
+            },
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3
+                ],
+                "hpHcConfig": {
+                    "hp": {
+                        "price": 2888,
+                        "slots": "BLEU"
+                    },
+                    "hc": {
+                        "price": 2098,
+                        "slots": "BLEU"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "ZEN_FIXE_BASE",
+        "abonnements": [
+            {
+                "puissance": 3,
+                "mensuel": 969
+            },
+            {
+                "puissance": 6,
+                "mensuel": 1267
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1589
+            },
+            {
+                "puissance": 12,
+                "mensuel": 1916
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2221
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2524
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3196
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3768
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4443
+            }
+        ],
+        "mapping": [
+            {
+                "price": 1753,
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ]
+            }
+        ]
+    },
+    {
+        "name": "ZEN_FIXE_HPHC",
+        "abonnements": [
+            {
+                "puissance": 6,
+                "mensuel": 1309
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1682
+            },
+            {
+                "puissance": 12,
+                "mensuel": 2028
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2309
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2626
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3292
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3897
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4508
+            }
+        ],
+        "mapping": [
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "hpHcConfig": {
+                    "hp": {
+                        "price": 1876,
+                        "slots": "BLEU"
+                    },
+                    "hc": {
+                        "price": 1456,
+                        "slots": "BLEU"
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "name": "ZEN_ONLINE_BASE",
+        "abonnements": [
+            {
+                "puissance": 3,
+                "mensuel": 969
+            },
+            {
+                "puissance": 6,
+                "mensuel": 1268
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1618
+            },
+            {
+                "puissance": 12,
+                "mensuel": 1955
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2270
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2583
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3274
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3866
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4443
+            }
+        ],
+        "mapping": [
+            {
+                "price": 2303,
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ]
+            }
+        ]
+    },
+    {
+        "name": "VERT_BASE",
+        "abonnements": [
+            {
+                "puissance": 3,
+                "mensuel": 969
+            },
+            {
+                "puissance": 6,
+                "mensuel": 1268
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1589
+            },
+            {
+                "puissance": 12,
+                "mensuel": 1916
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2221
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2524
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3196
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3768
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4443
+            }
+        ],
+        "mapping": [
+            {
+                "price": 2423,
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ]
+            }
+        ]
+    },
+    {
+        "name": "VERT_HPHC",
+        "abonnements": [
+            {
+                "puissance": 6,
+                "mensuel": 1309
+            },
+            {
+                "puissance": 9,
+                "mensuel": 1682
+            },
+            {
+                "puissance": 12,
+                "mensuel": 2028
+            },
+            {
+                "puissance": 15,
+                "mensuel": 2309
+            },
+            {
+                "puissance": 18,
+                "mensuel": 2626
+            },
+            {
+                "puissance": 24,
+                "mensuel": 3292
+            },
+            {
+                "puissance": 30,
+                "mensuel": 3897
+            },
+            {
+                "puissance": 36,
+                "mensuel": 4508
+            }
+        ],
+        "mapping": [
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "hpHcConfig": {
+                    "hp": {
+                        "price": 2618,
+                        "slots": "BLEU"
+                    },
+                    "hc": {
+                        "price": 1986,
+                        "slots": "BLEU"
+                    }
+                }
             }
         ]
     }
