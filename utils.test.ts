@@ -1,6 +1,6 @@
 import hphc_mapping from "./hp_hc.json";
 import { HpHcFileMapping } from "./types";
-import { isHpOrHcSlot } from "./utils";
+import { isFrenchHoliday, isHpOrHcSlot } from "./utils";
 
 describe("isHpOrHcSlot", () => {
   const hphcMapping = hphc_mapping as HpHcFileMapping[];
@@ -61,5 +61,18 @@ describe("isHpOrHcSlot", () => {
       const slotType = isHpOrHcSlot(date, blueGrids);
       expect(slotType).toBe(expected);
     });
+  });
+});
+
+describe("isFrenchHoliday", () => {
+  it("should return true for a holiday", () => {
+    const date = new Date("2025-01-01T05:00:00+02:00");
+
+    expect(isFrenchHoliday(date)).toBe(true);
+  });
+
+  it("should return false for a Monday", () => {
+    const date = new Date("2023-10-09T00:00:00+02:00");
+    expect(isFrenchHoliday(date)).toBe(false);
   });
 });

@@ -1,4 +1,15 @@
 {
+  "scripts": {
+    "deadcode:all": "ts-prune",
+    "deadcode:ci": "ts-prune | (! grep -v 'used in module') | (! grep -v 'migration') | (! grep -v 'd.ts')",
+    "depcheck": "depcheck --ignores=node-fetch,@types/jest,sort-package-json",
+    "depcheck:ci": "depcheck --ignores=node-fetch,@types/jest,sort-package-json | (! grep -v 'No depcheck issue') ",
+    "lint": "eslint --ext .js,.ts .",
+    "lint:ci": "eslint --ext .js,.ts . | (! grep -v 'warning') | (! grep -v 'error')",
+    "sort-package:check": "sort-package-json --check",
+    "sort-package:sort": "sort-package-json",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch '**/*.test.ts' --coverage"
+  },
   "dependencies": {
     "@types/node-fetch": "^2.6.12",
     "date-fns": "^4.1.0",
@@ -9,11 +20,11 @@
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "depcheck": "^1.4.7",
     "jest": "^29.7.0",
-    "ts-jest": "^29.2.5"
-  },
-  "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch '**/*.test.ts' --coverage",
-    "lint": "eslint --ext .js,.ts ."
+    "sort-package-json": "^2.5.1",
+    "ts-jest": "^29.2.5",
+    "ts-prune": "^0.10.3"
   }
 }

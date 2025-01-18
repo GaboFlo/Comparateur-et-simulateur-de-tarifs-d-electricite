@@ -49,9 +49,6 @@ function findCorrespondingMapping(
           item
         );
       } else {
-        if (!singleMapping.price) {
-          throw new Error(`No base price found ${endOfSlotRecorded}`);
-        }
         return {
           optionName: option.optionName,
           offerType: option.offerType,
@@ -104,15 +101,24 @@ function calculateHpHcPrices(
 }
 
 async function fetchTempoData() {
-  /* TODO take periode filter */
+  /* TODO take period filter */
   const response = await fetch(
     "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023"
   );
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
 
   return response.json() as Promise<TempoDates>;
+}
+
+function isHpOrHcTempoSlot(hour: number, minute: number): SlotType {
+  if (
+    (6 < hour && hour < 22) ||
+    (hour === 22 && minute == 0) ||
+    (hour === 6 && minute == 30)
+  ) {
+    return "HP";
+  } else {
+    return "HC";
+  }
 }
 
 function calculateTempoPrices(
@@ -125,17 +131,8 @@ function calculateTempoPrices(
   const hour = endOfSlotRecorded.getHours();
   const minute = endOfSlotRecorded.getMinutes();
 
-  let slotType: SlotType | null = null;
   let tempoCodeDay: TempoCodeDay | null = null;
-  if (
-    (6 < hour && hour < 22) ||
-    (hour === 22 && minute == 0) ||
-    (hour === 6 && minute == 30)
-  ) {
-    slotType = "HP";
-  } else {
-    slotType = "HC";
-  }
+  const slotType = isHpOrHcTempoSlot(hour, minute);
 
   // Determine codeJour (handling the day change at midnight)
   if (0 <= hour && (hour < 6 || (hour === 6 && minute == 0))) {
@@ -143,32 +140,25 @@ function calculateTempoPrices(
     const yesterdayStr = format(dayBefore, "yyyy-MM-dd");
     tempoCodeDay = tempoDates.find(
       (item) => item.dateJour === yesterdayStr
-    )?.codeJour;
-    if (!tempoCodeDay) {
-      throw new Error(`No tempoCodeDay found ${yesterdayStr}`);
-    }
+    ).codeJour;
   } else {
     tempoCodeDay = tempoDates.find(
       (item) => item.dateJour === format(endOfSlotRecorded, "yyyy-MM-dd")
     ).codeJour;
   }
-  if (tempoCodeDay && slotType) {
-    const relevantTempoMapping = tempoMapping.find((elt) => {
-      return elt.tempoCodeDay == tempoCodeDay;
-    });
-    const relevantCost =
-      slotType === "HP" ? relevantTempoMapping.HP : relevantTempoMapping.HC;
-    return {
-      optionName: "TEMPO",
-      offerType: "BLEU",
-      cost: item.value * relevantCost,
-      hourType: slotType,
-      tempoCodeDay,
-    };
-  }
-  throw new Error(
-    `No tempoCodeDay or slotType found ${tempoCodeDay} ${slotType}`
-  );
+
+  const relevantTempoMapping = tempoMapping.find((elt) => {
+    return elt.tempoCodeDay == tempoCodeDay;
+  });
+  const relevantCost =
+    slotType === "HP" ? relevantTempoMapping.HP : relevantTempoMapping.HC;
+  return {
+    optionName: "TEMPO",
+    offerType: "BLEU",
+    cost: item.value * relevantCost,
+    hourType: slotType,
+    tempoCodeDay,
+  };
 }
 
 export async function calculatePrices({
