@@ -13,7 +13,7 @@
     "ts-jest": "^29.2.5"
   },
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch '**/calculators.test.ts'",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch '**/*.test.ts'",
     "lint": "eslint --ext .js,.ts ."
   }
 }

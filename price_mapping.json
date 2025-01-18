@@ -2,42 +2,42 @@
     {
         "optionName": "BASE",
         "offerType": "BLEU",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 3,
-                "mensuel": 969
+                "powerClass": 3,
+                "monthlyCost": 969
             },
             {
-                "puissance": 6,
-                "mensuel": 1268
+                "powerClass": 6,
+                "monthlyCost": 1268
             },
             {
-                "puissance": 9,
-                "mensuel": 1589
+                "powerClass": 9,
+                "monthlyCost": 1589
             },
             {
-                "puissance": 12,
-                "mensuel": 1916
+                "powerClass": 12,
+                "monthlyCost": 1916
             },
             {
-                "puissance": 15,
-                "mensuel": 2207
+                "powerClass": 15,
+                "monthlyCost": 2207
             },
             {
-                "puissance": 18,
-                "mensuel": 2524
+                "powerClass": 18,
+                "monthlyCost": 2524
             },
             {
-                "puissance": 24,
-                "mensuel": 3196
+                "powerClass": 24,
+                "monthlyCost": 3196
             },
             {
-                "puissance": 30,
-                "mensuel": 3768
+                "powerClass": 30,
+                "monthlyCost": 3768
             },
             {
-                "puissance": 36,
-                "mensuel": 4443
+                "powerClass": 36,
+                "monthlyCost": 4443
             }
         ],
         "mappings": [
@@ -58,38 +58,38 @@
     {
         "optionName": "HPHC",
         "offerType": "BLEU",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1309
+                "powerClass": 6,
+                "monthlyCost": 1309
             },
             {
-                "puissance": 9,
-                "mensuel": 1670
+                "powerClass": 9,
+                "monthlyCost": 1670
             },
             {
-                "puissance": 12,
-                "mensuel": 2028
+                "powerClass": 12,
+                "monthlyCost": 2028
             },
             {
-                "puissance": 15,
-                "mensuel": 2357
+                "powerClass": 15,
+                "monthlyCost": 2357
             },
             {
-                "puissance": 18,
-                "mensuel": 2684
+                "powerClass": 18,
+                "monthlyCost": 2684
             },
             {
-                "puissance": 24,
-                "mensuel": 3370
+                "powerClass": 24,
+                "monthlyCost": 3370
             },
             {
-                "puissance": 30,
-                "mensuel": 3897
+                "powerClass": 30,
+                "monthlyCost": 3897
             },
             {
-                "puissance": 36,
-                "mensuel": 4508
+                "powerClass": 36,
+                "monthlyCost": 4508
             }
         ],
         "mappings": [
@@ -119,34 +119,34 @@
     {
         "optionName": "TEMPO",
         "offerType": "BLEU",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1303
+                "powerClass": 6,
+                "monthlyCost": 1303
             },
             {
-                "puissance": 9,
-                "mensuel": 1625
+                "powerClass": 9,
+                "monthlyCost": 1625
             },
             {
-                "puissance": 12,
-                "mensuel": 1956
+                "powerClass": 12,
+                "monthlyCost": 1956
             },
             {
-                "puissance": 15,
-                "mensuel": 2245
+                "powerClass": 15,
+                "monthlyCost": 2245
             },
             {
-                "puissance": 18,
-                "mensuel": 2560
+                "powerClass": 18,
+                "monthlyCost": 2560
             },
             {
-                "puissance": 30,
-                "mensuel": 3853
+                "powerClass": 30,
+                "monthlyCost": 3853
             },
             {
-                "puissance": 36,
-                "mensuel": 4471
+                "powerClass": 36,
+                "monthlyCost": 4471
             }
         ],
         "tempoMappings": [
@@ -170,42 +170,42 @@
     {
         "optionName": "WEEK_END",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 3,
-                "mensuel": 969
+                "powerClass": 3,
+                "monthlyCost": 969
             },
             {
-                "puissance": 6,
-                "mensuel": 1268
+                "powerClass": 6,
+                "monthlyCost": 1268
             },
             {
-                "puissance": 9,
-                "mensuel": 1589
+                "powerClass": 9,
+                "monthlyCost": 1589
             },
             {
-                "puissance": 12,
-                "mensuel": 1916
+                "powerClass": 12,
+                "monthlyCost": 1916
             },
             {
-                "puissance": 15,
-                "mensuel": 2207
+                "powerClass": 15,
+                "monthlyCost": 2207
             },
             {
-                "puissance": 18,
-                "mensuel": 2524
+                "powerClass": 18,
+                "monthlyCost": 2524
             },
             {
-                "puissance": 24,
-                "mensuel": 3196
+                "powerClass": 24,
+                "monthlyCost": 3196
             },
             {
-                "puissance": 30,
-                "mensuel": 3768
+                "powerClass": 30,
+                "monthlyCost": 3768
             },
             {
-                "puissance": 36,
-                "mensuel": 4443
+                "powerClass": 36,
+                "monthlyCost": 4443
             }
         ],
         "mappings": [
@@ -232,38 +232,38 @@
     {
         "optionName": "WEEK_END_HPHC",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1309
+                "powerClass": 6,
+                "monthlyCost": 1309
             },
             {
-                "puissance": 9,
-                "mensuel": 1682
+                "powerClass": 9,
+                "monthlyCost": 1682
             },
             {
-                "puissance": 12,
-                "mensuel": 2028
+                "powerClass": 12,
+                "monthlyCost": 2028
             },
             {
-                "puissance": 15,
-                "mensuel": 2357
+                "powerClass": 15,
+                "monthlyCost": 2357
             },
             {
-                "puissance": 18,
-                "mensuel": 2684
+                "powerClass": 18,
+                "monthlyCost": 2684
             },
             {
-                "puissance": 24,
-                "mensuel": 3370
+                "powerClass": 24,
+                "monthlyCost": 3370
             },
             {
-                "puissance": 30,
-                "mensuel": 3994
+                "powerClass": 30,
+                "monthlyCost": 3994
             },
             {
-                "puissance": 36,
-                "mensuel": 4624
+                "powerClass": 36,
+                "monthlyCost": 4624
             }
         ],
         "mappings": [
@@ -299,38 +299,38 @@
     {
         "optionName": "FLEX_ECO",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1309
+                "powerClass": 6,
+                "monthlyCost": 1309
             },
             {
-                "puissance": 9,
-                "mensuel": 1682
+                "powerClass": 9,
+                "monthlyCost": 1682
             },
             {
-                "puissance": 12,
-                "mensuel": 2028
+                "powerClass": 12,
+                "monthlyCost": 2028
             },
             {
-                "puissance": 15,
-                "mensuel": 2357
+                "powerClass": 15,
+                "monthlyCost": 2357
             },
             {
-                "puissance": 18,
-                "mensuel": 2684
+                "powerClass": 18,
+                "monthlyCost": 2684
             },
             {
-                "puissance": 24,
-                "mensuel": 3370
+                "powerClass": 24,
+                "monthlyCost": 3370
             },
             {
-                "puissance": 30,
-                "mensuel": 3994
+                "powerClass": 30,
+                "monthlyCost": 3994
             },
             {
-                "puissance": 36,
-                "mensuel": 4624
+                "powerClass": 36,
+                "monthlyCost": 4624
             }
         ],
         "mappings": [
@@ -360,38 +360,38 @@
     {
         "optionName": "FLEX_SOBRIETE",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1309
+                "powerClass": 6,
+                "monthlyCost": 1309
             },
             {
-                "puissance": 9,
-                "mensuel": 1682
+                "powerClass": 9,
+                "monthlyCost": 1682
             },
             {
-                "puissance": 12,
-                "mensuel": 2028
+                "powerClass": 12,
+                "monthlyCost": 2028
             },
             {
-                "puissance": 15,
-                "mensuel": 2357
+                "powerClass": 15,
+                "monthlyCost": 2357
             },
             {
-                "puissance": 18,
-                "mensuel": 2684
+                "powerClass": 18,
+                "monthlyCost": 2684
             },
             {
-                "puissance": 24,
-                "mensuel": 3370
+                "powerClass": 24,
+                "monthlyCost": 3370
             },
             {
-                "puissance": 30,
-                "mensuel": 3994
+                "powerClass": 30,
+                "monthlyCost": 3994
             },
             {
-                "puissance": 36,
-                "mensuel": 4624
+                "powerClass": 36,
+                "monthlyCost": 4624
             }
         ],
         "mappings": [
@@ -421,38 +421,38 @@
     {
         "optionName": "WEEK_END_PLUS_LUNDI",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1268
+                "powerClass": 6,
+                "monthlyCost": 1268
             },
             {
-                "puissance": 9,
-                "mensuel": 1618
+                "powerClass": 9,
+                "monthlyCost": 1618
             },
             {
-                "puissance": 12,
-                "mensuel": 1955
+                "powerClass": 12,
+                "monthlyCost": 1955
             },
             {
-                "puissance": 15,
-                "mensuel": 2221
+                "powerClass": 15,
+                "monthlyCost": 2221
             },
             {
-                "puissance": 18,
-                "mensuel": 2524
+                "powerClass": 18,
+                "monthlyCost": 2524
             },
             {
-                "puissance": 24,
-                "mensuel": 3196
+                "powerClass": 24,
+                "monthlyCost": 3196
             },
             {
-                "puissance": 30,
-                "mensuel": 3768
+                "powerClass": 30,
+                "monthlyCost": 3768
             },
             {
-                "puissance": 36,
-                "mensuel": 4443
+                "powerClass": 36,
+                "monthlyCost": 4443
             }
         ],
         "mappings": [
@@ -479,38 +479,38 @@
     {
         "optionName": "WEEK_END_PLUS_MERCREDI",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1268
+                "powerClass": 6,
+                "monthlyCost": 1268
             },
             {
-                "puissance": 9,
-                "mensuel": 1618
+                "powerClass": 9,
+                "monthlyCost": 1618
             },
             {
-                "puissance": 12,
-                "mensuel": 1955
+                "powerClass": 12,
+                "monthlyCost": 1955
             },
             {
-                "puissance": 15,
-                "mensuel": 2221
+                "powerClass": 15,
+                "monthlyCost": 2221
             },
             {
-                "puissance": 18,
-                "mensuel": 2524
+                "powerClass": 18,
+                "monthlyCost": 2524
             },
             {
-                "puissance": 24,
-                "mensuel": 3196
+                "powerClass": 24,
+                "monthlyCost": 3196
             },
             {
-                "puissance": 30,
-                "mensuel": 3768
+                "powerClass": 30,
+                "monthlyCost": 3768
             },
             {
-                "puissance": 36,
-                "mensuel": 4443
+                "powerClass": 36,
+                "monthlyCost": 4443
             }
         ],
         "mappings": [
@@ -537,38 +537,38 @@
     {
         "optionName": "WEEK_END_PLUS_MERCREDI",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1268
+                "powerClass": 6,
+                "monthlyCost": 1268
             },
             {
-                "puissance": 9,
-                "mensuel": 1618
+                "powerClass": 9,
+                "monthlyCost": 1618
             },
             {
-                "puissance": 12,
-                "mensuel": 1955
+                "powerClass": 12,
+                "monthlyCost": 1955
             },
             {
-                "puissance": 15,
-                "mensuel": 2221
+                "powerClass": 15,
+                "monthlyCost": 2221
             },
             {
-                "puissance": 18,
-                "mensuel": 2524
+                "powerClass": 18,
+                "monthlyCost": 2524
             },
             {
-                "puissance": 24,
-                "mensuel": 3196
+                "powerClass": 24,
+                "monthlyCost": 3196
             },
             {
-                "puissance": 30,
-                "mensuel": 3768
+                "powerClass": 30,
+                "monthlyCost": 3768
             },
             {
-                "puissance": 36,
-                "mensuel": 4443
+                "powerClass": 36,
+                "monthlyCost": 4443
             }
         ],
         "mappings": [
@@ -595,38 +595,38 @@
     {
         "optionName": "WEEK_END_PLUS_HPHC_LUNDI",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1309
+                "powerClass": 6,
+                "monthlyCost": 1309
             },
             {
-                "puissance": 9,
-                "mensuel": 1682
+                "powerClass": 9,
+                "monthlyCost": 1682
             },
             {
-                "puissance": 12,
-                "mensuel": 2028
+                "powerClass": 12,
+                "monthlyCost": 2028
             },
             {
-                "puissance": 15,
-                "mensuel": 2357
+                "powerClass": 15,
+                "monthlyCost": 2357
             },
             {
-                "puissance": 18,
-                "mensuel": 2684
+                "powerClass": 18,
+                "monthlyCost": 2684
             },
             {
-                "puissance": 24,
-                "mensuel": 3370
+                "powerClass": 24,
+                "monthlyCost": 3370
             },
             {
-                "puissance": 30,
-                "mensuel": 3994
+                "powerClass": 30,
+                "monthlyCost": 3994
             },
             {
-                "puissance": 36,
-                "mensuel": 4624
+                "powerClass": 36,
+                "monthlyCost": 4624
             }
         ],
         "mappings": [
@@ -671,38 +671,38 @@
     {
         "optionName": "WEEK_END_PLUS_HPHC_MERCREDI",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1309
+                "powerClass": 6,
+                "monthlyCost": 1309
             },
             {
-                "puissance": 9,
-                "mensuel": 1682
+                "powerClass": 9,
+                "monthlyCost": 1682
             },
             {
-                "puissance": 12,
-                "mensuel": 2028
+                "powerClass": 12,
+                "monthlyCost": 2028
             },
             {
-                "puissance": 15,
-                "mensuel": 2357
+                "powerClass": 15,
+                "monthlyCost": 2357
             },
             {
-                "puissance": 18,
-                "mensuel": 2684
+                "powerClass": 18,
+                "monthlyCost": 2684
             },
             {
-                "puissance": 24,
-                "mensuel": 3370
+                "powerClass": 24,
+                "monthlyCost": 3370
             },
             {
-                "puissance": 30,
-                "mensuel": 3994
+                "powerClass": 30,
+                "monthlyCost": 3994
             },
             {
-                "puissance": 36,
-                "mensuel": 4624
+                "powerClass": 36,
+                "monthlyCost": 4624
             }
         ],
         "mappings": [
@@ -747,38 +747,38 @@
     {
         "optionName": "WEEK_END_PLUS_HPHC_VENDREDI",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1309
+                "powerClass": 6,
+                "monthlyCost": 1309
             },
             {
-                "puissance": 9,
-                "mensuel": 1682
+                "powerClass": 9,
+                "monthlyCost": 1682
             },
             {
-                "puissance": 12,
-                "mensuel": 2028
+                "powerClass": 12,
+                "monthlyCost": 2028
             },
             {
-                "puissance": 15,
-                "mensuel": 2357
+                "powerClass": 15,
+                "monthlyCost": 2357
             },
             {
-                "puissance": 18,
-                "mensuel": 2684
+                "powerClass": 18,
+                "monthlyCost": 2684
             },
             {
-                "puissance": 24,
-                "mensuel": 3370
+                "powerClass": 24,
+                "monthlyCost": 3370
             },
             {
-                "puissance": 30,
-                "mensuel": 3994
+                "powerClass": 30,
+                "monthlyCost": 3994
             },
             {
-                "puissance": 36,
-                "mensuel": 4624
+                "powerClass": 36,
+                "monthlyCost": 4624
             }
         ],
         "mappings": [
@@ -823,42 +823,42 @@
     {
         "optionName": "FIXE_BASE",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 3,
-                "mensuel": 969
+                "powerClass": 3,
+                "monthlyCost": 969
             },
             {
-                "puissance": 6,
-                "mensuel": 1267
+                "powerClass": 6,
+                "monthlyCost": 1267
             },
             {
-                "puissance": 9,
-                "mensuel": 1589
+                "powerClass": 9,
+                "monthlyCost": 1589
             },
             {
-                "puissance": 12,
-                "mensuel": 1916
+                "powerClass": 12,
+                "monthlyCost": 1916
             },
             {
-                "puissance": 15,
-                "mensuel": 2221
+                "powerClass": 15,
+                "monthlyCost": 2221
             },
             {
-                "puissance": 18,
-                "mensuel": 2524
+                "powerClass": 18,
+                "monthlyCost": 2524
             },
             {
-                "puissance": 24,
-                "mensuel": 3196
+                "powerClass": 24,
+                "monthlyCost": 3196
             },
             {
-                "puissance": 30,
-                "mensuel": 3768
+                "powerClass": 30,
+                "monthlyCost": 3768
             },
             {
-                "puissance": 36,
-                "mensuel": 4443
+                "powerClass": 36,
+                "monthlyCost": 4443
             }
         ],
         "mappings": [
@@ -879,38 +879,38 @@
     {
         "optionName": "FIXE_HPHC",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1309
+                "powerClass": 6,
+                "monthlyCost": 1309
             },
             {
-                "puissance": 9,
-                "mensuel": 1682
+                "powerClass": 9,
+                "monthlyCost": 1682
             },
             {
-                "puissance": 12,
-                "mensuel": 2028
+                "powerClass": 12,
+                "monthlyCost": 2028
             },
             {
-                "puissance": 15,
-                "mensuel": 2309
+                "powerClass": 15,
+                "monthlyCost": 2309
             },
             {
-                "puissance": 18,
-                "mensuel": 2626
+                "powerClass": 18,
+                "monthlyCost": 2626
             },
             {
-                "puissance": 24,
-                "mensuel": 3292
+                "powerClass": 24,
+                "monthlyCost": 3292
             },
             {
-                "puissance": 30,
-                "mensuel": 3897
+                "powerClass": 30,
+                "monthlyCost": 3897
             },
             {
-                "puissance": 36,
-                "mensuel": 4508
+                "powerClass": 36,
+                "monthlyCost": 4508
             }
         ],
         "mappings": [
@@ -940,42 +940,42 @@
     {
         "optionName": "ONLINE_BASE",
         "offerType": "ZEN",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 3,
-                "mensuel": 969
+                "powerClass": 3,
+                "monthlyCost": 969
             },
             {
-                "puissance": 6,
-                "mensuel": 1268
+                "powerClass": 6,
+                "monthlyCost": 1268
             },
             {
-                "puissance": 9,
-                "mensuel": 1618
+                "powerClass": 9,
+                "monthlyCost": 1618
             },
             {
-                "puissance": 12,
-                "mensuel": 1955
+                "powerClass": 12,
+                "monthlyCost": 1955
             },
             {
-                "puissance": 15,
-                "mensuel": 2270
+                "powerClass": 15,
+                "monthlyCost": 2270
             },
             {
-                "puissance": 18,
-                "mensuel": 2583
+                "powerClass": 18,
+                "monthlyCost": 2583
             },
             {
-                "puissance": 24,
-                "mensuel": 3274
+                "powerClass": 24,
+                "monthlyCost": 3274
             },
             {
-                "puissance": 30,
-                "mensuel": 3866
+                "powerClass": 30,
+                "monthlyCost": 3866
             },
             {
-                "puissance": 36,
-                "mensuel": 4443
+                "powerClass": 36,
+                "monthlyCost": 4443
             }
         ],
         "mappings": [
@@ -996,42 +996,42 @@
     {
         "optionName": "BASE",
         "offerType": "VERT",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 3,
-                "mensuel": 969
+                "powerClass": 3,
+                "monthlyCost": 969
             },
             {
-                "puissance": 6,
-                "mensuel": 1268
+                "powerClass": 6,
+                "monthlyCost": 1268
             },
             {
-                "puissance": 9,
-                "mensuel": 1589
+                "powerClass": 9,
+                "monthlyCost": 1589
             },
             {
-                "puissance": 12,
-                "mensuel": 1916
+                "powerClass": 12,
+                "monthlyCost": 1916
             },
             {
-                "puissance": 15,
-                "mensuel": 2221
+                "powerClass": 15,
+                "monthlyCost": 2221
             },
             {
-                "puissance": 18,
-                "mensuel": 2524
+                "powerClass": 18,
+                "monthlyCost": 2524
             },
             {
-                "puissance": 24,
-                "mensuel": 3196
+                "powerClass": 24,
+                "monthlyCost": 3196
             },
             {
-                "puissance": 30,
-                "mensuel": 3768
+                "powerClass": 30,
+                "monthlyCost": 3768
             },
             {
-                "puissance": 36,
-                "mensuel": 4443
+                "powerClass": 36,
+                "monthlyCost": 4443
             }
         ],
         "mappings": [
@@ -1052,38 +1052,38 @@
     {
         "optionName": "HPHC",
         "offerType": "VERT",
-        "abonnements": [
+        "subscriptions": [
             {
-                "puissance": 6,
-                "mensuel": 1309
+                "powerClass": 6,
+                "monthlyCost": 1309
             },
             {
-                "puissance": 9,
-                "mensuel": 1682
+                "powerClass": 9,
+                "monthlyCost": 1682
             },
             {
-                "puissance": 12,
-                "mensuel": 2028
+                "powerClass": 12,
+                "monthlyCost": 2028
             },
             {
-                "puissance": 15,
-                "mensuel": 2309
+                "powerClass": 15,
+                "monthlyCost": 2309
             },
             {
-                "puissance": 18,
-                "mensuel": 2626
+                "powerClass": 18,
+                "monthlyCost": 2626
             },
             {
-                "puissance": 24,
-                "mensuel": 3292
+                "powerClass": 24,
+                "monthlyCost": 3292
             },
             {
-                "puissance": 30,
-                "mensuel": 3897
+                "powerClass": 30,
+                "monthlyCost": 3897
             },
             {
-                "puissance": 36,
-                "mensuel": 4508
+                "powerClass": 36,
+                "monthlyCost": 4508
             }
         ],
         "mappings": [

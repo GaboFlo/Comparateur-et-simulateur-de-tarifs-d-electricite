@@ -22,15 +22,17 @@ export type SlotType = "HP" | "HC";
 export interface Option {
   optionName: OptionName;
   offerType: OfferType;
-  abonnements: Abonnement[];
+  subscriptions: Subscription[];
   mappings: Mapping[];
   tempoMappings?: TempoMapping[];
 }
 
-export interface Abonnement {
-  puissance: number;
-  mensuel: number;
+export interface Subscription {
+  powerClass: PowerClass;
+  monthlyCost: number;
 }
+
+export type PowerClass = 6 | 9 | 12 | 15 | 18 | 24 | 30 | 36;
 
 export interface Mapping {
   applicableDays: number[];

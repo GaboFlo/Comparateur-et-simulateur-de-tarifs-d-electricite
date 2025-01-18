@@ -140,7 +140,7 @@ describe("calculateTempoPrices", () => {
   });
 });
 
-/* describe("calculateBasePrices", () => {
+describe("calculateBasePrices", () => {
   it("BLEU", async () => {
     const data: CalculatedData[] = [
       {
@@ -245,4 +245,4 @@ describe("calculateHpHcPrices", () => {
     ];
     expect(result).toEqual(expected);
   });
-}); */
+});
