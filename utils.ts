@@ -1,4 +1,3 @@
-import { isSaturday, isSunday } from "date-fns";
 import Holidays from "date-holidays";
 import { GridMapping, SlotType } from "./types";
 
