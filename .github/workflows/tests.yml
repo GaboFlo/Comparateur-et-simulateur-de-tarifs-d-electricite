@@ -27,3 +27,5 @@ jobs:
       - name: Depcheck
         run: |
           npm i -g depcheck && npm run depcheck:ci
+      - name: Run tests
+        run: npm run test
