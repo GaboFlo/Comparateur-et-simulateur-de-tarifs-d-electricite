@@ -46,11 +46,6 @@ export interface HpHcConfigParent {
   price: number;
 }
 
-export interface HpHCConfig {
-  price: number;
-  slotName?: OfferType;
-}
-
 export interface TempoMapping {
   tempoCodeDay: number;
   HP: number;
@@ -65,8 +60,6 @@ export interface ConsumptionLoadCurveData {
 export interface CalculatedData extends ConsumptionLoadCurveData {
   costs?: Cost[];
 }
-export type AvailableOptions = "BLEU_BASE" | "BLEU_HPHC" | "BLEU_TEMPO";
-export type DayType = "BLEU" | "BLANC" | "ROUGE";
 
 export interface Cost {
   optionName: OptionName;
