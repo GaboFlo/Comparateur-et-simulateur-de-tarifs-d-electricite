@@ -1,6 +1,7 @@
 [
     {
-        "name": "Bleu_Base",
+        "optionName": "BASE",
+        "offerType": "BLEU",
         "abonnements": [
             {
                 "puissance": 3,
@@ -39,7 +40,7 @@
                 "mensuel": 4443
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "price": 2516,
                 "applicableDays": [
@@ -55,7 +56,8 @@
         ]
     },
     {
-        "name": "Bleu_HPHC",
+        "optionName": "HPHC",
+        "offerType": "BLEU",
         "abonnements": [
             {
                 "puissance": 6,
@@ -90,7 +92,7 @@
                 "mensuel": 4508
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "applicableDays": [
                     0,
@@ -101,21 +103,22 @@
                     5,
                     6
                 ],
-                "hpHcConfig": {
-                    "hp": {
+                "hpHcConfig": [
+                    {
                         "price": 2700,
-                        "slots": "BLEU"
+                        "slotType": "HP"
                     },
-                    "hc": {
+                    {
                         "price": 2068,
-                        "slots": "BLEU"
+                        "slotType": "HC"
                     }
-                }
+                ]
             }
         ]
     },
     {
-        "name": "Bleu_Tempo",
+        "optionName": "TEMPO",
+        "offerType": "BLEU",
         "abonnements": [
             {
                 "puissance": 6,
@@ -146,7 +149,7 @@
                 "mensuel": 4471
             }
         ],
-        "tempoMapping": [
+        "tempomappings": [
             {
                 "tempo_day": 1,
                 "HEURES_PLEINES": 1609,
@@ -165,7 +168,8 @@
         ]
     },
     {
-        "name": "ZEN_WEEK_END",
+        "optionName": "WEEK_END",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 3,
@@ -204,7 +208,7 @@
                 "mensuel": 4443
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "price": 1932,
                 "applicableDays": [
@@ -226,7 +230,8 @@
         ]
     },
     {
-        "name": "ZEN_WEEK-END_HPHC",
+        "optionName": "WEEK_END_HPHC",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 6,
@@ -261,7 +266,7 @@
                 "mensuel": 4624
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "price": 2041,
                 "applicableDays": [
@@ -278,19 +283,22 @@
                     3,
                     4
                 ],
-                "hpHcConfig": {
-                    "hp": {
-                        "price": 2808
+                "hpHcConfig": [
+                    {
+                        "price": 2808,
+                        "slotType": "HP"
                     },
-                    "hc": {
-                        "price": 2041
+                    {
+                        "price": 2041,
+                        "slotType": "HC"
                     }
-                }
+                ]
             }
         ]
     },
     {
-        "name": "ZEN_FLEX_ECO",
+        "optionName": "FLEX_ECO",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 6,
@@ -325,7 +333,7 @@
                 "mensuel": 4624
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "applicableDays": [
                     0,
@@ -336,21 +344,22 @@
                     5,
                     6
                 ],
-                "hpHcConfig": {
-                    "hp": {
+                "hpHcConfig": [
+                    {
                         "price": 2700,
-                        "slots": "ZEN"
+                        "slotType": "HP"
                     },
-                    "hc": {
+                    {
                         "price": 2068,
-                        "slots": "ZEN"
+                        "slotType": "HC"
                     }
-                }
+                ]
             }
         ]
     },
     {
-        "name": "ZEN_FLEX_SOBRIETE",
+        "optionName": "FLEX_SOBRIETE",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 6,
@@ -385,7 +394,7 @@
                 "mensuel": 4624
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "applicableDays": [
                     0,
@@ -396,21 +405,22 @@
                     5,
                     6
                 ],
-                "hpHcConfig": {
-                    "hp": {
+                "hpHcConfig": [
+                    {
                         "price": 7562,
-                        "slots": "ZEN"
+                        "slotType": "HP"
                     },
-                    "hc": {
+                    {
                         "price": 2700,
-                        "slots": "ZEN"
+                        "slotType": "HC"
                     }
-                }
+                ]
             }
         ]
     },
     {
-        "name": "ZEN_WEEK_END_PLUS_LUNDI",
+        "optionName": "WEEK_END_PLUS_LUNDI",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 6,
@@ -445,7 +455,7 @@
                 "mensuel": 4443
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "price": 2021,
                 "applicableDays": [
@@ -467,7 +477,8 @@
         ]
     },
     {
-        "name": "ZEN_WEEK_END_PLUS_MERCREDI",
+        "optionName": "WEEK_END_PLUS_MERCREDI",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 6,
@@ -502,7 +513,7 @@
                 "mensuel": 4443
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "price": 2021,
                 "applicableDays": [
@@ -524,7 +535,8 @@
         ]
     },
     {
-        "name": "ZEN_WEEK_END_PLUS_VENDREDI",
+        "optionName": "WEEK_END_PLUS_MERCREDI",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 6,
@@ -559,7 +571,7 @@
                 "mensuel": 4443
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "price": 2021,
                 "applicableDays": [
@@ -581,7 +593,8 @@
         ]
     },
     {
-        "name": "ZEN_WEEK_END_PLUS_HPHC_LUNDI",
+        "optionName": "WEEK_END_PLUS_HPHC_LUNDI",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 6,
@@ -616,7 +629,7 @@
                 "mensuel": 4624
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "applicableDays": [
                     0,
@@ -624,16 +637,16 @@
                     6
                 ],
                 "include_holidays": true,
-                "hpHcConfig": {
-                    "hp": {
+                "hpHcConfig": [
+                    {
                         "price": 2098,
-                        "slots": "BLEU"
+                        "slotType": "HP"
                     },
-                    "hc": {
+                    {
                         "price": 2098,
-                        "slots": "BLEU"
+                        "slotType": "HC"
                     }
-                }
+                ]
             },
             {
                 "applicableDays": [
@@ -642,21 +655,22 @@
                     3,
                     4
                 ],
-                "hpHcConfig": {
-                    "hp": {
+                "hpHcConfig": [
+                    {
                         "price": 2888,
-                        "slots": "BLEU"
+                        "slotType": "HP"
                     },
-                    "hc": {
+                    {
                         "price": 2098,
-                        "slots": "BLEU"
+                        "slotType": "HC"
                     }
-                }
+                ]
             }
         ]
     },
     {
-        "name": "ZEN_WEEK_END_PLUS_HPHC_MERCREDI",
+        "optionName": "WEEK_END_PLUS_HPHC_MERCREDI",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 6,
@@ -691,7 +705,7 @@
                 "mensuel": 4624
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "applicableDays": [
                     2,
@@ -699,16 +713,16 @@
                     6
                 ],
                 "include_holidays": true,
-                "hpHcConfig": {
-                    "hp": {
+                "hpHcConfig": [
+                    {
                         "price": 2098,
-                        "slots": "BLEU"
+                        "slotType": "HP"
                     },
-                    "hc": {
+                    {
                         "price": 2098,
-                        "slots": "BLEU"
+                        "slotType": "HC"
                     }
-                }
+                ]
             },
             {
                 "applicableDays": [
@@ -717,21 +731,22 @@
                     3,
                     4
                 ],
-                "hpHcConfig": {
-                    "hp": {
+                "hpHcConfig": [
+                    {
                         "price": 2888,
-                        "slots": "BLEU"
+                        "slotType": "HP"
                     },
-                    "hc": {
+                    {
                         "price": 2098,
-                        "slots": "BLEU"
+                        "slotType": "HC"
                     }
-                }
+                ]
             }
         ]
     },
     {
-        "name": "ZEN_WEEK_END_PLUS_HPHC_VENDREDI",
+        "optionName": "WEEK_END_PLUS_HPHC_VENDREDI",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 6,
@@ -766,7 +781,7 @@
                 "mensuel": 4624
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "applicableDays": [
                     4,
@@ -774,16 +789,16 @@
                     6
                 ],
                 "include_holidays": true,
-                "hpHcConfig": {
-                    "hp": {
+                "hpHcConfig": [
+                    {
                         "price": 2098,
-                        "slots": "BLEU"
+                        "slotType": "HP"
                     },
-                    "hc": {
+                    {
                         "price": 2098,
-                        "slots": "BLEU"
+                        "slotType": "HC"
                     }
-                }
+                ]
             },
             {
                 "applicableDays": [
@@ -792,21 +807,22 @@
                     2,
                     3
                 ],
-                "hpHcConfig": {
-                    "hp": {
+                "hpHcConfig": [
+                    {
                         "price": 2888,
-                        "slots": "BLEU"
+                        "slotType": "HP"
                     },
-                    "hc": {
+                    {
                         "price": 2098,
-                        "slots": "BLEU"
+                        "slotType": "HC"
                     }
-                }
+                ]
             }
         ]
     },
     {
-        "name": "ZEN_FIXE_BASE",
+        "optionName": "FIXE_BASE",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 3,
@@ -845,7 +861,7 @@
                 "mensuel": 4443
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "price": 1753,
                 "applicableDays": [
@@ -861,7 +877,8 @@
         ]
     },
     {
-        "name": "ZEN_FIXE_HPHC",
+        "optionName": "FIXE_HPHC",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 6,
@@ -896,7 +913,7 @@
                 "mensuel": 4508
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "applicableDays": [
                     0,
@@ -907,21 +924,22 @@
                     5,
                     6
                 ],
-                "hpHcConfig": {
-                    "hp": {
-                        "price": 1876,
-                        "slots": "BLEU"
+                "hpHcConfig": [
+                    {
+                        "slotType": "HP",
+                        "price": 1876
                     },
-                    "hc": {
-                        "price": 1456,
-                        "slots": "BLEU"
+                    {
+                        "slotType": "HC",
+                        "price": 1456
                     }
-                }
+                ]
             }
         ]
     },
     {
-        "name": "ZEN_ONLINE_BASE",
+        "optionName": "ONLINE_BASE",
+        "offerType": "ZEN",
         "abonnements": [
             {
                 "puissance": 3,
@@ -960,7 +978,7 @@
                 "mensuel": 4443
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "price": 2303,
                 "applicableDays": [
@@ -976,7 +994,8 @@
         ]
     },
     {
-        "name": "VERT_BASE",
+        "optionName": "BASE",
+        "offerType": "VERT",
         "abonnements": [
             {
                 "puissance": 3,
@@ -1015,7 +1034,7 @@
                 "mensuel": 4443
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "price": 2423,
                 "applicableDays": [
@@ -1031,7 +1050,8 @@
         ]
     },
     {
-        "name": "VERT_HPHC",
+        "optionName": "HPHC",
+        "offerType": "VERT",
         "abonnements": [
             {
                 "puissance": 6,
@@ -1066,7 +1086,7 @@
                 "mensuel": 4508
             }
         ],
-        "mapping": [
+        "mappings": [
             {
                 "applicableDays": [
                     0,
@@ -1077,16 +1097,16 @@
                     5,
                     6
                 ],
-                "hpHcConfig": {
-                    "hp": {
+                "hpHcConfig": [
+                    {
                         "price": 2618,
-                        "slots": "BLEU"
+                        "slotType": "HP"
                     },
-                    "hc": {
+                    {
                         "price": 1986,
-                        "slots": "BLEU"
+                        "slotType": "HC"
                     }
-                }
+                ]
             }
         ]
     }
