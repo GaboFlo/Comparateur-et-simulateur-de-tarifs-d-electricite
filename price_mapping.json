@@ -149,21 +149,21 @@
                 "mensuel": 4471
             }
         ],
-        "tempomappings": [
+        "tempoMappings": [
             {
-                "tempo_day": 1,
-                "HEURES_PLEINES": 1609,
-                "HEURES_CREUSES": 1296
+                "tempoCodeDay": 1,
+                "HP": 1609,
+                "HC": 1296
             },
             {
-                "tempo_day": 2,
-                "HEURES_PLEINES": 1894,
-                "HEURES_CREUSES": 1486
+                "tempoCodeDay": 2,
+                "HP": 1894,
+                "HC": 1486
             },
             {
-                "tempo_day": 3,
-                "HEURES_PLEINES": 7562,
-                "HEURES_CREUSES": 1568
+                "tempoCodeDay": 3,
+                "HP": 7562,
+                "HC": 1568
             }
         ]
     },

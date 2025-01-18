@@ -1,4 +1,4 @@
-export type PriceMappingParent = Option[];
+export type PriceMappingFile = Option[];
 
 export type OptionName =
   | "BASE"
@@ -24,7 +24,7 @@ export interface Option {
   offerType: OfferType;
   abonnements: Abonnement[];
   mappings: Mapping[];
-  tempoMapping?: TempoMapping[];
+  tempoMappings?: TempoMapping[];
 }
 
 export interface Abonnement {
@@ -50,9 +50,9 @@ export interface HpHCConfig {
 }
 
 export interface TempoMapping {
-  tempo_day: number;
-  HEURES_PLEINES: number;
-  HEURES_CREUSES: number;
+  tempoCodeDay: number;
+  HP: number;
+  HC: number;
 }
 
 export interface ConsumptionLoadCurveData {
@@ -71,10 +71,12 @@ export interface Cost {
   offerType: OfferType;
   cost: number;
   hourType?: SlotType;
-  dayType?: DayType;
+  tempoCodeDay?: TempoCodeDay;
 }
 
 /* HPHC file */
+export type HpHcFile = HpHcFileMapping[];
+
 export interface HpHcFileMapping {
   offerType: OfferType;
   grids: GridMapping[];
@@ -89,3 +91,14 @@ interface HourTime {
   minute: number;
   hour: number;
 }
+
+/* Tempo dates API */
+export type TempoDates = TempoDate[];
+
+export interface TempoDate {
+  dateJour: string;
+  codeJour: TempoCodeDay;
+  periode: string;
+}
+
+export type TempoCodeDay = 1 | 2 | 3;
