@@ -101,7 +101,6 @@ function calculateHpHcPrices(
 }
 
 async function fetchTempoData() {
-  /* TODO take period filter */
   const response = await fetch(
     "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023"
   );
