@@ -1,1 +1,1 @@
-# Comparateur Fournisseur Energie
+# Comparateur des fournisseur et offres d'énergie
