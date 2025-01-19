@@ -1,5 +1,9 @@
 {
+  "name": "comparateur_fournisseur_electricite",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
+    "build": "react-scripts build",
     "deadcode:all": "ts-prune",
     "deadcode:ci": "ts-prune | (! grep -v 'used in module') | (! grep -v 'migration') | (! grep -v 'd.ts')",
     "depcheck": "depcheck --ignores=node-fetch,@types/jest,sort-package-json",
@@ -8,17 +12,42 @@
     "lint:ci": "eslint --ext .js,.ts . | (! grep -v 'warning') | (! grep -v 'error')",
     "sort-package:check": "sort-package-json --check",
     "sort-package:sort": "sort-package-json",
+    "start": "react-scripts start",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch '**/*.test.ts' --coverage"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "dependencies": {
     "@types/node-fetch": "^2.6.12",
+    "cra-template-typescript": "1.2.0",
     "date-fns": "^4.1.0",
     "date-holidays": "^3.23.18",
     "eslint": "^7.32.0",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "5.0.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "depcheck": "^1.4.7",

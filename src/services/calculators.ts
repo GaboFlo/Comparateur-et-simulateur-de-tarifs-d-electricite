@@ -2,6 +2,7 @@ import { format, subDays } from "date-fns";
 import fetch from "node-fetch";
 import hphc_mapping from "./hp_hc.json";
 import price_mapping from "./price_mapping.json";
+import { isFrenchHoliday, isHpOrHcSlot } from "./utils";
 import {
   CalculatedData,
   Cost,
@@ -16,8 +17,7 @@ import {
   TempoCodeDay,
   TempoDates,
   TempoMapping,
-} from "./types";
-import { isFrenchHoliday, isHpOrHcSlot } from "./utils";
+} from "../types";
 
 interface CalculateProps {
   data: CalculatedData[];
@@ -25,7 +25,7 @@ interface CalculateProps {
   offerType: OfferType;
 }
 
-function isDayApplicable(mapping: Mapping, endOfSlotRecorded: Date): boolean {
+function isDayApplicable(mapping: Mapping, endOfSlotRecorded: Date) {
   return (
     mapping.applicableDays.includes(endOfSlotRecorded.getDay()) ||
     (mapping.include_holidays && isFrenchHoliday(endOfSlotRecorded))
@@ -37,7 +37,7 @@ function findCorrespondingMapping(
   endOfSlotRecorded: Date,
   hpHcMappingData: HpHcFileMapping[],
   item: CalculatedData
-): Cost {
+) {
   for (const singleMapping of option.mappings) {
     if (isDayApplicable(singleMapping, endOfSlotRecorded)) {
       if (singleMapping.hpHcConfig) {
@@ -49,6 +49,9 @@ function findCorrespondingMapping(
           item
         );
       } else {
+        if (!singleMapping.price) {
+          throw new Error(`No price found ${endOfSlotRecorded.toISOString()}`);
+        }
         return {
           optionName: option.optionName,
           offerType: option.offerType,
@@ -76,7 +79,12 @@ function calculateHpHcPrices(
 
   const applicableHpHcGrids = hphc_mapping.find(
     (item) => item.offerType === option.offerType
-  ).grids;
+  )?.grids;
+  if (!applicableHpHcGrids || !mapping.hpHcConfig) {
+    throw new Error(
+      `No applicableHpHcGrids found or hpHcConfig missing ${commonThrowError}`
+    );
+  }
   const slotType = isHpOrHcSlot(endOfSlotRecorded, applicableHpHcGrids);
   let new_cost: Cost | null = null;
   for (const hpHcConfig of mapping.hpHcConfig) {
@@ -130,7 +138,7 @@ function calculateTempoPrices(
   const hour = endOfSlotRecorded.getHours();
   const minute = endOfSlotRecorded.getMinutes();
 
-  let tempoCodeDay: TempoCodeDay | null = null;
+  let tempoCodeDay: TempoCodeDay | undefined = undefined;
   const slotType = isHpOrHcTempoSlot(hour, minute);
 
   // Determine codeJour (handling the day change at midnight)
@@ -139,16 +147,19 @@ function calculateTempoPrices(
     const yesterdayStr = format(dayBefore, "yyyy-MM-dd");
     tempoCodeDay = tempoDates.find(
       (item) => item.dateJour === yesterdayStr
-    ).codeJour;
+    )?.codeJour;
   } else {
     tempoCodeDay = tempoDates.find(
       (item) => item.dateJour === format(endOfSlotRecorded, "yyyy-MM-dd")
-    ).codeJour;
+    )?.codeJour;
   }
 
   const relevantTempoMapping = tempoMapping.find((elt) => {
     return elt.tempoCodeDay == tempoCodeDay;
   });
+  if (!relevantTempoMapping) {
+    throw new Error(`No relevantTempoMapping found ${tempoCodeDay}`);
+  }
   const relevantCost =
     slotType === "HP" ? relevantTempoMapping.HP : relevantTempoMapping.HC;
   return {
@@ -171,13 +182,16 @@ export async function calculatePrices({
   const option = priceMappingData.find(
     (item) => item.optionName === optionName && item.offerType === offerType
   );
+  if (!option) {
+    throw new Error(`No option found ${offerType}-${optionName}`);
+  }
   const new_data: CalculatedData[] = [];
 
   data.forEach(async (item) => {
     const endOfSlotRecorded = new Date(item.recordedAt);
     const commonThrowError = `${offerType}-${optionName}-${endOfSlotRecorded.toISOString()}`;
 
-    let new_cost: Cost | null = null;
+    let new_cost: Cost | undefined = undefined;
 
     if (option.mappings) {
       new_cost = findCorrespondingMapping(

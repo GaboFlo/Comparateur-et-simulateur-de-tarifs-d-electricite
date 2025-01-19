@@ -1,5 +1,5 @@
 import Holidays from "date-holidays";
-import { GridMapping, SlotType } from "./types";
+import { GridMapping, SlotType } from "../types";
 
 const hd = new Holidays("FR");
 
@@ -11,10 +11,14 @@ export const isHpOrHcSlot = (
   endOfRecordedPeriod: Date,
   grids: GridMapping[]
 ) => {
-  return grids.find((elt) => {
+  const potentialGrid = grids.find((elt) => {
     return (
       elt.endSlot.hour === endOfRecordedPeriod.getHours() &&
       elt.endSlot.minute === endOfRecordedPeriod.getMinutes()
     );
-  }).slotType as SlotType;
+  });
+  if (!potentialGrid) {
+    throw new Error(`No grid found for ${endOfRecordedPeriod}`);
+  }
+  return potentialGrid.slotType as SlotType;
 };

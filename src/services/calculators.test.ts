@@ -1,5 +1,5 @@
+import { CalculatedData } from "../types";
 import { calculatePrices } from "./calculators";
-import { CalculatedData } from "./types";
 
 describe("calculateTempoPrices", () => {
   it("RED days 2025-01-10 (previous is white)", async () => {

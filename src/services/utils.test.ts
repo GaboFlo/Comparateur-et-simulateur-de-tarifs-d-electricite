@@ -1,10 +1,14 @@
+import { HpHcFileMapping } from "../types";
 import hphc_mapping from "./hp_hc.json";
-import { HpHcFileMapping } from "./types";
 import { isFrenchHoliday, isHpOrHcSlot } from "./utils";
 
 describe("isHpOrHcSlot", () => {
   const hphcMapping = hphc_mapping as HpHcFileMapping[];
-  const blueGrids = hphcMapping.find((elt) => elt.offerType === "BLEU").grids;
+  const blueGrids = hphcMapping.find((elt) => elt.offerType === "BLEU");
+  if (!blueGrids) {
+    throw new Error("No blue grids found");
+  }
+
   const testMapping = [
     { endOfTimeSlot: "00:00", expected: "HP" },
     { endOfTimeSlot: "00:30", expected: "HP" },
@@ -58,7 +62,7 @@ describe("isHpOrHcSlot", () => {
   testMapping.forEach(({ endOfTimeSlot, expected }) => {
     it(endOfTimeSlot, () => {
       const date = new Date(`2023-10-10T${endOfTimeSlot}:00+02:00`);
-      const slotType = isHpOrHcSlot(date, blueGrids);
+      const slotType = isHpOrHcSlot(date, blueGrids.grids);
       expect(slotType).toBe(expected);
     });
   });
