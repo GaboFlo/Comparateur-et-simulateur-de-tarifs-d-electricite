@@ -53,10 +53,10 @@ export default function CurrentOfferForm() {
             name="supplier"
             type="name"
             required
-            size="medium"
             value={formState.supplier}
             onChange={handleChange}
             disabled
+            sx={{ height: "55px" }}
           >
             <MenuItem value="EDF">
               <ListItemIcon sx={{ marginRight: 1 }}>
@@ -76,7 +76,6 @@ export default function CurrentOfferForm() {
           value={formState.offerType}
           onChange={handleChange}
           required
-          size="medium"
         >
           <MenuItem value="BLEU">Bleu</MenuItem>
           <MenuItem value="VERT">Vert</MenuItem>
@@ -92,7 +91,6 @@ export default function CurrentOfferForm() {
             value={formState.powerClass}
             onChange={handleChange}
             required
-            size="medium"
           >
             {powerClasses.map((value: PowerClass) => (
               <MenuItem key={value} value={value}>
@@ -110,7 +108,6 @@ export default function CurrentOfferForm() {
           value={formState.optionType}
           onChange={handleChange}
           required
-          size="medium"
           disabled={!formState.offerType}
         >
           {getAvailableOptions(formState.offerType).map((option) => (

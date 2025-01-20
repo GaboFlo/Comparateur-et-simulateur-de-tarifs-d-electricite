@@ -1,7 +1,7 @@
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded";
-import { Button, SelectChangeEvent } from "@mui/material";
+import { Button, CircularProgress, SelectChangeEvent } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import MuiCard from "@mui/material/Card";
@@ -13,10 +13,13 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Stack from "@mui/material/Stack";
 import { styled } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import JSZip from "jszip";
 import * as React from "react";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "../context/FormContext";
+import { parseCsvToConsumptionLoadCurveData } from "../services/csvParser";
+import { ConsumptionLoadCurveData } from "../types";
 import TooltipModal from "./TooltipModal";
 
 const Card = styled(MuiCard)<{ selected?: boolean }>(({ theme }) => ({
@@ -37,7 +40,6 @@ const Card = styled(MuiCard)<{ selected?: boolean }>(({ theme }) => ({
   },
   [theme.breakpoints.up("md")]: {
     flexGrow: 1,
-    maxWidth: `calc(50% - ${theme.spacing(1)})`,
   },
   variants: [
     {
@@ -80,8 +82,9 @@ const ImportContainer = styled("div")(({ theme }) => ({
 
 export default function DataImport() {
   const { formState, setFormState } = useFormContext();
-  /*   const [fullPrmNumbers, setFullPrmNumbers] = React.useState<number[]>([]);
-   */
+  const [loading, setLoading] = useState(false);
+  const [parsingError, setParsingError] = useState<string | null>(null);
+
   const handleChange = (
     event:
       | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -108,29 +111,41 @@ export default function DataImport() {
     });
   };
 
-  /*  React.useEffect(() => {
-    if (formState.consoBorisToken && isValidToken(formState.consoBorisToken)) {
-      const fullPrmNumbers = jwtDecode<JwtPayload>(formState.consoBorisToken)
-        .sub as unknown as number[];
-      setFullPrmNumbers(fullPrmNumbers);
-      if (fullPrmNumbers.length === 1) {
-        setFormState((prevState) => ({
-          ...prevState,
-          prmNumber: fullPrmNumbers[0],
-        }));
-      }
-    }
-  }); */
+  const [extractedData, setExtractedData] = useState<
+    ConsumptionLoadCurveData[] | null
+  >(null);
 
   const onDrop = (acceptedFiles: File[]) => {
+    setLoading(true);
     acceptedFiles.forEach((file) => {
       const reader = new FileReader();
-      reader.onload = () => {
-        const fileContent = reader.result;
-        // eslint-disable-next-line no-console
-        console.log(fileContent); // Process the CSV file content here
+      reader.onload = async () => {
+        const fileContent = reader.result as ArrayBuffer;
+        const zip = new JSZip();
+        const zipContent = await zip.loadAsync(fileContent);
+
+        try {
+          const file = zipContent.file(
+            "mes-puissances-atteintes-30min-004047194096-92120.csv"
+          );
+          if (file) {
+            const csvContent = await file.async("string");
+            const jsonData = parseCsvToConsumptionLoadCurveData(csvContent);
+            setExtractedData(jsonData);
+          } else {
+            setParsingError(
+              "Le fichier mes-puissances-atteintes-30min-******.csv n'existe pas dans le zip."
+            );
+          }
+        } catch (error) {
+          setParsingError(
+            `Erreur lors de l'extraction du fichier CSV : ${error}`
+          );
+        } finally {
+          setLoading(false);
+        }
       };
-      reader.readAsText(file);
+      reader.readAsArrayBuffer(file);
     });
   };
 
@@ -151,14 +166,8 @@ export default function DataImport() {
     setOpenToolTipCsv(true);
   };
 
-  /*  const isValidToken = (token?: string) => {
-    if (!token) return false;
-    const parts = token.split(".");
-    return parts.length === 3;
-  };
- */
   return (
-    <Stack spacing={{ xs: 3, sm: 6 }} useFlexGap>
+    <Stack spacing={{ xs: 3, sm: 3 }} useFlexGap>
       <FormControl component="fieldset" fullWidth>
         <RadioGroup
           aria-label="Type d'import"
@@ -188,7 +197,12 @@ export default function DataImport() {
               }}
             >
               <CardContent
-                sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 1,
+                }}
               >
                 <UploadFileRoundedIcon
                   fontSize="small"
@@ -210,180 +224,80 @@ export default function DataImport() {
               </CardContent>
             </CardActionArea>
           </Card>
-          {/*    <Card selected={formState.importMode === "api"}>
-            <CardActionArea
-              disabled
-              onClick={() =>
-                handleChange({
-                  target: { name: "importMode", value: "api" },
-                } as ChangeEvent<HTMLInputElement>)
-              }
-              sx={{
-                ".MuiCardActionArea-focusHighlight": {
-                  backgroundColor: "transparent",
-                },
-                "&:focus-visible": {
-                  backgroundColor: "action.hover",
-                },
-              }}
-            >
-              <CardContent
-                sx={{ display: "flex", alignItems: "center", gap: 1 }}
-              >
-                <CodeRoundedIcon
-                  fontSize="small"
-                  sx={[
-                    (theme) => ({
-                      color: "grey.400",
-                      ...theme.applyStyles("dark", {
-                        color: "grey.600",
-                      }),
-                    }),
-                    formState.importMode === "api" && {
-                      color: "primary.main",
-                    },
-                  ]}
-                />
-                <Typography sx={{ fontWeight: "medium" }}>
-                  Connexion API Enedis (déprécié)
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card> */}
         </RadioGroup>
       </FormControl>
       {formState.importMode === "files" && (
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <ImportContainer>
-            <Alert
-              severity="info"
-              icon={<InfoRoundedIcon />}
-              variant="outlined"
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              Vous pouvez télécharger votre consommation, par pallier de 30
-              minutes, sur votre Espace EDF
-              <Button onClick={handleTooltipCsvOpen}>
-                <HelpOutlineIcon sx={{ height: 20 }} />
-              </Button>
-              <TooltipModal
-                title="Comment télécharger votre consommation ?"
-                description="Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."
-                open={openTooltipCsv}
-                handleClose={handleTooltipCsvClose}
-                imgPath="/edf-download.png"
-                imgDescription="Page de téléchargement de la consommation"
-              />
-            </Alert>
-            <Box
-              {...getRootProps()}
-              sx={{
-                border: "2px dashed #ccc",
-                borderRadius: "8px",
-                padding: 2,
-                textAlign: "center",
-                cursor: "pointer",
-              }}
-            >
-              <Grid
-                container
-                spacing={1}
-                alignItems="center"
-                justifyContent="center"
-              >
-                <Grid size={2}>
-                  <input {...getInputProps()} />
-                  <UploadFileRoundedIcon sx={{ fontSize: 50 }} />
-                </Grid>
-                <Grid size={10}>
-                  <p>
-                    Déposez votre fichier ZIP ici, ou cliquez pour ouvrir la
-                    fenêtre d'import
-                  </p>
-                </Grid>
-              </Grid>
-            </Box>
+            {!loading && extractedData === null && !parsingError && (
+              <>
+                <Alert
+                  severity="info"
+                  icon={<InfoRoundedIcon />}
+                  variant="outlined"
+                  sx={{ display: "flex", alignItems: "center" }}
+                >
+                  Vous pouvez télécharger votre consommation, par pallier de 30
+                  minutes, sur votre Espace EDF
+                  <Button onClick={handleTooltipCsvOpen}>
+                    <HelpOutlineIcon sx={{ height: 20 }} />
+                  </Button>
+                  <TooltipModal
+                    title="Comment télécharger votre consommation ?"
+                    description="Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."
+                    open={openTooltipCsv}
+                    handleClose={handleTooltipCsvClose}
+                    imgPath="/edf-download.png"
+                    imgDescription="Page de téléchargement de la consommation"
+                  />
+                </Alert>
+
+                <Box
+                  {...getRootProps()}
+                  sx={{
+                    border: "2px dashed #ccc",
+                    borderRadius: "8px",
+                    padding: 2,
+                    textAlign: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <Grid
+                    container
+                    spacing={1}
+                    alignItems="center"
+                    justifyContent="center"
+                  >
+                    <Grid size={2}>
+                      <input {...getInputProps()} />
+                      <UploadFileRoundedIcon sx={{ fontSize: 50 }} />
+                    </Grid>
+                    <Grid size={10}>
+                      <p>
+                        Déposez votre fichier ZIP ici, ou cliquez pour ouvrir la
+                        fenêtre d'import
+                      </p>
+                    </Grid>
+                  </Grid>
+                </Box>
+              </>
+            )}
+            {loading && !extractedData && !parsingError && <CircularProgress />}
+            {!loading && extractedData !== null && !parsingError && (
+              <Alert severity="success">
+                Fichier CSV extrait avec succès. Vous pouvez maintenant
+                continuer.
+                <pre>{JSON.stringify(extractedData, null, 2)}</pre>
+              </Alert>
+            )}
+            {parsingError && (
+              <Alert severity="error" sx={{ whiteSpace: "pre-wrap" }}>
+                {parsingError}
+              </Alert>
+            )}
           </ImportContainer>
         </Box>
       )}
-      {/*   {formState.importMode === "api" && (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <ImportContainer>
-            <Alert
-              severity="warning"
-              icon={<WarningRoundedIcon />}
-              variant="outlined"
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              Cette méthode utilise un service tiers, open-source, pour
-              récupérer vos données de consommation. <br />
-              Pour utiliser cette méthode, vous devez vous connecter sur{" "}
-              <a
-                href="https://conso.boris.sh/"
-                target="_blank"
-                rel="noreferrer"
-              >
-                conso.boris.sh
-              </a>{" "}
-              et coller votre token ici.
-              <Button onClick={handleTooltipCsvOpen}>
-                <HelpOutlineIcon sx={{ height: 20 }} />
-              </Button>
-              <TooltipModal
-                title="Comment utiliser l'API Enedis ?"
-                description="Rendez-vous sur https://conso.boris.sh/ puis suivez les instructions pour vous connecter sur votre compte Enedis (ou en créer un). 
-                <br/> Une fois de retour sur la page de conso.boris, copiez le token et collez le ici."
-                open={openTooltipCsv}
-                handleClose={handleTooltipCsvClose}
-                imgPath="/conso.boris.png"
-                imgDescription="Page de création du token"
-              />
-            </Alert>
-
-            <FormControl variant="outlined" fullWidth>
-              <TextField
-                id="consoBorisToken"
-                name="consoBorisToken"
-                label="Token"
-                value={formState.consoBorisToken}
-                onChange={handleChange}
-                variant="outlined"
-                placeholder="eyJhb..."
-                required
-              />
-            </FormControl>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={formState.saveConsoBorisToken}
-                  onChange={handleChange}
-                  name="saveConsoBorisToken"
-                  color="primary"
-                />
-              }
-              label="Enregistrer le token dans mon navigateur pour les prochaines visites"
-            />
-            <FormControl variant="outlined" fullWidth>
-              <FormLabel required>Numéro de compteur</FormLabel>
-              <Select
-                id="pmrNumber"
-                name="pmrNumber"
-                value={formState.prmNumber}
-                onChange={handleChange}
-                required
-                size="medium"
-                disabled={fullPrmNumbers.length === 1}
-              >
-                {fullPrmNumbers.map((value: number) => (
-                  <MenuItem key={value} value={value}>
-                    {value}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </ImportContainer>
-        </Box>
-      )} */}
     </Stack>
   );
 }
