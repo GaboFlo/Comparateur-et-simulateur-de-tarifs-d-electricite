@@ -1,8 +1,10 @@
+import { Season } from "../types";
 import { getSeason } from "./utils";
 
-interface SeasonHourlyPercentageAnalysis {
-  season: string;
-  hourlyPercentages: { hour: string; value: number; percentage: number }[];
+interface SeasonHourlyAnalysis {
+  season: Season;
+  seasonTotalSum: number;
+  hourly: { hour: string; value: number }[];
 }
 
 interface HourlyAnalysis {
@@ -21,8 +23,8 @@ interface Props {
 export const analyseHourByHourBySeason = ({
   data,
   dateRange,
-}: Props): SeasonHourlyPercentageAnalysis[] => {
-  const seasons: Record<string, HourlyAnalysis> = {
+}: Props): SeasonHourlyAnalysis[] => {
+  const seasons: Record<Season, HourlyAnalysis> = {
     Printemps: {},
     Été: {},
     Automne: {},
@@ -47,7 +49,7 @@ export const analyseHourByHourBySeason = ({
       seasons[season][hour] += record.value / 1000 / 2;
     });
 
-  const seasonHourlyPercentages: SeasonHourlyPercentageAnalysis[] = [];
+  const seasonHourlys: SeasonHourlyAnalysis[] = [];
 
   for (const season in seasons) {
     const seasonData = seasons[season as keyof typeof seasons];
@@ -57,29 +59,24 @@ export const analyseHourByHourBySeason = ({
       seasonTotalSum += seasonData[hour];
     }
 
-    const seasonHourlyPercentagesArray: {
+    const seasonHourlysArray: {
       hour: string;
       value: number;
-      percentage: number;
     }[] = [];
 
     for (const hour in seasonData) {
-      seasonHourlyPercentagesArray.push({
+      seasonHourlysArray.push({
         hour: hour,
         value: seasonData[hour],
-        percentage: parseFloat(
-          ((seasonData[hour] / seasonTotalSum) * 100).toFixed(1)
-        ),
       });
     }
 
-    seasonHourlyPercentages.push({
-      season: season,
-      hourlyPercentages: seasonHourlyPercentagesArray.sort(
-        (a, b) => parseInt(a.hour) - parseInt(b.hour)
-      ),
+    seasonHourlys.push({
+      season: season as Season,
+      seasonTotalSum,
+      hourly: seasonHourlysArray.sort((a, b) => a.hour.localeCompare(b.hour)),
     });
   }
 
-  return seasonHourlyPercentages;
+  return seasonHourlys;
 };

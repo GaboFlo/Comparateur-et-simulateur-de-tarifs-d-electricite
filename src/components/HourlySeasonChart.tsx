@@ -4,6 +4,7 @@ import { PieChart } from "@mui/x-charts";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useFormContext } from "../context/FormContext";
 import { analyseHourByHourBySeason } from "../services/statistics";
+import { Season } from "../types";
 
 export default function HourlySeasonChart() {
   const { formState } = useFormContext();
@@ -16,71 +17,80 @@ export default function HourlySeasonChart() {
     dateRange: formState.dateRange,
   });
 
-  const sumBySeason = data.reduce((acc, d) => {
-    acc[d.season] = d.hourlyPercentages.reduce((acc2, h) => acc2 + h.value, 0);
-    return acc;
-  }, {} as { [key: string]: number });
-
-  function transformData(input: { [key: string]: number }) {
-    const transformed = [];
-
-    const data = Object.entries(input).map(([key, value], index) => ({
-      id: index,
-      value: Math.round(value),
-      label: key,
-      color: colorPalette[key],
-    }));
-
-    transformed.push({ data });
-
-    return transformed;
+  function valueFormatter(value: number | null) {
+    return value ? `${Math.round(value).toFixed(0)} kWh` : "N/A";
   }
 
-  const colorPalette: { [key: string]: string } = {
+  const colorPalette: { [key in Season]: string } = {
     Été: "#FFC107", // Yellow
     Hiver: "#00BFFF", // DeepSkyBlue
     Automne: "#FF5722", // DeepOrange
     Printemps: "#4CAF50", // Green
   };
 
-  function valueFormatter(value: number | null) {
-    return value ? `${Math.round(value).toFixed(0)} kWh` : "N/A";
-  }
+  const chartSetting = {
+    yAxis: [
+      {
+        label: "Consommation (kWh)",
+      },
+    ],
+    height: 300,
+  };
 
   return (
     <Paper>
-      <Typography component="h2" gutterBottom>
+      <Typography component="h2" gutterBottom variant="h4">
         Répartition de la consommation par heure et par saison
       </Typography>
       <BarChart
-        borderRadius={8}
+        borderRadius={5}
         xAxis={[
           {
             scaleType: "band",
             data: Array.from({ length: 24 }, (_, i) => i),
+            label: "Heure",
           },
         ]}
         series={data.map((d) => ({
           id: d.season,
-          data: d.hourlyPercentages.map((h) => h.value),
+          data: d.hourly.map((h) => h.value),
           label: d.season,
           stack: "stack",
           valueFormatter,
           color: colorPalette[d.season],
         }))}
-        height={250}
-        margin={{ left: 50, right: 0, top: 20, bottom: 20 }}
+        margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
         grid={{ horizontal: true }}
         slotProps={{
+          axisLabel: {
+            textAnchor: "middle",
+          },
           legend: {
             hidden: true,
           },
         }}
+        {...chartSetting}
       />
       <PieChart
-        series={transformData(sumBySeason)}
-        height={250}
-        margin={{ left: 0, right: 0, top: 20, bottom: 20 }}
+        series={[
+          {
+            data: data.map(
+              (d) => ({
+                id: d.season,
+                label: d.season,
+                value: d.seasonTotalSum,
+                color: colorPalette[d.season],
+              }),
+              valueFormatter
+            ),
+          },
+        ]}
+        height={300}
+        slotProps={{
+          legend: {
+            hidden: false,
+          },
+        }}
       />
     </Paper>
   );

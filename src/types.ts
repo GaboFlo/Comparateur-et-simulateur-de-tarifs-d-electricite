@@ -97,3 +97,5 @@ export interface TempoDate {
 }
 
 export type TempoCodeDay = 1 | 2 | 3;
+
+export type Season = "Été" | "Hiver" | "Automne" | "Printemps";

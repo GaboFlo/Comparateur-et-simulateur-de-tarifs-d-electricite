@@ -1,6 +1,11 @@
 import { getDate, getMonth } from "date-fns";
 import Holidays from "date-holidays";
-import { ConsumptionLoadCurveData, GridMapping, SlotType } from "../types";
+import {
+  ConsumptionLoadCurveData,
+  GridMapping,
+  Season,
+  SlotType,
+} from "../types";
 
 const hd = new Holidays("FR");
 
@@ -53,7 +58,7 @@ export function getSeason(date: Date) {
       (month === season.endMonth && day <= season.endDay) ||
       (month > season.startMonth && month < season.endMonth)
     ) {
-      return season.name;
+      return season.name as Season;
     }
   }
   throw new Error(`Season not found for date: ${date}`);
