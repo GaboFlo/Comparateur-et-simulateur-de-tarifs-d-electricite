@@ -1,6 +1,6 @@
 import { HpHcFileMapping } from "../types";
 import hphc_mapping from "./hp_hc.json";
-import { isFrenchHoliday, isHpOrHcSlot } from "./utils";
+import { getSeason, isFrenchHoliday, isHpOrHcSlot } from "./utils";
 
 describe("isHpOrHcSlot", () => {
   const hphcMapping = hphc_mapping as HpHcFileMapping[];
@@ -78,5 +78,32 @@ describe("isFrenchHoliday", () => {
   it("should return false for a Monday", () => {
     const date = new Date("2023-10-09T00:00:00+02:00");
     expect(isFrenchHoliday(date)).toBe(false);
+  });
+});
+
+describe("getSeason", () => {
+  it("should return Hiver for December 23st", () => {
+    const date = new Date("2023-12-21T00:00:00+02:00");
+    expect(getSeason(date)).toBe("Hiver");
+  });
+
+  it("should return Hiver for January 1st", () => {
+    const date = new Date("2023-01-01T00:00:00+02:00");
+    expect(getSeason(date)).toBe("Hiver");
+  });
+
+  it("should return Printemps for March 21st", () => {
+    const date = new Date("2023-03-21T00:00:00+02:00");
+    expect(getSeason(date)).toBe("Printemps");
+  });
+
+  it("should return Été for June 21st", () => {
+    const date = new Date("2023-06-21T00:00:00+02:00");
+    expect(getSeason(date)).toBe("Été");
+  });
+
+  it("should return Automne for September 21st", () => {
+    const date = new Date("2023-09-21T00:00:00+02:00");
+    expect(getSeason(date)).toBe("Automne");
   });
 });
