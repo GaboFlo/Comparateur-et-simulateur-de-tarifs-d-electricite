@@ -15,7 +15,7 @@ import { OfferType, OptionName, PowerClass, PriceMappingFile } from "../types";
 
 const FormGrid = styled(Grid)(() => ({
   display: "flex",
-  flexDirection: "column",
+  flexDirection: "row",
 }));
 
 const powerClasses: PowerClass[] = [6, 9, 12, 15, 18, 24, 30, 36];
@@ -44,31 +44,28 @@ export default function CurrentOfferForm() {
   };
 
   return (
-    <FormGrid container spacing={2}>
-      <FormGrid item xs={12} md={6}>
-        <FormControl variant="outlined" fullWidth>
-          <FormLabel required>Fournisseur actuel</FormLabel>
-          <Select
-            id="supplier"
-            name="supplier"
-            type="name"
-            required
-            value={formState.supplier}
-            onChange={handleChange}
-            disabled
-            sx={{ height: "55px" }}
-          >
-            <MenuItem value="EDF">
-              <ListItemIcon sx={{ marginRight: 1 }}>
-                <img src="/edf.png" alt="EDF" width="24" height="24" />
-              </ListItemIcon>
-              <ListItemText primary="EDF" />
-            </MenuItem>
-          </Select>
-        </FormControl>
-      </FormGrid>
-
-      <FormGrid item xs={12} md={6}>
+    <FormGrid container>
+      <FormControl fullWidth sx={{ marginY: 1 }}>
+        <FormLabel required>Fournisseur actuel</FormLabel>
+        <Select
+          id="supplier"
+          name="supplier"
+          type="name"
+          required
+          value={formState.supplier}
+          onChange={handleChange}
+          disabled
+          sx={{ height: "55px" }}
+        >
+          <MenuItem value="EDF">
+            <ListItemIcon sx={{ marginRight: 1 }}>
+              <img src="/edf.png" alt="EDF" width="24" height="24" />
+            </ListItemIcon>
+            <ListItemText primary="EDF" />
+          </MenuItem>
+        </Select>
+      </FormControl>
+      <FormControl fullWidth sx={{ marginY: 1 }}>
         <FormLabel required>Offre</FormLabel>
         <Select
           id="offerType"
@@ -76,31 +73,15 @@ export default function CurrentOfferForm() {
           value={formState.offerType}
           onChange={handleChange}
           required
+          fullWidth
         >
           <MenuItem value="BLEU">Bleu</MenuItem>
           <MenuItem value="VERT">Vert</MenuItem>
           <MenuItem value="ZEN">Zen</MenuItem>
         </Select>
-      </FormGrid>
-      <FormGrid item xs={12} md={6}>
-        <FormControl variant="outlined" fullWidth>
-          <FormLabel required>Puissance (kVA)</FormLabel>
-          <Select
-            id="powerClass"
-            name="powerClass"
-            value={formState.powerClass}
-            onChange={handleChange}
-            required
-          >
-            {powerClasses.map((value: PowerClass) => (
-              <MenuItem key={value} value={value}>
-                {value}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </FormGrid>
-      <FormGrid item xs={12} md={6}>
+      </FormControl>
+
+      <FormControl fullWidth sx={{ marginY: 1 }}>
         <FormLabel required>Option</FormLabel>
         <Select
           id="optionType"
@@ -116,7 +97,23 @@ export default function CurrentOfferForm() {
             </MenuItem>
           ))}
         </Select>
-      </FormGrid>
+      </FormControl>
+      <FormControl fullWidth sx={{ marginY: 1 }}>
+        <FormLabel required>Puissance (kVA)</FormLabel>
+        <Select
+          id="powerClass"
+          name="powerClass"
+          value={formState.powerClass}
+          onChange={handleChange}
+          required
+        >
+          {powerClasses.map((value: PowerClass) => (
+            <MenuItem key={value} value={value}>
+              {value}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     </FormGrid>
   );
 }

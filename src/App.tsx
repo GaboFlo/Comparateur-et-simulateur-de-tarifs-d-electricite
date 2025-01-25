@@ -27,20 +27,6 @@ const steps = [
   "Simulations",
 ];
 
-function getStepContent(step: number) {
-  switch (step) {
-    case 0:
-      return <CurrentOfferForm />;
-    case 1:
-      return <DataImport />;
-    case 2:
-      return <DatePickers />;
-    case 3:
-      return <Typography variant="h2">Simulations</Typography>;
-    default:
-      throw new Error("Unknown step");
-  }
-}
 export default function Checkout(props: { disableCustomTheme?: boolean }) {
   const [activeStep, setActiveStep] = React.useState(0);
   const handleNext = () => {
@@ -49,6 +35,22 @@ export default function Checkout(props: { disableCustomTheme?: boolean }) {
   const handleBack = () => {
     setActiveStep(activeStep - 1);
   };
+
+  function getStepContent(step: number) {
+    switch (step) {
+      case 0:
+        return <CurrentOfferForm />;
+      case 1:
+        return <DataImport handleNext={handleNext} />;
+      case 2:
+        return <DatePickers />;
+      case 3:
+        return <Typography variant="h2">Simulations</Typography>;
+      default:
+        throw new Error("Unknown step");
+    }
+  }
+
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
@@ -115,7 +117,6 @@ export default function Checkout(props: { disableCustomTheme?: boolean }) {
               justifyContent: { sm: "space-between", md: "flex-end" },
               alignItems: "center",
               width: "100%",
-              maxWidth: { sm: "100%", md: 800 },
             }}
           >
             <Box
@@ -161,7 +162,6 @@ export default function Checkout(props: { disableCustomTheme?: boolean }) {
               flexDirection: "column",
               flexGrow: 1,
               width: "100%",
-              maxWidth: { sm: "100%", md: 800 },
               maxHeight: "720px",
               gap: { xs: 5, md: "none" },
             }}
