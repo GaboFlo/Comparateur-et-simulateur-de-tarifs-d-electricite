@@ -61,7 +61,7 @@ export default function DataImport({ handleNext }: Props) {
               const newState = {
                 ...prevState,
                 ["consumptionData"]: jsonData,
-                ["dateRange"]: findFirstAndLastDate(jsonData),
+                ["fileDateRange"]: findFirstAndLastDate(jsonData),
               };
               return newState;
             });

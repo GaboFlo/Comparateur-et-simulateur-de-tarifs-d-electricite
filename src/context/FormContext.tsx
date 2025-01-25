@@ -1,4 +1,3 @@
-import { subYears } from "date-fns";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import {
   ConsumptionLoadCurveData,
@@ -17,7 +16,8 @@ interface FormState {
   powerClass: PowerClass;
   importMode: ImportMode;
   prmNumber?: number;
-  dateRange: [Date, Date];
+  dateRange?: [Date, Date];
+  fileDateRange?: [Date, Date];
   consumptionData: ConsumptionLoadCurveData[];
   disableNext: boolean;
 }
@@ -48,7 +48,6 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     optionType: "BASE",
     powerClass: 6,
     importMode: "files",
-    dateRange: [subYears(new Date(), 1), new Date()],
     consumptionData: [],
     disableNext: false,
   });

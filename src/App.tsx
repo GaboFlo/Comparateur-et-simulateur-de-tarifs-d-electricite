@@ -9,21 +9,19 @@ import Grid from "@mui/material/Grid2";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
-import Typography from "@mui/material/Typography";
 import * as React from "react";
 import CurrentOfferForm from "./components/CurrentOfferForm";
 import DataImport from "./components/DataImport";
-import DatePickers from "./components/DatePickers";
 import Info from "./components/Info";
 import InfoMobile from "./components/InfoMobile";
+import Simulations from "./components/Simulations";
 import { useFormContext } from "./context/FormContext";
 import AppTheme from "./theme/AppTheme";
 import ColorModeIconDropdown from "./theme/ColorModeIconDropdown";
 
 const steps = [
   "Votre offre actuelle",
-  "Votre consommation",
-  "Période de simulation",
+  "Vos données de consommation",
   "Simulations",
 ];
 
@@ -45,9 +43,7 @@ export default function Checkout(props: { disableCustomTheme?: boolean }) {
       case 1:
         return <DataImport handleNext={handleNext} />;
       case 2:
-        return <DatePickers />;
-      case 3:
-        return <Typography variant="h2">Simulations</Typography>;
+        return <Simulations />;
       default:
         throw new Error("Unknown step");
     }
