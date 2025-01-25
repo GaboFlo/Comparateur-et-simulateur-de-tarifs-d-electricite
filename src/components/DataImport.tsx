@@ -10,7 +10,9 @@ import JSZip from "jszip";
 import * as React from "react";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { useFormContext } from "../context/FormContext";
 import { parseCsvToConsumptionLoadCurveData } from "../services/csvParser";
+import { findFirstAndLastDate } from "../services/utils";
 import { ConsumptionLoadCurveData } from "../types";
 import TooltipModal from "./TooltipModal";
 
@@ -18,6 +20,19 @@ interface Props {
   handleNext: () => void;
 }
 export default function DataImport({ handleNext }: Props) {
+  const { setFormState } = useFormContext();
+
+  React.useEffect(() => {
+    disableNextButton(true);
+  }, []);
+
+  function disableNextButton(disableNext: boolean) {
+    setFormState((prevState) => ({
+      ...prevState,
+      disableNext,
+    }));
+  }
+
   const [loading, setLoading] = useState(false);
   const [parsingError, setParsingError] = useState<string | null>(null);
 
@@ -42,6 +57,16 @@ export default function DataImport({ handleNext }: Props) {
             const csvContent = await file.async("string");
             const jsonData = parseCsvToConsumptionLoadCurveData(csvContent);
             setExtractedData(jsonData);
+            setFormState((prevState) => {
+              const newState = {
+                ...prevState,
+                ["consumptionData"]: jsonData,
+                ["dateRange"]: findFirstAndLastDate(jsonData),
+              };
+              return newState;
+            });
+
+            disableNextButton(false);
             handleNext();
           } else {
             setParsingError(
@@ -86,13 +111,28 @@ export default function DataImport({ handleNext }: Props) {
               severity="info"
               icon={<InfoRoundedIcon />}
               variant="outlined"
-              sx={{ display: "flex", alignItems: "center" }}
+              sx={{
+                alignItems: "center",
+                width: "100%",
+              }}
             >
-              Vous pouvez télécharger votre consommation, par pallier de 30
-              minutes, sur votre Espace EDF
-              <Button onClick={handleTooltipCsvOpen}>
-                <HelpOutlineIcon sx={{ height: 20 }} />
-              </Button>
+              <Grid
+                container
+                alignItems="center"
+                justifyContent="flex-end"
+                spacing={1}
+                direction="row"
+              >
+                <Grid>
+                  Vous pouvez télécharger votre consommation, par pallier de 30
+                  minutes, sur votre Espace EDF
+                </Grid>
+                <Grid>
+                  <Button onClick={handleTooltipCsvOpen}>
+                    <HelpOutlineIcon sx={{ height: 20 }} />
+                  </Button>
+                </Grid>
+              </Grid>
               <TooltipModal
                 title="Comment télécharger votre consommation ?"
                 description="Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."

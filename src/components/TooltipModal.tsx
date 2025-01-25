@@ -1,4 +1,12 @@
-import { Backdrop, Box, Fade, Modal, Typography } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import {
+  Backdrop,
+  Box,
+  Fade,
+  IconButton,
+  Modal,
+  Typography,
+} from "@mui/material";
 
 interface Props {
   title: string;
@@ -27,6 +35,7 @@ export default function TooltipModal({
     boxShadow: 24,
     p: 4,
     borderRadius: "8px",
+    maxWidth: "90%",
   };
 
   const linkifiedDescription = description?.replace(
@@ -49,6 +58,18 @@ export default function TooltipModal({
       >
         <Fade in={open}>
           <Box sx={style}>
+            <IconButton
+              aria-label="close"
+              onClick={handleClose}
+              sx={{
+                position: "absolute",
+                right: 8,
+                top: 8,
+                color: (theme) => theme.palette.grey[500],
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
             <Typography id="modal-modal-title" variant="h5" component="h2">
               {title}
             </Typography>
@@ -68,6 +89,7 @@ export default function TooltipModal({
                 display: "block",
                 marginLeft: "auto",
                 marginRight: "auto",
+                maxWidth: "80%",
               }}
             />
           </Box>

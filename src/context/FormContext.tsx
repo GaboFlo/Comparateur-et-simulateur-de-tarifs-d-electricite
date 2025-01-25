@@ -1,6 +1,11 @@
 import { subYears } from "date-fns";
 import React, { createContext, ReactNode, useContext, useState } from "react";
-import { OfferType, OptionName, PowerClass } from "../types";
+import {
+  ConsumptionLoadCurveData,
+  OfferType,
+  OptionName,
+  PowerClass,
+} from "../types";
 
 type AvailableSuppliers = "EDF";
 
@@ -10,11 +15,11 @@ interface FormState {
   offerType: OfferType;
   optionType: OptionName | "";
   powerClass: PowerClass;
-  consoBorisToken?: string;
-  saveConsoBorisToken: boolean;
   importMode: ImportMode;
   prmNumber?: number;
   dateRange: [Date, Date];
+  consumptionData: ConsumptionLoadCurveData[];
+  disableNext: boolean;
 }
 
 interface FormContextProps {
@@ -42,10 +47,10 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     offerType: "BLEU",
     optionType: "BASE",
     powerClass: 6,
-    saveConsoBorisToken: Boolean(localStorage.getItem("saveConsoBorisToken")),
-    consoBorisToken: localStorage.getItem("consoBorisToken") || "",
     importMode: "files",
     dateRange: [subYears(new Date(), 1), new Date()],
+    consumptionData: [],
+    disableNext: false,
   });
 
   return (

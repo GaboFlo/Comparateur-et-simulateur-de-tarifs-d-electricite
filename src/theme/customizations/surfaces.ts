@@ -10,7 +10,6 @@ export const surfacesCustomizations: Components<Theme> = {
     styleOverrides: {
       root: ({ theme }) => ({
         padding: 4,
-        overflow: "clip",
         backgroundColor: theme.palette.background.default,
         border: "1px solid",
         borderColor: theme.palette.divider,

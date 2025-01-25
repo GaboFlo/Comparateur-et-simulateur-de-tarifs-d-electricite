@@ -1,6 +1,5 @@
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import DownloadForOfflineRoundedIcon from "@mui/icons-material/DownloadForOfflineRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -17,6 +16,7 @@ import DataImport from "./components/DataImport";
 import DatePickers from "./components/DatePickers";
 import Info from "./components/Info";
 import InfoMobile from "./components/InfoMobile";
+import { useFormContext } from "./context/FormContext";
 import AppTheme from "./theme/AppTheme";
 import ColorModeIconDropdown from "./theme/ColorModeIconDropdown";
 
@@ -28,6 +28,8 @@ const steps = [
 ];
 
 export default function Checkout(props: { disableCustomTheme?: boolean }) {
+  const { formState } = useFormContext();
+
   const [activeStep, setActiveStep] = React.useState(0);
   const handleNext = () => {
     setActiveStep(activeStep + 1);
@@ -221,7 +223,7 @@ export default function Checkout(props: { disableCustomTheme?: boolean }) {
                 </Button>
               )}
 
-              {activeStep !== steps.length - 1 ? (
+              {activeStep !== steps.length - 1 && !formState.disableNext && (
                 <Button
                   variant="contained"
                   endIcon={<ChevronRightRoundedIcon />}
@@ -231,15 +233,6 @@ export default function Checkout(props: { disableCustomTheme?: boolean }) {
                   {activeStep === steps.length - 2
                     ? "Lancer la simulation"
                     : "Suivant"}
-                </Button>
-              ) : (
-                <Button
-                  variant="contained"
-                  endIcon={<DownloadForOfflineRoundedIcon />}
-                  onClick={handleNext}
-                  sx={{ width: { xs: "100%", sm: "fit-content" } }}
-                >
-                  Exporter les résultats
                 </Button>
               )}
             </Box>

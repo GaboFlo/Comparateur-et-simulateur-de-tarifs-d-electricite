@@ -1,5 +1,5 @@
 import Holidays from "date-holidays";
-import { GridMapping, SlotType } from "../types";
+import { ConsumptionLoadCurveData, GridMapping, SlotType } from "../types";
 
 const hd = new Holidays("FR");
 
@@ -21,4 +21,13 @@ export const isHpOrHcSlot = (
     throw new Error(`No grid found for ${endOfRecordedPeriod}`);
   }
   return potentialGrid.slotType as SlotType;
+};
+
+export const findFirstAndLastDate = (
+  data: ConsumptionLoadCurveData[]
+): [Date, Date] => {
+  const dates = data.map((item) => new Date(item.recordedAt)?.getTime());
+  const firstDate = new Date(Math.min(...dates));
+  const lastDate = new Date(Math.max(...dates));
+  return [firstDate, lastDate];
 };
