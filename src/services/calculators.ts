@@ -1,10 +1,16 @@
-import { format, subDays } from "date-fns";
+import {
+  endOfDay,
+  format,
+  isWithinInterval,
+  startOfDay,
+  subDays,
+} from "date-fns";
 import fetch from "node-fetch";
-import hphc_mapping from "./hp_hc.json";
-import price_mapping from "./price_mapping.json";
-import { isFrenchHoliday, isHpOrHcSlot } from "./utils";
+import { getAvailableOptionsForOffer } from "../components/CurrentOfferForm";
 import {
   CalculatedData,
+  ComparisonTableInterfaceRow,
+  ConsumptionLoadCurveData,
   Cost,
   HpHcFile,
   HpHcFileMapping,
@@ -12,17 +18,27 @@ import {
   OfferType,
   Option,
   OptionName,
+  PowerClass,
   PriceMappingFile,
   SlotType,
   TempoCodeDay,
   TempoDates,
   TempoMapping,
 } from "../types";
+import hphc_mapping from "./hp_hc.json";
+import price_mapping from "./price_mapping.json";
+import {
+  findMonthlySubscriptionCost,
+  isFrenchHoliday,
+  isHpOrHcSlot,
+} from "./utils";
 
 interface CalculateProps {
   data: CalculatedData[];
   optionName: OptionName;
   offerType: OfferType;
+  dateRange?: [Date, Date];
+  tempoDates?: TempoDates;
 }
 
 function isDayApplicable(mapping: Mapping, endOfSlotRecorded: Date) {
@@ -108,12 +124,16 @@ function calculateHpHcPrices(
   return new_cost;
 }
 
-async function fetchTempoData() {
-  const response = await fetch(
-    "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023"
-  );
-
-  return response.json() as Promise<TempoDates>;
+export async function fetchTempoData() {
+  try {
+    const response = await fetch(
+      "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023"
+    );
+    const res: TempoDates = await response.json();
+    return res;
+  } catch {
+    return undefined;
+  }
 }
 
 function isHpOrHcTempoSlot(hour: number, minute: number): SlotType {
@@ -163,20 +183,21 @@ function calculateTempoPrices(
   const relevantCost =
     slotType === "HP" ? relevantTempoMapping.HP : relevantTempoMapping.HC;
   return {
-    optionName: "TEMPO",
-    offerType: "BLEU",
+    optionName: OptionName.TEMPO,
+    offerType: OfferType.BLEU,
     cost: item.value * relevantCost,
     hourType: slotType,
     tempoCodeDay,
   };
 }
 
-export async function calculatePrices({
+export function calculatePrices({
   data,
   optionName,
   offerType,
-}: CalculateProps): Promise<CalculatedData[]> {
-  const tempoDates = await fetchTempoData();
+  dateRange,
+  tempoDates,
+}: CalculateProps): CalculatedData[] {
   const priceMappingData = price_mapping as PriceMappingFile;
   const hpHcMappingData = hphc_mapping as HpHcFile;
   const option = priceMappingData.find(
@@ -186,7 +207,14 @@ export async function calculatePrices({
     throw new Error(`No option found ${offerType}-${optionName}`);
   }
   const new_data: CalculatedData[] = [];
-
+  if (dateRange) {
+    data = data.filter((elt) => {
+      return isWithinInterval(elt.recordedAt, {
+        start: startOfDay(dateRange[0]),
+        end: endOfDay(dateRange[1]),
+      });
+    });
+  }
   data.forEach(async (item) => {
     const endOfSlotRecorded = new Date(item.recordedAt);
     const commonThrowError = `${offerType}-${optionName}-${endOfSlotRecorded.toISOString()}`;
@@ -219,4 +247,55 @@ export async function calculatePrices({
   });
 
   return new_data;
+}
+
+interface FullCalculatePricesInterface {
+  data: ConsumptionLoadCurveData[];
+  powerClass: PowerClass;
+  dateRange?: [Date, Date];
+  tempoDates?: TempoDates;
+}
+export function calculateForAllOptions({
+  data,
+  powerClass,
+  dateRange,
+  tempoDates,
+}: FullCalculatePricesInterface) {
+  const allOfferTypes = Object.keys(OfferType) as OfferType[];
+  const summarizedData: ComparisonTableInterfaceRow[] = [];
+  let fullData: CalculatedData[] = data;
+
+  allOfferTypes.forEach((offerType) => {
+    const availableOptions = getAvailableOptionsForOffer(offerType);
+    availableOptions.forEach(async (optionName) => {
+      fullData = await calculatePrices({
+        data: fullData,
+        offerType,
+        optionName,
+        dateRange,
+        tempoDates,
+      });
+      const fullCost = fullData.reduce((acc, item) => {
+        if (item.costs && item.costs.length > 0) {
+          return acc + item.costs[0].cost;
+        }
+        return acc;
+      }, 0);
+      const monthlyCost = findMonthlySubscriptionCost(
+        powerClass,
+        offerType,
+        optionName
+      );
+      const summaryRow: ComparisonTableInterfaceRow = {
+        provider: "EDF",
+        offerType,
+        optionName,
+        totalConsumptionCost: fullCost,
+        monthlyCost,
+        total: 900,
+      };
+      summarizedData.push(summaryRow);
+    });
+  });
+  return { summarizedData, fullData };
 }

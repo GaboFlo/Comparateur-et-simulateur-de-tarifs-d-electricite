@@ -20,6 +20,17 @@ const FormGrid = styled(Grid)(() => ({
 
 const powerClasses: PowerClass[] = [6, 9, 12, 15, 18, 24, 30, 36];
 
+export const getAvailableOptionsForOffer = (
+  offerType: OfferType | ""
+): OptionName[] => {
+  const priceMappingData = priceMapping as PriceMappingFile;
+  if (!offerType) return [];
+  const availableOptions = priceMappingData
+    .filter((item) => item.offerType === offerType)
+    .map((item) => item.optionName);
+  return availableOptions as OptionName[];
+};
+
 export default function CurrentOfferForm() {
   const { formState, setFormState } = useFormContext();
 
@@ -32,15 +43,6 @@ export default function CurrentOfferForm() {
       }
       return newState;
     });
-  };
-
-  const getAvailableOptions = (offerType: OfferType | ""): OptionName[] => {
-    const priceMappingData = priceMapping as PriceMappingFile;
-    if (!offerType) return [];
-    const availableOptions = priceMappingData
-      .filter((item) => item.offerType === offerType)
-      .map((item) => item.optionName);
-    return availableOptions as OptionName[];
   };
 
   return (
@@ -91,7 +93,7 @@ export default function CurrentOfferForm() {
           required
           disabled={!formState.offerType}
         >
-          {getAvailableOptions(formState.offerType).map((option) => (
+          {getAvailableOptionsForOffer(formState.offerType).map((option) => (
             <MenuItem key={option} value={option}>
               {option}
             </MenuItem>

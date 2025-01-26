@@ -1,11 +1,10 @@
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
-import { Alert } from "@mui/material";
+import { Alert, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import * as React from "react";
 
 export default function Info() {
   return (
-    <React.Fragment>
+    <Stack>
       <Typography variant="h4" gutterBottom>
         Pourquoi ce site ?
       </Typography>
@@ -16,6 +15,6 @@ export default function Info() {
       <Typography variant="body1" sx={{ fontWeight: "medium" }}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       </Typography>
-    </React.Fragment>
+    </Stack>
   );
 }

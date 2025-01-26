@@ -1,22 +1,28 @@
 export type PriceMappingFile = Option[];
 
-export type OptionName =
-  | "BASE"
-  | "HPHC"
-  | "TEMPO"
-  | "WEEK_END_HPHC"
-  | "FLEX_ECO"
-  | "FLEX_SOBRIETE"
-  | "WEEK_END_PLUS_LUNDI"
-  | "WEEK_END_PLUS_MERCREDI"
-  | "WEEK_END_PLUS_VENDREDI"
-  | "WEEK_END_PLUS_HPHC_LUNDI"
-  | "WEEK_END_PLUS_HPHC_MERCREDI"
-  | "WEEK_END_PLUS_HPHC_VENDREDI"
-  | "FIXE_BASE"
-  | "FIXE_HPHC"
-  | "ONLINE_BASE";
-export type OfferType = "BLEU" | "ZEN" | "VERT";
+export enum OptionName {
+  BASE = "BASE",
+  HPHC = "HPHC",
+  TEMPO = "TEMPO",
+  WEEK_END_HPHC = "WEEK_END_HPHC",
+  FLEX_ECO = "FLEX_ECO",
+  FLEX_SOBRIETE = "FLEX_SOBRIETE",
+  WEEK_END_PLUS_LUNDI = "WEEK_END_PLUS_LUNDI",
+  WEEK_END_PLUS_MERCREDI = "WEEK_END_PLUS_MERCREDI",
+  WEEK_END_PLUS_VENDREDI = "WEEK_END_PLUS_VENDREDI",
+  WEEK_END_PLUS_HPHC_LUNDI = "WEEK_END_PLUS_HPHC_LUNDI",
+  WEEK_END_PLUS_HPHC_MERCREDI = "WEEK_END_PLUS_HPHC_MERCREDI",
+  WEEK_END_PLUS_HPHC_VENDREDI = "WEEK_END_PLUS_HPHC_VENDREDI",
+  FIXE_BASE = "FIXE_BASE",
+  FIXE_HPHC = "FIXE_HPHC",
+  ONLINE_BASE = "ONLINE_BASE",
+}
+
+export enum OfferType {
+  BLEU = "BLEU",
+  ZEN = "ZEN",
+  VERT = "VERT",
+}
 export type SlotType = "HP" | "HC";
 
 export interface Option {
@@ -99,3 +105,12 @@ export interface TempoDate {
 export type TempoCodeDay = 1 | 2 | 3;
 
 export type Season = "Été" | "Hiver" | "Automne" | "Printemps";
+
+export interface ComparisonTableInterfaceRow {
+  provider: "EDF";
+  offerType: OfferType;
+  optionName: OptionName;
+  totalConsumptionCost: number;
+  monthlyCost: number;
+  total: number;
+}

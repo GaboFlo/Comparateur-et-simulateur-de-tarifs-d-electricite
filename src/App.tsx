@@ -12,7 +12,7 @@ import Stepper from "@mui/material/Stepper";
 import * as React from "react";
 import CurrentOfferForm from "./components/CurrentOfferForm";
 import DataImport from "./components/DataImport";
-import Info from "./components/Info";
+/* import Info from "./components/Info";*/
 import InfoMobile from "./components/InfoMobile";
 import Simulations from "./components/Simulations";
 import { useFormContext } from "./context/FormContext";
@@ -25,7 +25,7 @@ const steps = [
   "Simulations",
 ];
 
-export default function Checkout(props: { disableCustomTheme?: boolean }) {
+export default function App(props: { disableCustomTheme?: boolean }) {
   const { formState } = useFormContext();
 
   const [activeStep, setActiveStep] = React.useState(0);
@@ -69,7 +69,7 @@ export default function Checkout(props: { disableCustomTheme?: boolean }) {
           },
         }}
       >
-        <Grid
+        {/*     <Grid
           size={{ xs: 12, sm: 4, lg: 3 }}
           sx={{
             display: { xs: "none", md: "flex" },
@@ -81,6 +81,7 @@ export default function Checkout(props: { disableCustomTheme?: boolean }) {
             pt: 10,
             px: 5,
             gap: 4,
+            height: "100vh",
           }}
         >
           <Box
@@ -94,9 +95,8 @@ export default function Checkout(props: { disableCustomTheme?: boolean }) {
           >
             <Info />
           </Box>
-        </Grid>
+        </Grid> */}
         <Grid
-          size={{ sm: 12, md: 8, lg: 9 }}
           sx={{
             display: "flex",
             flexDirection: "column",

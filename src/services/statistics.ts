@@ -73,7 +73,7 @@ export const analyseHourByHourBySeason = ({
 
     seasonHourlys.push({
       season: season as Season,
-      seasonTotalSum,
+      seasonTotalSum: Math.round(seasonTotalSum),
       hourly: seasonHourlysArray.sort((a, b) => a.hour.localeCompare(b.hour)),
     });
   }

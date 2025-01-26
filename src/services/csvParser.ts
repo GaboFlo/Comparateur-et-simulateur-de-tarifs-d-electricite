@@ -31,12 +31,14 @@ export function parseCsvToConsumptionLoadCurveData(
         combinedDateString.split(" ")[1]
       }`;
       const date = new Date(formattedDate);
-      const recordedAt = format(date, "yyyy-MM-dd'T'HH:mm:ssXXX");
 
-      allData.push({
-        recordedAt,
-        value: Number(value),
-      });
+      /* A améliorer mais pour les HP-HC plus simple  */
+      if ([0, 30].includes(date.getMinutes())) {
+        allData.push({
+          recordedAt: format(date, "yyyy-MM-dd'T'HH:mm:ssXXX"),
+          value: Number(value),
+        });
+      }
     }
   }
 

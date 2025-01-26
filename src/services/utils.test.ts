@@ -1,6 +1,11 @@
-import { HpHcFileMapping } from "../types";
+import { HpHcFileMapping, OfferType, OptionName, PowerClass } from "../types";
 import hphc_mapping from "./hp_hc.json";
-import { getSeason, isFrenchHoliday, isHpOrHcSlot } from "./utils";
+import {
+  findMonthlySubscriptionCost,
+  getSeason,
+  isFrenchHoliday,
+  isHpOrHcSlot,
+} from "./utils";
 
 describe("isHpOrHcSlot", () => {
   const hphcMapping = hphc_mapping as HpHcFileMapping[];
@@ -93,7 +98,7 @@ describe("getSeason", () => {
   });
 
   it("should return Printemps for March 21st", () => {
-    const date = new Date("2023-03-21T00:00:00+02:00");
+    const date = new Date("2023-03-25T00:00:00+02:00");
     expect(getSeason(date)).toBe("Printemps");
   });
 
@@ -105,5 +110,16 @@ describe("getSeason", () => {
   it("should return Automne for September 21st", () => {
     const date = new Date("2023-09-21T00:00:00+02:00");
     expect(getSeason(date)).toBe("Automne");
+  });
+});
+
+describe("findMonthlySubscriptionCost", () => {
+  it("BASE BLEU 9", () => {
+    const monthly = findMonthlySubscriptionCost(
+      9 as PowerClass,
+      OfferType.BLEU,
+      OptionName.BASE
+    );
+    expect(monthly).toBe(1589);
   });
 });

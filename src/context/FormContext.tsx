@@ -44,8 +44,8 @@ export const useFormContext = () => {
 export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [formState, setFormState] = useState<FormState>({
     supplier: "EDF",
-    offerType: "BLEU",
-    optionType: "BASE",
+    offerType: OfferType.BLEU,
+    optionType: OptionName.BASE,
     powerClass: 6,
     importMode: "files",
     consumptionData: [],

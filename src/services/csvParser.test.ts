@@ -12,7 +12,7 @@ Date et heure de rel趥 par le distributeur;Puissance atteinte (W);Nature de la 
 03:30:00;964;R饬le
 03:00:00;760;R饬le
 02:30:00;854;R饬le
-02:00:00;1314;R饬le
+02:40:00;1314;R饬le
 01:30:00;942;R饬le
 01:00:00;1160;R饬le
 00:30:00;1102;R饬le
@@ -60,10 +60,6 @@ Date et heure de rel趥 par le distributeur;Puissance atteinte (W);Nature de la 
       {
         recordedAt: "2025-01-18T02:30:00+01:00",
         value: 854,
-      },
-      {
-        recordedAt: "2025-01-18T02:00:00+01:00",
-        value: 1314,
       },
       {
         recordedAt: "2025-01-18T01:30:00+01:00",

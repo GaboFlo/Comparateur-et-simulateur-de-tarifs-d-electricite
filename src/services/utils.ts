@@ -3,9 +3,14 @@ import Holidays from "date-holidays";
 import {
   ConsumptionLoadCurveData,
   GridMapping,
+  OfferType,
+  OptionName,
+  PowerClass,
+  PriceMappingFile,
   Season,
   SlotType,
 } from "../types";
+import price_mapping from "./price_mapping.json";
 
 const hd = new Holidays("FR");
 
@@ -62,4 +67,24 @@ export function getSeason(date: Date) {
     }
   }
   throw new Error(`Season not found for date: ${date}`);
+}
+
+export function findMonthlySubscriptionCost(
+  powerClass: PowerClass,
+  offerType: OfferType,
+  optionName: OptionName
+) {
+  const priceMappingData = price_mapping as PriceMappingFile;
+  for (const elt of priceMappingData) {
+    if (elt.offerType === offerType && elt.optionName === optionName) {
+      for (const sub of elt.subscriptions) {
+        if (sub.powerClass === powerClass) {
+          return sub.monthlyCost;
+        }
+      }
+    }
+  }
+  throw new Error(
+    `Subscription not found for powerClass: ${powerClass}, offerType: ${offerType}, optionName: ${optionName}`
+  );
 }

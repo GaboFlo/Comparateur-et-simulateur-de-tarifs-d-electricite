@@ -6,6 +6,7 @@ import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import * as React from "react";
 import Info from "./Info";
+import { Stack } from "@mui/system";
 
 export default function InfoMobile() {
   const [open, setOpen] = React.useState(false);
@@ -27,7 +28,7 @@ export default function InfoMobile() {
   );
 
   return (
-    <div>
+    <Stack>
       <Button
         variant="text"
         endIcon={<ExpandMoreRoundedIcon />}
@@ -49,6 +50,6 @@ export default function InfoMobile() {
       >
         {DrawerList}
       </Drawer>
-    </div>
+    </Stack>
   );
 }
