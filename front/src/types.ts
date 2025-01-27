@@ -63,13 +63,17 @@ export interface ConsumptionLoadCurveData {
   value: number;
 }
 
+export interface FullCalculatedData {
+  detailedData: CalculatedData[];
+  totalCost: number;
+  optionName: OptionName;
+  offerType: OfferType;
+}
 export interface CalculatedData extends ConsumptionLoadCurveData {
   costs?: Cost[];
 }
 
 export interface Cost {
-  optionName: OptionName;
-  offerType: OfferType;
   cost: number;
   hourType?: SlotType;
   tempoCodeDay?: TempoCodeDay;
@@ -79,7 +83,7 @@ export interface Cost {
 export type HpHcFile = HpHcFileMapping[];
 
 export interface HpHcFileMapping {
-  offerType: OfferType;
+  offerType: OfferType[];
   grids: GridMapping[];
 }
 

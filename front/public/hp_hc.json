@@ -1,6 +1,10 @@
 [
     {
-        "offerType": "BLEU",
+        "offerType": [
+            "BLEU",
+            "ZEN",
+            "VERT"
+        ],
         "grids": [
             {
                 "slotType": "HP",
@@ -341,7 +345,9 @@
         ]
     },
     {
-        "offerType": "FLEX",
+        "offerType": [
+            "FLEX"
+        ],
         "grids": [
             {
                 "slotType": "HC",

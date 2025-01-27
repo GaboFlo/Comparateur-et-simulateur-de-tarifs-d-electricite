@@ -1,4 +1,4 @@
-import { CalculatedData } from "../types";
+import { CalculatedData } from "../../front/src/types";
 import { analyseHourByHourBySeason } from "./statistics";
 
 describe("analyseHourByHourBySeason", () => {

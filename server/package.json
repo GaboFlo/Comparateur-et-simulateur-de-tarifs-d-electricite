@@ -1,0 +1,23 @@
+{
+    "name": "comparateur_fournisseur_electricite-server",
+    "version": "1.0.0",
+    "description": "",
+    "license": "ISC",
+    "author": "GaboFlo",
+    "main": "index.ts",
+    "scripts": {
+        "start:dev": "nodemon --ext ts,js --exec ts-node ./src/index.ts",
+        "start:prod": "ts-node ./src/index.ts"
+    },
+    "ts-node": "^10.9.1",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.21.2",
+        "zod": "^3.24.1"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.17",
+        "nodemon": "^3.0.1",
+        "ts-node": "^10.9.1"
+    }
+}

@@ -1,7 +1,6 @@
 import { getDate, getMonth } from "date-fns";
 import Holidays from "date-holidays";
 import {
-  ConsumptionLoadCurveData,
   GridMapping,
   OfferType,
   OptionName,
@@ -9,8 +8,10 @@ import {
   PriceMappingFile,
   Season,
   SlotType,
-} from "../types";
+} from "../../front/src/types";
 import price_mapping from "./price_mapping.json";
+
+export const PRICE_COEFF = 100 * 100000;
 
 const hd = new Holidays("FR");
 
@@ -32,15 +33,6 @@ export const isHpOrHcSlot = (
     throw new Error(`No grid found for ${endOfRecordedPeriod}`);
   }
   return potentialGrid.slotType as SlotType;
-};
-
-export const findFirstAndLastDate = (
-  data: ConsumptionLoadCurveData[]
-): [Date, Date] => {
-  const dates = data.map((item) => new Date(item.recordedAt)?.getTime());
-  const firstDate = new Date(Math.min(...dates));
-  const lastDate = new Date(Math.max(...dates));
-  return [firstDate, lastDate];
 };
 
 export function getSeason(date: Date) {

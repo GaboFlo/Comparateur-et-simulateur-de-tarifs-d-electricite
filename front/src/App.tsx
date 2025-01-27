@@ -10,9 +10,9 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import * as React from "react";
+/* import Info from "./components/Info";*/
 import CurrentOfferForm from "./components/CurrentOfferForm";
 import DataImport from "./components/DataImport";
-/* import Info from "./components/Info";*/
 import InfoMobile from "./components/InfoMobile";
 import Simulations from "./components/Simulations";
 import { useFormContext } from "./context/FormContext";

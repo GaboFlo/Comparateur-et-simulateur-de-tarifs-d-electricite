@@ -9,8 +9,9 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { styled } from "@mui/system";
+import { useEffect } from "react";
 import { useFormContext } from "../context/FormContext";
-import priceMapping from "../services/price_mapping.json";
+import { getAvailableOffers } from "../services/httpCalls";
 import { OfferType, OptionName, PowerClass, PriceMappingFile } from "../types";
 
 const FormGrid = styled(Grid)(() => ({
@@ -21,11 +22,11 @@ const FormGrid = styled(Grid)(() => ({
 const powerClasses: PowerClass[] = [6, 9, 12, 15, 18, 24, 30, 36];
 
 export const getAvailableOptionsForOffer = (
+  mapping: PriceMappingFile,
   offerType: OfferType | ""
 ): OptionName[] => {
-  const priceMappingData = priceMapping as PriceMappingFile;
   if (!offerType) return [];
-  const availableOptions = priceMappingData
+  const availableOptions = mapping
     .filter((item) => item.offerType === offerType)
     .map((item) => item.optionName);
   return availableOptions as OptionName[];
@@ -33,6 +34,17 @@ export const getAvailableOptionsForOffer = (
 
 export default function CurrentOfferForm() {
   const { formState, setFormState } = useFormContext();
+
+  useEffect(() => {
+    const fetchOffers = async () => {
+      const allOffers =
+        (await getAvailableOffers()) as PriceMappingFile; /* TOO zod */
+      setFormState((prevState) => {
+        return { ...prevState, allOffers };
+      });
+    };
+    fetchOffers();
+  }, []);
 
   const handleChange = (event: SelectChangeEvent<string | number>) => {
     const { name, value } = event.target;
@@ -91,13 +103,17 @@ export default function CurrentOfferForm() {
           value={formState.optionType}
           onChange={handleChange}
           required
-          disabled={!formState.offerType}
+          disabled={!formState.offerType || !formState.allOffers}
         >
-          {getAvailableOptionsForOffer(formState.offerType).map((option) => (
-            <MenuItem key={option} value={option}>
-              {option}
-            </MenuItem>
-          ))}
+          {formState.allOffers &&
+            getAvailableOptionsForOffer(
+              formState.allOffers,
+              formState.offerType
+            ).map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
         </Select>
       </FormControl>
       <FormControl fullWidth sx={{ marginY: 1 }}>

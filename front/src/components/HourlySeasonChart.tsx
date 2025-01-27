@@ -2,20 +2,37 @@ import { Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { PieChart } from "@mui/x-charts";
 import { BarChart } from "@mui/x-charts/BarChart";
+import React from "react";
 import { useFormContext } from "../context/FormContext";
-import { analyseHourByHourBySeason } from "../services/statistics";
+import { postSeasonAnalysis } from "../services/httpCalls";
 import { Season } from "../types";
+
+/* TODO */
+interface SeasonHourlyAnalysis {
+  season: Season;
+  seasonTotalSum: number;
+  hourly: { hour: string; value: number }[];
+}
 
 export default function HourlySeasonChart() {
   const { formState } = useFormContext();
   if (!formState.dateRange) {
     return null;
   }
+  const [seasonData, setSeasonData] = React.useState<SeasonHourlyAnalysis[]>(
+    []
+  );
 
-  const data = analyseHourByHourBySeason({
-    data: formState.consumptionData,
-    dateRange: formState.dateRange,
-  });
+  React.useEffect(() => {
+    async function fetchData() {
+      const data = await postSeasonAnalysis(
+        formState.consumptionData,
+        formState.dateRange
+      );
+      setSeasonData(data);
+    }
+    fetchData();
+  }, [formState.consumptionData, formState.dateRange]);
 
   function valueFormatter(value: number | null) {
     return value ? `${Math.round(value).toFixed(0)} kWh` : "N/A";
@@ -51,7 +68,7 @@ export default function HourlySeasonChart() {
             label: "Heure",
           },
         ]}
-        series={data.map((d) => ({
+        series={seasonData.map((d) => ({
           id: d.season,
           data: d.hourly.map((h) => h.value),
           label: d.season,
@@ -74,7 +91,7 @@ export default function HourlySeasonChart() {
       <PieChart
         series={[
           {
-            data: data.map(
+            data: seasonData.map(
               (d) => ({
                 id: d.season,
                 label: d.season,

@@ -1,4 +1,9 @@
-import { HpHcFileMapping, OfferType, OptionName, PowerClass } from "../types";
+import {
+  HpHcFileMapping,
+  OfferType,
+  OptionName,
+  PowerClass,
+} from "../../front/src/types";
 import hphc_mapping from "./hp_hc.json";
 import {
   findMonthlySubscriptionCost,
@@ -9,7 +14,9 @@ import {
 
 describe("isHpOrHcSlot", () => {
   const hphcMapping = hphc_mapping as HpHcFileMapping[];
-  const blueGrids = hphcMapping.find((elt) => elt.offerType === "BLEU");
+  const blueGrids = hphcMapping.find((elt) =>
+    elt.offerType.includes(OfferType.BLEU)
+  );
   if (!blueGrids) {
     throw new Error("No blue grids found");
   }

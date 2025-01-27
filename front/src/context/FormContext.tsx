@@ -4,12 +4,14 @@ import {
   OfferType,
   OptionName,
   PowerClass,
+  PriceMappingFile,
 } from "../types";
 
 type AvailableSuppliers = "EDF";
 
 export type ImportMode = "files" | "api";
 interface FormState {
+  allOffers?: PriceMappingFile;
   supplier: AvailableSuppliers;
   offerType: OfferType;
   optionType: OptionName | "";

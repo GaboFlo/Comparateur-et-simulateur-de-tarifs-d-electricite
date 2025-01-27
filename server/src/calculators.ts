@@ -1,4 +1,5 @@
 import {
+  differenceInMonths,
   endOfDay,
   format,
   isWithinInterval,
@@ -6,12 +7,12 @@ import {
   subDays,
 } from "date-fns";
 import fetch from "node-fetch";
-import { getAvailableOptionsForOffer } from "../components/CurrentOfferForm";
 import {
   CalculatedData,
   ComparisonTableInterfaceRow,
   ConsumptionLoadCurveData,
   Cost,
+  FullCalculatedData,
   HpHcFile,
   HpHcFileMapping,
   Mapping,
@@ -24,13 +25,14 @@ import {
   TempoCodeDay,
   TempoDates,
   TempoMapping,
-} from "../types";
+} from "../../front/src/types";
 import hphc_mapping from "./hp_hc.json";
 import price_mapping from "./price_mapping.json";
 import {
   findMonthlySubscriptionCost,
   isFrenchHoliday,
   isHpOrHcSlot,
+  PRICE_COEFF,
 } from "./utils";
 
 interface CalculateProps {
@@ -69,15 +71,9 @@ function findCorrespondingMapping(
           throw new Error(`No price found ${endOfSlotRecorded.toISOString()}`);
         }
         return {
-          optionName: option.optionName,
-          offerType: option.offerType,
-          cost: singleMapping.price * item.value,
+          cost: (singleMapping.price * item.value) / 2,
         } as Cost;
       }
-    } else {
-      throw new Error(
-        `No applicableDays found nor include_holidays ${endOfSlotRecorded}`
-      );
     }
   }
 }
@@ -93,8 +89,8 @@ function calculateHpHcPrices(
     option.optionName
   }-${endOfSlotRecorded.toISOString()}`;
 
-  const applicableHpHcGrids = hphc_mapping.find(
-    (item) => item.offerType === option.offerType
+  const applicableHpHcGrids = hphc_mapping.find((item) =>
+    item.offerType.includes(option.offerType)
   )?.grids;
   if (!applicableHpHcGrids || !mapping.hpHcConfig) {
     throw new Error(
@@ -111,9 +107,7 @@ function calculateHpHcPrices(
         );
       }
       new_cost = {
-        optionName: option.optionName,
-        offerType: option.offerType,
-        cost: hpHcConfig.price * item.value,
+        cost: (hpHcConfig.price * item.value) / 2,
         hourType: slotType,
       };
     }
@@ -183,8 +177,6 @@ function calculateTempoPrices(
   const relevantCost =
     slotType === "HP" ? relevantTempoMapping.HP : relevantTempoMapping.HC;
   return {
-    optionName: OptionName.TEMPO,
-    offerType: OfferType.BLEU,
     cost: item.value * relevantCost,
     hourType: slotType,
     tempoCodeDay,
@@ -197,7 +189,7 @@ export function calculatePrices({
   offerType,
   dateRange,
   tempoDates,
-}: CalculateProps): CalculatedData[] {
+}: CalculateProps): FullCalculatedData {
   const priceMappingData = price_mapping as PriceMappingFile;
   const hpHcMappingData = hphc_mapping as HpHcFile;
   const option = priceMappingData.find(
@@ -207,6 +199,7 @@ export function calculatePrices({
     throw new Error(`No option found ${offerType}-${optionName}`);
   }
   const new_data: CalculatedData[] = [];
+  let totalCost = 0;
   if (dateRange) {
     data = data.filter((elt) => {
       return isWithinInterval(elt.recordedAt, {
@@ -237,6 +230,7 @@ export function calculatePrices({
     }
 
     if (new_cost) {
+      totalCost = totalCost + new_cost.cost;
       new_data.push({
         ...item,
         costs: [...(item.costs ?? []), new_cost],
@@ -246,56 +240,48 @@ export function calculatePrices({
     }
   });
 
-  return new_data;
+  return { detailedData: new_data, totalCost, offerType, optionName };
 }
 
 interface FullCalculatePricesInterface {
   data: ConsumptionLoadCurveData[];
   powerClass: PowerClass;
-  dateRange?: [Date, Date];
+  dateRange: [Date, Date];
   tempoDates?: TempoDates;
+  optionName: OptionName;
+  offerType: OfferType;
 }
-export function calculateForAllOptions({
+export function calculateRowSummary({
   data,
   powerClass,
   dateRange,
   tempoDates,
+  optionName,
+  offerType,
 }: FullCalculatePricesInterface) {
-  const allOfferTypes = Object.keys(OfferType) as OfferType[];
-  const summarizedData: ComparisonTableInterfaceRow[] = [];
-  let fullData: CalculatedData[] = data;
-
-  allOfferTypes.forEach((offerType) => {
-    const availableOptions = getAvailableOptionsForOffer(offerType);
-    availableOptions.forEach(async (optionName) => {
-      fullData = await calculatePrices({
-        data: fullData,
-        offerType,
-        optionName,
-        dateRange,
-        tempoDates,
-      });
-      const fullCost = fullData.reduce((acc, item) => {
-        if (item.costs && item.costs.length > 0) {
-          return acc + item.costs[0].cost;
-        }
-        return acc;
-      }, 0);
-      const monthlyCost = findMonthlySubscriptionCost(
-        powerClass,
-        offerType,
-        optionName
-      );
-      const summaryRow: ComparisonTableInterfaceRow = {
-        provider: "EDF",
-        offerType,
-        optionName,
-        totalConsumptionCost: fullCost,
-        monthlyCost,
-        total: 900,
-      };
-      summarizedData.push(summaryRow);
-    });
+  const calculatedData = calculatePrices({
+    data,
+    offerType,
+    optionName,
+    dateRange,
+    tempoDates,
   });
-  return { summarizedData, fullData };
+
+  const monthlyCost = findMonthlySubscriptionCost(
+    powerClass,
+    offerType,
+    optionName
+  );
+
+  return {
+    provider: "EDF",
+    offerType,
+    optionName,
+    totalConsumptionCost: Math.round(calculatedData.totalCost / PRICE_COEFF),
+    monthlyCost: monthlyCost / 100,
+    total: Math.round(
+      calculatedData.totalCost / PRICE_COEFF +
+        (monthlyCost * differenceInMonths(dateRange[1], dateRange[0])) / 100
+    ),
+  } as ComparisonTableInterfaceRow;
 }
