@@ -4,4 +4,4 @@ COPY . .
 WORKDIR /server
 RUN npm install --ignore-scripts
 CMD ["npm", "run", "start:prod"]
-EXPOSE 4000
+EXPOSE 10000
