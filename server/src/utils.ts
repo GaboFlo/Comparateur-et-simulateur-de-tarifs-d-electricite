@@ -10,6 +10,7 @@ import {
   SlotType,
 } from "../../front/src/types";
 import price_mapping from "./price_mapping.json";
+import { ConsumptionLoadCurveData } from "./csvParser";
 
 export const PRICE_COEFF = 100 * 100000;
 
@@ -80,3 +81,12 @@ export function findMonthlySubscriptionCost(
     `Subscription not found for powerClass: ${powerClass}, offerType: ${offerType}, optionName: ${optionName}`
   );
 }
+
+export const findFirstAndLastDate = (
+  data: ConsumptionLoadCurveData[]
+): [Date, Date] => {
+  const dates = data.map((item) => new Date(item.recordedAt)?.getTime());
+  const firstDate = new Date(Math.min(...dates));
+  const lastDate = new Date(Math.max(...dates));
+  return [firstDate, lastDate];
+};

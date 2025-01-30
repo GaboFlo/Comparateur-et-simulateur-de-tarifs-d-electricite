@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   FormControl,
   FormLabel,
   Grid,
@@ -21,6 +22,11 @@ const FormGrid = styled(Grid)(() => ({
 
 const powerClasses: PowerClass[] = [6, 9, 12, 15, 18, 24, 30, 36];
 
+const getDistinctOfferTypes = (mapping: PriceMappingFile) => {
+  const offerTypes = new Set(mapping.map((item) => item.offerType));
+  return Array.from(offerTypes);
+};
+
 export const getAvailableOptionsForOffer = (
   mapping: PriceMappingFile,
   offerType: OfferType | ""
@@ -37,10 +43,10 @@ export default function CurrentOfferForm() {
 
   useEffect(() => {
     const fetchOffers = async () => {
-      const allOffers =
-        (await getAvailableOffers()) as PriceMappingFile; /* TOO zod */
+      formState.isGlobalLoading = true;
+      const allOffers = await getAvailableOffers();
       setFormState((prevState) => {
-        return { ...prevState, allOffers };
+        return { ...prevState, allOffers, isGlobalLoading: false };
       });
     };
     fetchOffers();
@@ -89,9 +95,15 @@ export default function CurrentOfferForm() {
           required
           fullWidth
         >
-          <MenuItem value="BLEU">Bleu</MenuItem>
-          <MenuItem value="VERT">Vert</MenuItem>
-          <MenuItem value="ZEN">Zen</MenuItem>
+          {!formState.allOffers ? (
+            <CircularProgress />
+          ) : (
+            getDistinctOfferTypes(formState.allOffers).map((value) => (
+              <MenuItem key={value} value={value}>
+                {value}
+              </MenuItem>
+            ))
+          )}
         </Select>
       </FormControl>
 

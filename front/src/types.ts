@@ -118,3 +118,9 @@ export interface ComparisonTableInterfaceRow {
   monthlyCost: number;
   total: number;
 }
+
+export interface SeasonHourlyAnalysis {
+  season: Season;
+  seasonTotalSum: number;
+  hourly: { hour: string; value: number }[];
+}

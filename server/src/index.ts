@@ -1,10 +1,13 @@
 import cors from "cors";
-import express from "express";
-import { z } from "zod";
-import hpHcFile from "./hp_hc.json";
+import express, { Request, Response } from "express";
+import fs from "fs";
+import multer from "multer";
+import path from "path";
+import unzipper from "unzipper";
+import { parseCsvToConsumptionLoadCurveData } from "./csvParser";
 import priceMappingFile from "./price_mapping.json";
 import { analyseHourByHourBySeason } from "./statistics";
-import { ConsumptionLoadCurveDataArraySchema } from "./zod";
+import { findFirstAndLastDate } from "./utils";
 
 const app = express();
 const port = 10000;
@@ -14,65 +17,88 @@ const port = 10000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.json({ limit: "500mb" })); /* TODO */
+
+const uploadRelativeDir = "./uploads";
+
+const uploadDir = path.join(uploadRelativeDir);
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const uploadHandler = async (req: Request, res: Response): Promise<void> => {
+  if (!req.file) {
+    res.status(400).send("No file uploaded.");
+    return;
+  }
+  const { start, end } = req.query;
+  if (!start || !end) {
+    res.status(400).send("Missing start or end query parameters");
+    return;
+  }
+  const startNumber = Number(start);
+  const endNumber = Number(end);
+
+  if (isNaN(startNumber) || isNaN(endNumber)) {
+    res.status(400).send("Invalid start or end query parameters");
+    return;
+  }
+
+  const zipFilePath = req.file.path;
+
+  try {
+    const directory = await unzipper.Open.file(zipFilePath);
+    const csvFile = directory.files.find(
+      (file) =>
+        file.path.startsWith("mes-puissances-atteintes-30min") &&
+        file.path.endsWith(".csv")
+    );
+    if (csvFile) {
+      const csvContent = await new Promise<string>((resolve, reject) => {
+        const chunks: Buffer[] = [];
+        csvFile
+          .stream()
+          .on("data", (chunk) => chunks.push(chunk))
+          .on("end", () => resolve(Buffer.concat(chunks).toString("utf-8")))
+          .on("error", reject);
+      });
+      const parsedData = parseCsvToConsumptionLoadCurveData(csvContent);
+      const seasonData = analyseHourByHourBySeason({
+        data: parsedData,
+        dateRange: [new Date(startNumber), new Date(endNumber)],
+      });
+      res.json({
+        seasonHourlyAnalysis: seasonData,
+        analyzedDateRange: findFirstAndLastDate(parsedData),
+      });
+    } else {
+      res.status(404).send("CSV file not found in the zip.");
+    }
+  } catch (error) {
+    console.error("Error extracting zip file:", error);
+    res.status(500).send("Error extracting zip file.");
+  } finally {
+    // Unlink all files in the upload directory
+    fs.readdir(uploadDir, (err, files) => {
+      if (err) {
+        console.error("Error reading upload directory:", err);
+        return;
+      }
+      files.forEach((file) => {
+        fs.unlink(path.join(uploadDir, file), (err) => {
+          if (err) {
+            console.error("Error deleting file:", err);
+          }
+        });
+      });
+    });
+  }
+};
+
+const upload = multer({ dest: uploadRelativeDir });
+app.post("/uploadEdfFile", upload.single("file"), uploadHandler);
 
 app.get("/availableOffers", (req, res) => {
   res.status(200).json(priceMappingFile);
-});
-
-app.get("/hphc", (req, res) => {
-  res.status(200).json(hpHcFile);
-});
-
-app.post("/offersSimulation", (req, res) => {
-  const data = req.body;
-  const { powerClass, from, to } = req.query;
-  if (!powerClass || typeof powerClass !== "string") {
-    res.status(400).json({ error: "Missing query parameters" });
-    return;
-  }
-  try {
-    // Validate the JSON data
-    const validatedData = ConsumptionLoadCurveDataArraySchema.parse(data);
-    /* TODO */
-    res.status(200).send(validatedData);
-  } catch (e) {
-    if (e instanceof z.ZodError) {
-      res.status(400).json({ error: "Validation failed", details: e.errors });
-    } else {
-      res.status(500).send("Internal Server Error");
-    }
-  }
-  // eslint-disable-next-line no-console
-  console.log(data);
-  res.status(200).send("Data received");
-});
-
-app.post("/seasonAnalysis", (req, res) => {
-  const data = req.body;
-  const { from, to } = req.query;
-
-  try {
-    // Validate the JSON data
-    const validatedData = ConsumptionLoadCurveDataArraySchema.parse(data);
-    if (!from || !to || typeof from !== "string" || typeof to !== "string") {
-      res
-        .status(400)
-        .json({ error: "Missing query parameters 'from' and 'to'" });
-      return;
-    }
-    const analysis = analyseHourByHourBySeason({
-      data: validatedData,
-      dateRange: [new Date(from), new Date(to)],
-    });
-    res.status(200).send(analysis);
-  } catch (e) {
-    if (e instanceof z.ZodError) {
-      res.status(400).json({ error: "Validation failed", details: e.errors });
-    } else {
-      res.status(500).send("Internal Server Error");
-    }
-  }
 });
 
 // Start the server

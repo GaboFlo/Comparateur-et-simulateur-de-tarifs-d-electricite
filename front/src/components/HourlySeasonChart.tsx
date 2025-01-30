@@ -2,47 +2,25 @@ import { Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { PieChart } from "@mui/x-charts";
 import { BarChart } from "@mui/x-charts/BarChart";
-import React from "react";
 import { useFormContext } from "../context/FormContext";
-import { postSeasonAnalysis } from "../services/httpCalls";
 import { Season } from "../types";
-
-/* TODO */
-interface SeasonHourlyAnalysis {
-  season: Season;
-  seasonTotalSum: number;
-  hourly: { hour: string; value: number }[];
-}
 
 export default function HourlySeasonChart() {
   const { formState } = useFormContext();
-  if (!formState.dateRange) {
-    return null;
-  }
-  const [seasonData, setSeasonData] = React.useState<SeasonHourlyAnalysis[]>(
-    []
-  );
-
-  React.useEffect(() => {
-    async function fetchData() {
-      const data = await postSeasonAnalysis(
-        formState.consumptionData,
-        formState.dateRange
-      );
-      setSeasonData(data);
-    }
-    fetchData();
-  }, [formState.consumptionData, formState.dateRange]);
 
   function valueFormatter(value: number | null) {
     return value ? `${Math.round(value).toFixed(0)} kWh` : "N/A";
   }
 
-  const colorPalette: { [key in Season]: string } = {
-    Été: "#FFC107", // Yellow
-    Hiver: "#00BFFF", // DeepSkyBlue
-    Automne: "#FF5722", // DeepOrange
-    Printemps: "#4CAF50", // Green
+  const colorPalette: Record<Season, string> = {
+    Été: "#FFD700",
+    Hiver: "#1E90FF",
+    Automne: "#FF8C00",
+    Printemps: "#32CD32",
+  };
+
+  const getColor = (season: Season) => {
+    return colorPalette[season];
   };
 
   const chartSetting = {
@@ -56,59 +34,67 @@ export default function HourlySeasonChart() {
 
   return (
     <Paper>
-      <Typography component="h2" gutterBottom variant="h4">
+      <Typography component="h2" gutterBottom variant="h6">
         Répartition de la consommation par heure et par saison
       </Typography>
-      <BarChart
-        borderRadius={5}
-        xAxis={[
-          {
-            scaleType: "band",
-            data: Array.from({ length: 24 }, (_, i) => i),
-            label: "Heure",
-          },
-        ]}
-        series={seasonData.map((d) => ({
-          id: d.season,
-          data: d.hourly.map((h) => h.value),
-          label: d.season,
-          stack: "stack",
-          valueFormatter,
-          color: colorPalette[d.season],
-        }))}
-        margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
-        grid={{ horizontal: true }}
-        slotProps={{
-          axisLabel: {
-            textAnchor: "middle",
-          },
-          legend: {
-            hidden: true,
-          },
-        }}
-        {...chartSetting}
-      />
-      <PieChart
-        series={[
-          {
-            data: seasonData.map(
-              (d) => ({
-                id: d.season,
-                label: d.season,
-                value: d.seasonTotalSum,
-                color: colorPalette[d.season],
-              }),
-              valueFormatter
-            ),
-          },
-        ]}
-        height={300}
-        slotProps={{
-          legend: {
-            hidden: false,
-          },
-        }}
-      />
+      {!formState.seasonHourlyAnalysis ? (
+        <Typography>
+          Aucune donnée à afficher. Veuillez importer un fichier EDF.
+        </Typography>
+      ) : (
+        <>
+          <BarChart
+            borderRadius={5}
+            xAxis={[
+              {
+                scaleType: "band",
+                data: Array.from({ length: 24 }, (_, i) => i),
+                label: "Heure",
+              },
+            ]}
+            series={formState.seasonHourlyAnalysis.map((d) => ({
+              id: d.season,
+              data: d.hourly.map((h) => h.value),
+              label: d.season,
+              stack: "stack",
+              valueFormatter,
+              color: getColor(d.season),
+            }))}
+            margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
+            grid={{ horizontal: true }}
+            slotProps={{
+              axisLabel: {
+                textAnchor: "middle",
+              },
+              legend: {
+                hidden: true,
+              },
+            }}
+            {...chartSetting}
+          />
+          <PieChart
+            series={[
+              {
+                data: formState.seasonHourlyAnalysis.map(
+                  (d) => ({
+                    id: d.season,
+                    label: d.season,
+                    value: d.seasonTotalSum,
+                    color: getColor(d.season),
+                  }),
+                  valueFormatter
+                ),
+              },
+            ]}
+            height={300}
+            slotProps={{
+              legend: {
+                hidden: false,
+              },
+            }}
+          />
+        </>
+      )}
     </Paper>
   );
 }

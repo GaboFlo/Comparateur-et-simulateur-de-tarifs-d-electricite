@@ -1,10 +1,12 @@
+import { endOfDay, startOfDay, subYears } from "date-fns";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import {
-  ConsumptionLoadCurveData,
+  ComparisonTableInterfaceRow,
   OfferType,
   OptionName,
   PowerClass,
   PriceMappingFile,
+  SeasonHourlyAnalysis,
 } from "../types";
 
 type AvailableSuppliers = "EDF";
@@ -16,12 +18,11 @@ interface FormState {
   offerType: OfferType;
   optionType: OptionName | "";
   powerClass: PowerClass;
-  importMode: ImportMode;
-  prmNumber?: number;
-  dateRange?: [Date, Date];
-  fileDateRange?: [Date, Date];
-  consumptionData: ConsumptionLoadCurveData[];
-  disableNext: boolean;
+  isGlobalLoading: boolean;
+  seasonHourlyAnalysis?: SeasonHourlyAnalysis[];
+  comparisonRows?: ComparisonTableInterfaceRow[];
+  dateRange: [Date, Date];
+  analyzedDateRange?: [Date, Date];
 }
 
 interface FormContextProps {
@@ -44,14 +45,15 @@ export const useFormContext = () => {
 };
 
 export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
+  const lastYearStart = startOfDay(subYears(new Date(), 1));
+  const lastYearEnd = endOfDay(new Date());
   const [formState, setFormState] = useState<FormState>({
     supplier: "EDF",
     offerType: OfferType.BLEU,
     optionType: OptionName.BASE,
     powerClass: 6,
-    importMode: "files",
-    consumptionData: [],
-    disableNext: false,
+    isGlobalLoading: false,
+    dateRange: [lastYearStart, lastYearEnd],
   });
 
   return (

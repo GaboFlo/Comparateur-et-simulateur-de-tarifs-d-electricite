@@ -1,5 +1,7 @@
-import { ConsumptionLoadCurveData } from "../types";
-import { parseCsvToConsumptionLoadCurveData } from "./csvParser";
+import {
+  ConsumptionLoadCurveData,
+  parseCsvToConsumptionLoadCurveData,
+} from "./csvParser";
 
 describe("parseCsvToConsumptionLoadCurveData", () => {
   it("should parse a single day of data correctly", () => {

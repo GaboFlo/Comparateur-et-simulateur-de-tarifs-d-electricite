@@ -11,6 +11,7 @@ import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import * as React from "react";
 /* import Info from "./components/Info";*/
+import { LinearProgress } from "@mui/material";
 import CurrentOfferForm from "./components/CurrentOfferForm";
 import DataImport from "./components/DataImport";
 import InfoMobile from "./components/InfoMobile";
@@ -51,11 +52,15 @@ export default function App(props: { disableCustomTheme?: boolean }) {
 
   return (
     <AppTheme {...props}>
+      {formState.isGlobalLoading ? (
+        <LinearProgress sx={{ height: "5px" }} />
+      ) : (
+        <div style={{ height: "5px" }} />
+      )}
       <CssBaseline enableColorScheme />
       <Box sx={{ position: "fixed", top: "1rem", right: "1rem" }}>
         <ColorModeIconDropdown />
       </Box>
-
       <Grid
         container
         sx={{
@@ -69,33 +74,6 @@ export default function App(props: { disableCustomTheme?: boolean }) {
           },
         }}
       >
-        {/*     <Grid
-          size={{ xs: 12, sm: 4, lg: 3 }}
-          sx={{
-            display: { xs: "none", md: "flex" },
-            flexDirection: "column",
-            backgroundColor: "background.paper",
-            borderRight: { sm: "none", md: "1px solid" },
-            borderColor: { sm: "none", md: "divider" },
-            alignItems: "start",
-            pt: 10,
-            px: 5,
-            gap: 4,
-            height: "100vh",
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              flexGrow: 1,
-              width: "100%",
-              maxWidth: 600,
-            }}
-          >
-            <Info />
-          </Box>
-        </Grid> */}
         <Grid
           sx={{
             display: "flex",
@@ -189,7 +167,6 @@ export default function App(props: { disableCustomTheme?: boolean }) {
                 </Step>
               ))}
             </Stepper>
-
             {getStepContent(activeStep)}
             <Box
               sx={[
@@ -219,16 +196,14 @@ export default function App(props: { disableCustomTheme?: boolean }) {
                 </Button>
               )}
 
-              {activeStep !== steps.length - 1 && !formState.disableNext && (
+              {activeStep === 0 && (
                 <Button
                   variant="contained"
                   endIcon={<ChevronRightRoundedIcon />}
                   onClick={handleNext}
                   sx={{ width: { xs: "100%", sm: "fit-content" } }}
                 >
-                  {activeStep === steps.length - 2
-                    ? "Lancer la simulation"
-                    : "Suivant"}
+                  Suivant
                 </Button>
               )}
             </Box>

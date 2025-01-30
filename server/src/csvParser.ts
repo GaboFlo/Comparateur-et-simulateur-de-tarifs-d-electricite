@@ -1,5 +1,9 @@
 import { format } from "date-fns";
-import { ConsumptionLoadCurveData } from "../types";
+
+export interface ConsumptionLoadCurveData {
+  recordedAt: string;
+  value: number;
+}
 
 export function parseCsvToConsumptionLoadCurveData(
   csvString: string

@@ -7,11 +7,8 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { useEffect, useState } from "react";
 
 import { useFormContext } from "../context/FormContext";
-import { postSimulation } from "../services/httpCalls";
-import { ComparisonTableInterfaceRow } from "../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -35,30 +32,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export function ComparisonTable() {
   const { formState } = useFormContext();
-  const [summarizedData, setSummarizedData] = useState<
-    ComparisonTableInterfaceRow[]
-  >([]);
-  const [loading, setLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const res = await postSimulation({
-        data: formState.consumptionData,
-        dateRange: formState.dateRange ??
-          formState.fileDateRange ?? [new Date(), new Date()],
-        powerClass: formState.powerClass,
-      });
-      setSummarizedData(res);
-      setLoading(false);
-      return res;
-    };
-
-    fetchData();
-  }, [formState.dateRange]);
   return (
     <TableContainer component={Paper}>
-      {loading ? (
+      {formState.isGlobalLoading || !formState.comparisonRows ? (
         <LinearProgress />
       ) : (
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -79,7 +56,7 @@ export function ComparisonTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {summarizedData.map((row) => (
+            {formState.comparisonRows.map((row) => (
               <StyledTableRow
                 key={`${row.provider}-${row.offerType}-${row.optionName}`}
               >

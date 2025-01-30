@@ -1,14 +1,30 @@
+import { Typography } from "@mui/material";
 import { Stack } from "@mui/system";
-import { ComparisonTable } from "./ComparisonTable";
-import DatePickers from "./DatePickers";
+import { format } from "date-fns";
+import { useFormContext } from "../context/FormContext";
 import HourlySeasonChart from "./HourlySeasonChart";
 
 export default function Simulations() {
+  const { formState } = useFormContext();
   return (
-    <Stack>
-      <DatePickers />
+    <Stack
+      sx={{
+        textAlign: "center",
+      }}
+    >
+      <Typography variant="h5">
+        Simulations du{" "}
+        {formState.analyzedDateRange
+          ? format(formState.analyzedDateRange[0], "dd/MM/yyyy")
+          : format(formState.dateRange[0], "dd/MM/yyyy")}{" "}
+        au{" "}
+        {formState.analyzedDateRange
+          ? format(formState.analyzedDateRange[1], "dd/MM/yyyy")
+          : format(formState.dateRange[1], "dd/MM/yyyy")}
+      </Typography>
       <HourlySeasonChart />
-      <ComparisonTable />
+      {/*       <ComparisonTable />
+       */}
     </Stack>
   );
 }

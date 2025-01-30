@@ -6,82 +6,57 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
-import JSZip from "jszip";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { endOfDay, startOfDay } from "date-fns";
+import { fr } from "date-fns/locale/fr";
 import * as React from "react";
-import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "../context/FormContext";
-import { parseCsvToConsumptionLoadCurveData } from "../services/csvParser";
-import { findFirstAndLastDate } from "../services/utils";
-import { ConsumptionLoadCurveData } from "../types";
+import { uploadEdfFile } from "../services/httpCalls";
 import TooltipModal from "./TooltipModal";
 
 interface Props {
   handleNext: () => void;
 }
 export default function DataImport({ handleNext }: Props) {
-  const { setFormState } = useFormContext();
+  const { formState, setFormState } = useFormContext();
 
   React.useEffect(() => {
-    disableNextButton(true);
+    setFormState((prevState) => {
+      return { ...prevState, isGlobalLoading: false };
+    });
   }, []);
 
-  function disableNextButton(disableNext: boolean) {
-    setFormState((prevState) => ({
-      ...prevState,
-      disableNext,
-    }));
-  }
-
-  const [loading, setLoading] = useState(false);
-  const [parsingError, setParsingError] = useState<string | null>(null);
-
-  const [extractedData, setExtractedData] = useState<
-    ConsumptionLoadCurveData[] | null
-  >(null);
-
   const onDrop = (acceptedFiles: File[]) => {
-    setLoading(true);
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        const fileContent = reader.result as ArrayBuffer;
-        const zip = new JSZip();
-        const zipContent = await zip.loadAsync(fileContent);
-
-        try {
-          const file = zipContent.file(
-            "mes-puissances-atteintes-30min-004047194096-92120.csv"
-          );
-          if (file) {
-            const csvContent = await file.async("string");
-            const jsonData = parseCsvToConsumptionLoadCurveData(csvContent);
-            setExtractedData(jsonData);
-            setFormState((prevState) => {
-              const newState = {
-                ...prevState,
-                ["consumptionData"]: jsonData,
-                ["fileDateRange"]: findFirstAndLastDate(jsonData),
-              };
-              return newState;
-            });
-
-            disableNextButton(false);
-            handleNext();
-          } else {
-            setParsingError(
-              "Le fichier mes-puissances-atteintes-30min-******.csv n'existe pas dans le zip."
-            );
-          }
-        } catch (error) {
-          setParsingError(
-            `Erreur lors de l'extraction du fichier CSV : ${error}`
-          );
-        } finally {
-          setLoading(false);
+    formState.isGlobalLoading = true;
+    acceptedFiles.forEach(async (file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      try {
+        const response = await uploadEdfFile({
+          formData,
+          start: formState.dateRange[0],
+          end: formState.dateRange[1],
+        });
+        // eslint-disable-next-line no-console
+        console.log(response);
+        if (response) {
+          setFormState((prevState) => ({
+            ...prevState,
+            isGlobalLoading: false,
+            seasonHourlyAnalysis: response.seasonHourlyAnalysis,
+            comparisonRows: response.comparisonRows,
+            analyzedDateRange: response.analyzedDateRange,
+          }));
+          handleNext();
+        } else {
+          alert("Error uploading file.");
         }
-      };
-      reader.readAsArrayBuffer(file);
+      } catch (error) {
+        alert("An error occurred during upload.");
+      }
     });
   };
 
@@ -90,6 +65,7 @@ export default function DataImport({ handleNext }: Props) {
     accept: {
       "application/zip": [".zip"],
     },
+    maxFiles: 1,
   });
 
   const [openTooltipCsv, setOpenToolTipCsv] = React.useState(false);
@@ -102,11 +78,40 @@ export default function DataImport({ handleNext }: Props) {
     setOpenToolTipCsv(true);
   };
 
+  const setRange = (range: [Date, Date]) => {
+    setFormState((prevState) => ({
+      ...prevState,
+      dateRange: range,
+    }));
+  };
+
   return (
     <Stack spacing={{ xs: 3, sm: 3 }} useFlexGap>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        {!loading && extractedData === null && !parsingError && (
+        {!formState.isGlobalLoading && (
           <>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <LocalizationProvider
+                dateAdapter={AdapterDateFns}
+                adapterLocale={fr}
+              >
+                <MobileDateRangePicker
+                  value={formState.dateRange}
+                  onAccept={(newValue) => {
+                    const start = startOfDay(newValue[0] ?? new Date());
+                    const end = endOfDay(newValue[1] ?? new Date());
+                    setRange([start, end]);
+                  }}
+                  disableFuture
+                  localeText={{
+                    start: "Début de simulation",
+                    end: "Fin de simulation",
+                    cancelButtonLabel: "Annuler",
+                    toolbarTitle: "",
+                  }}
+                />
+              </LocalizationProvider>
+            </Box>
             <Alert
               severity="info"
               icon={<InfoRoundedIcon />}
@@ -142,7 +147,6 @@ export default function DataImport({ handleNext }: Props) {
                 imgDescription="Page de téléchargement de la consommation"
               />
             </Alert>
-
             <Box
               {...getRootProps()}
               sx={{
@@ -173,17 +177,7 @@ export default function DataImport({ handleNext }: Props) {
             </Box>
           </>
         )}
-        {loading && !extractedData && !parsingError && <CircularProgress />}
-        {!loading && extractedData !== null && !parsingError && (
-          <Alert severity="success">
-            Fichier CSV extrait avec succès. Vous pouvez maintenant continuer.
-          </Alert>
-        )}
-        {parsingError && (
-          <Alert severity="error" sx={{ whiteSpace: "pre-wrap" }}>
-            {parsingError}
-          </Alert>
-        )}
+        {formState.isGlobalLoading && <CircularProgress />}
       </Box>
     </Stack>
   );

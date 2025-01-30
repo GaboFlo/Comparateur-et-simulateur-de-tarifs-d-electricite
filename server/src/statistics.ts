@@ -39,7 +39,6 @@ export const analyseHourByHourBySeason = ({
     .forEach((record) => {
       const date = new Date(record.recordedAt);
       const hour = date.getHours().toString().padStart(2, "0");
-
       const season = getSeason(date);
 
       if (!seasons[season][hour]) {
