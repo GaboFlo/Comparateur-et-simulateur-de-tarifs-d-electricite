@@ -76,6 +76,7 @@ function findCorrespondingMapping(
       }
     }
   }
+  throw new Error(`No mapping found ${endOfSlotRecorded.toISOString()}`);
 }
 
 function calculateHpHcPrices(
@@ -247,18 +248,22 @@ interface FullCalculatePricesInterface {
   data: ConsumptionLoadCurveData[];
   powerClass: PowerClass;
   dateRange: [Date, Date];
-  tempoDates?: TempoDates;
   optionName: OptionName;
   offerType: OfferType;
 }
-export function calculateRowSummary({
+
+async function calculateRowSummary({
   data,
   powerClass,
   dateRange,
-  tempoDates,
+
   optionName,
   offerType,
 }: FullCalculatePricesInterface) {
+  let tempoDates: TempoDates | undefined = undefined;
+  if (optionName === OptionName.TEMPO) {
+    tempoDates = await fetchTempoData();
+  }
   const calculatedData = calculatePrices({
     data,
     offerType,
@@ -284,4 +289,34 @@ export function calculateRowSummary({
         (monthlyCost * differenceInMonths(dateRange[1], dateRange[0])) / 100
     ),
   } as ComparisonTableInterfaceRow;
+}
+
+interface FullCalculatePricesForAllOptionsInterface {
+  data: ConsumptionLoadCurveData[];
+  powerClass: PowerClass;
+  dateRange: [Date, Date];
+}
+
+export async function calculateRowSummaryForAllOptions({
+  data,
+  powerClass,
+  dateRange,
+}: FullCalculatePricesForAllOptionsInterface) {
+  const priceMappingData = price_mapping as PriceMappingFile;
+  let dataToReturn: ComparisonTableInterfaceRow[] = [];
+  for (const option of priceMappingData.slice(0, 3)) {
+    /* TODO  Perfs */
+
+    dataToReturn = [
+      ...dataToReturn,
+      await calculateRowSummary({
+        data,
+        powerClass,
+        dateRange,
+        optionName: option.optionName,
+        offerType: option.offerType,
+      }),
+    ];
+  }
+  return dataToReturn;
 }

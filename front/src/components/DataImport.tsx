@@ -39,6 +39,7 @@ export default function DataImport({ handleNext }: Props) {
           formData,
           start: formState.dateRange[0],
           end: formState.dateRange[1],
+          powerClass: formState.powerClass,
         });
         // eslint-disable-next-line no-console
         console.log(response);

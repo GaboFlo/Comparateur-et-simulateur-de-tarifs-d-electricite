@@ -1,4 +1,4 @@
-import { PriceMappingFile } from "../types";
+import { PowerClass, PriceMappingFile } from "../types";
 
 const getBaseURL = () => {
   const domain = window.location.hostname.split(".")[0];
@@ -16,15 +16,17 @@ interface UploadEdfFileProps {
   formData: FormData;
   start: Date;
   end: Date;
+  powerClass: PowerClass;
 }
 export const uploadEdfFile = async ({
   formData,
   start,
   end,
+  powerClass,
 }: UploadEdfFileProps) => {
   try {
     const resp = await fetch(
-      `${getBaseURL()}/uploadEdfFile?start=${start.getTime()}&end=${end.getTime()}`,
+      `${getBaseURL()}/uploadEdfFile?start=${start.getTime()}&end=${end.getTime()}&powerClass=${powerClass}`,
       {
         method: "POST",
         body: formData,

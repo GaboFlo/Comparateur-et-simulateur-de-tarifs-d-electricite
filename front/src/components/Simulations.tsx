@@ -2,6 +2,7 @@ import { Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { format } from "date-fns";
 import { useFormContext } from "../context/FormContext";
+import { ComparisonTable } from "./ComparisonTable";
 import HourlySeasonChart from "./HourlySeasonChart";
 
 export default function Simulations() {
@@ -23,8 +24,7 @@ export default function Simulations() {
           : format(formState.dateRange[1], "dd/MM/yyyy")}
       </Typography>
       <HourlySeasonChart />
-      {/*       <ComparisonTable />
-       */}
+      <ComparisonTable />
     </Stack>
   );
 }

@@ -4,6 +4,8 @@ import fs from "fs";
 import multer from "multer";
 import path from "path";
 import unzipper from "unzipper";
+import { PowerClass } from "../../front/src/types";
+import { calculateRowSummaryForAllOptions } from "./calculators";
 import { parseCsvToConsumptionLoadCurveData } from "./csvParser";
 import priceMappingFile from "./price_mapping.json";
 import { analyseHourByHourBySeason } from "./statistics";
@@ -30,15 +32,20 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
     res.status(400).send("No file uploaded.");
     return;
   }
-  const { start, end } = req.query;
-  if (!start || !end) {
-    res.status(400).send("Missing start or end query parameters");
+  const { start, end, powerClass } = req.query;
+  if (!start || !end || !powerClass) {
+    res.status(400).send("Missing query parameters");
     return;
   }
   const startNumber = Number(start);
   const endNumber = Number(end);
+  const dateRange: [Date, Date] = [new Date(startNumber), new Date(endNumber)];
 
-  if (isNaN(startNumber) || isNaN(endNumber)) {
+  if (
+    isNaN(startNumber) ||
+    isNaN(endNumber) ||
+    typeof powerClass !== "string"
+  ) {
     res.status(400).send("Invalid start or end query parameters");
     return;
   }
@@ -64,11 +71,18 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
       const parsedData = parseCsvToConsumptionLoadCurveData(csvContent);
       const seasonData = analyseHourByHourBySeason({
         data: parsedData,
-        dateRange: [new Date(startNumber), new Date(endNumber)],
+        dateRange,
       });
+
+      const typedPowerClass = Number(powerClass) as PowerClass;
       res.json({
         seasonHourlyAnalysis: seasonData,
         analyzedDateRange: findFirstAndLastDate(parsedData),
+        comparisonRows: await calculateRowSummaryForAllOptions({
+          data: parsedData,
+          dateRange,
+          powerClass: typedPowerClass,
+        }),
       });
     } else {
       res.status(404).send("CSV file not found in the zip.");
