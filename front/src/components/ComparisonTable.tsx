@@ -23,15 +23,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
+interface StyledTableRowProps {
+  highlight: boolean;
+}
+
+const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
+  ({ theme, highlight }) => ({
+    backgroundColor: highlight ? theme.palette.primary.light : "inherit",
+  })
+);
 
 export function ComparisonTable() {
   const { formState } = useFormContext();
@@ -125,28 +125,36 @@ export function ComparisonTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rowSummaries.map((row) => (
-                <StyledTableRow
-                  key={`${row.provider}-${row.offerType}-${row.optionName}`}
-                >
-                  <StyledTableCell component="th" scope="row">
-                    {row.provider}
-                  </StyledTableCell>
-                  <StyledTableCell component="th" scope="row">
-                    {row.offerType}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.optionName}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.totalConsumptionCost}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    {row.monthlyCost}
-                  </StyledTableCell>
-                  <StyledTableCell align="right">{row.total}</StyledTableCell>
-                </StyledTableRow>
-              ))}
+              {rowSummaries
+                .sort((a, b) => {
+                  return a.total - b.total;
+                })
+                .map((row) => (
+                  <StyledTableRow
+                    key={`${row.provider}-${row.offerType}-${row.optionName}`}
+                    highlight={
+                      row.offerType === formState.offerType &&
+                      row.optionName === formState.optionType
+                    }
+                  >
+                    <StyledTableCell component="th" scope="row">
+                      {row.provider}
+                    </StyledTableCell>
+                    <StyledTableCell component="th" scope="row">
+                      {row.offerType}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.optionName}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.totalConsumptionCost}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.monthlyCost}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{row.total}</StyledTableCell>
+                  </StyledTableRow>
+                ))}
             </TableBody>
           </Table>
           {loading && <LinearProgress />}

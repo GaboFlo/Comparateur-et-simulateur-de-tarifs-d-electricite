@@ -6,7 +6,6 @@ import {
   startOfDay,
   subDays,
 } from "date-fns";
-import fetch from "node-fetch";
 import {
   CalculatedData,
   ComparisonTableInterfaceRow,
@@ -124,8 +123,8 @@ export async function fetchTempoData() {
     const response = await fetch(
       "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023"
     );
-    const res: TempoDates = await response.json();
-    return res;
+    const res = await response.json();
+    return res as TempoDates;
   } catch {
     return undefined;
   }
