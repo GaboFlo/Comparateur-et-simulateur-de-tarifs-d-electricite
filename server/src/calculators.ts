@@ -302,7 +302,7 @@ export async function calculateRowSummaryForAllOptions({
 }: FullCalculatePricesForAllOptionsInterface) {
   const priceMappingData = price_mapping as PriceMappingFile;
   let dataToReturn: ComparisonTableInterfaceRow[] = [];
-  for (const option of priceMappingData.slice(0, 3)) {
+  for (const option of priceMappingData) {
     /* TODO  Perfs */
 
     dataToReturn = [
