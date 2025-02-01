@@ -39,17 +39,14 @@ export default function DataImport({ handleNext }: Props) {
           formData,
           start: formState.dateRange[0],
           end: formState.dateRange[1],
-          powerClass: formState.powerClass,
         });
-        // eslint-disable-next-line no-console
-        console.log(response);
         if (response) {
           setFormState((prevState) => ({
             ...prevState,
-            isGlobalLoading: false,
-            seasonHourlyAnalysis: response.seasonHourlyAnalysis,
-            comparisonRows: response.comparisonRows,
+            seasonHourlyAnalysis: response.seasonData,
             analyzedDateRange: response.analyzedDateRange,
+            fileId: response.fileId,
+            isGlobalLoading: false,
           }));
           handleNext();
         } else {

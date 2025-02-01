@@ -1,7 +1,6 @@
 import { endOfDay, startOfDay, subYears } from "date-fns";
 import React, { createContext, ReactNode, useContext, useState } from "react";
 import {
-  ComparisonTableInterfaceRow,
   OfferType,
   OptionName,
   PowerClass,
@@ -20,9 +19,9 @@ interface FormState {
   powerClass: PowerClass;
   isGlobalLoading: boolean;
   seasonHourlyAnalysis?: SeasonHourlyAnalysis[];
-  comparisonRows?: ComparisonTableInterfaceRow[];
   dateRange: [Date, Date];
   analyzedDateRange?: [Date, Date];
+  fileId?: string;
 }
 
 interface FormContextProps {

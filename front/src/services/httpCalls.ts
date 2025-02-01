@@ -16,24 +16,40 @@ interface UploadEdfFileProps {
   formData: FormData;
   start: Date;
   end: Date;
-  powerClass: PowerClass;
 }
 export const uploadEdfFile = async ({
   formData,
   start,
   end,
-  powerClass,
 }: UploadEdfFileProps) => {
+  const route = `${getBaseURL()}/uploadEdfFile`;
   try {
     const resp = await fetch(
-      `${getBaseURL()}/uploadEdfFile?start=${start.getTime()}&end=${end.getTime()}&powerClass=${powerClass}`,
+      `${route}?start=${start.getTime()}&end=${end.getTime()}`,
       {
         method: "POST",
         body: formData,
       }
     );
+
     return resp.json();
   } catch (error) {
     throw new Error("An error occurred during upload.");
   }
+};
+
+interface StreamedDataProps {
+  fileId: string;
+  start: Date;
+  end: Date;
+  powerClass: PowerClass;
+}
+export const getStreamedData = async ({
+  fileId,
+  start,
+  end,
+  powerClass,
+}: StreamedDataProps) => {
+  const route = `${getBaseURL()}/stream/${fileId}?start=${start.getTime()}&end=${end.getTime()}&powerClass=${powerClass}`;
+  return route;
 };

@@ -1,5 +1,4 @@
 import { LicenseInfo } from "@mui/x-date-pickers-pro";
-import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { FormProvider } from "./context/FormContext";
@@ -13,9 +12,7 @@ LicenseInfo.setLicenseKey(
 );
 
 root.render(
-  <React.StrictMode>
-    <FormProvider>
-      <App />
-    </FormProvider>
-  </React.StrictMode>
+  <FormProvider>
+    <App />
+  </FormProvider>
 );

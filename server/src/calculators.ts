@@ -252,11 +252,10 @@ interface FullCalculatePricesInterface {
   offerType: OfferType;
 }
 
-async function calculateRowSummary({
+export async function calculateRowSummary({
   data,
   powerClass,
   dateRange,
-
   optionName,
   offerType,
 }: FullCalculatePricesInterface) {

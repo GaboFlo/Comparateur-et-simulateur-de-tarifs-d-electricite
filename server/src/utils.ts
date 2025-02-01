@@ -11,6 +11,7 @@ import {
 } from "../../front/src/types";
 import price_mapping from "./price_mapping.json";
 import { ConsumptionLoadCurveData } from "./csvParser";
+import * as fs from "fs/promises";
 
 export const PRICE_COEFF = 100 * 100000;
 
@@ -90,3 +91,22 @@ export const findFirstAndLastDate = (
   const lastDate = new Date(Math.max(...dates));
   return [firstDate, lastDate];
 };
+
+export async function readFileAsString(filePath: string): Promise<string> {
+  try {
+    const buffer = await fs.readFile(filePath);
+
+    if (buffer instanceof Buffer) {
+      const fileContent: string = buffer.toString("utf8");
+      return fileContent;
+    } else {
+      console.error(
+        "readFile did not return a Buffer.  Check file path and permissions."
+      );
+      throw new Error("Could not read file as string."); // Ou une autre erreur appropriée
+    }
+  } catch (error) {
+    console.error("Error reading file:", error);
+    throw error;
+  }
+}

@@ -4,12 +4,21 @@ import fs from "fs";
 import multer from "multer";
 import path from "path";
 import unzipper from "unzipper";
-import { PowerClass } from "../../front/src/types";
-import { calculateRowSummaryForAllOptions } from "./calculators";
-import { parseCsvToConsumptionLoadCurveData } from "./csvParser";
-import priceMappingFile from "./price_mapping.json";
+import { v4 as uuidv4 } from "uuid";
+import {
+  Option,
+  OptionName,
+  PowerClass,
+  PriceMappingFile,
+} from "../../front/src/types";
+import { calculateRowSummary } from "./calculators";
+import {
+  ConsumptionLoadCurveData,
+  parseCsvToConsumptionLoadCurveData,
+} from "./csvParser";
+import { default as priceMappingFile } from "./price_mapping.json";
 import { analyseHourByHourBySeason } from "./statistics";
-import { findFirstAndLastDate } from "./utils";
+import { findFirstAndLastDate, readFileAsString } from "./utils";
 
 const app = express();
 const port = 10000;
@@ -22,18 +31,14 @@ app.use(express.json());
 
 const uploadRelativeDir = "./uploads";
 
-const uploadDir = path.join(uploadRelativeDir);
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
 const uploadHandler = async (req: Request, res: Response): Promise<void> => {
   if (!req.file) {
     res.status(400).send("No file uploaded.");
     return;
   }
-  const { start, end, powerClass } = req.query;
-  if (!start || !end || !powerClass) {
+
+  const { start, end } = req.query;
+  if (!start || !end) {
     res.status(400).send("Missing query parameters");
     return;
   }
@@ -41,11 +46,7 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
   const endNumber = Number(end);
   const dateRange: [Date, Date] = [new Date(startNumber), new Date(endNumber)];
 
-  if (
-    isNaN(startNumber) ||
-    isNaN(endNumber) ||
-    typeof powerClass !== "string"
-  ) {
+  if (isNaN(startNumber) || isNaN(endNumber)) {
     res.status(400).send("Invalid start or end query parameters");
     return;
   }
@@ -69,53 +70,119 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
           .on("error", reject);
       });
       const parsedData = parseCsvToConsumptionLoadCurveData(csvContent);
-      const seasonData = analyseHourByHourBySeason({
-        data: parsedData,
-        dateRange,
-      });
-
-      const typedPowerClass = Number(powerClass) as PowerClass;
-      res.json({
-        seasonHourlyAnalysis: seasonData,
-        analyzedDateRange: findFirstAndLastDate(parsedData),
-        comparisonRows: await calculateRowSummaryForAllOptions({
-          data: parsedData,
-          dateRange,
-          powerClass: typedPowerClass,
-        }),
+      const fileId = uuidv4();
+      const fullPath = `${uploadRelativeDir}/${fileId}.json`;
+      await fs.writeFile(fullPath, JSON.stringify(parsedData), (err) => {
+        if (err) {
+          res.sendStatus(500).send("Impossible to save json");
+          return;
+        } else {
+          const seasonData = analyseHourByHourBySeason({
+            data: parsedData,
+            dateRange,
+          });
+          res.send({
+            seasonData,
+            fileId,
+            analyzedDateRange: findFirstAndLastDate(parsedData),
+          });
+          // Delete the file after sending the response
+          return;
+        }
       });
     } else {
-      res.status(404).send("CSV file not found in the zip.");
+      res.sendStatus(404).send("CSV file not found in the zip.");
+      return;
     }
   } catch (error) {
-    console.error("Error extracting zip file:", error);
-    res.status(500).send("Error extracting zip file.");
-  } finally {
-    // Unlink all files in the upload directory
-    fs.readdir(uploadDir, (err, files) => {
-      if (err) {
-        console.error("Error reading upload directory:", err);
-        return;
-      }
-      files.forEach((file) => {
-        fs.unlink(path.join(uploadDir, file), (err) => {
-          if (err) {
-            console.error("Error deleting file:", err);
-          }
-        });
-      });
-    });
+    res.sendStatus(500).send("Error extracting zip file.");
+    return;
   }
+  await fs.unlink(zipFilePath, (err) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+  });
 };
 
 const upload = multer({ dest: uploadRelativeDir });
 app.post("/uploadEdfFile", upload.single("file"), uploadHandler);
 
-app.get("/availableOffers", (req, res) => {
-  res.status(200).json(priceMappingFile);
+app.get("/stream/:fileId", async (req, res) => {
+  const fileId = req.params.fileId;
+  const { start, end, powerClass } = req.query;
+
+  if (!fileId || !start || !end || !powerClass) {
+    res.status(400).send("Missing fields");
+    return;
+  }
+
+  const dateRange: [Date, Date] = [
+    new Date(Number(start)),
+    new Date(Number(end)),
+  ];
+  const typedPowerClass = Number(powerClass) as PowerClass;
+  const typedPriceMappingFile = priceMappingFile as PriceMappingFile;
+  const filePath = path.join(uploadRelativeDir, `${fileId}.json`);
+
+  let data: string | undefined;
+  try {
+    data = await readFileAsString(filePath);
+    if (!data) {
+      res.sendStatus(500);
+      return;
+    }
+  } catch {
+    res.sendStatus(500);
+    return;
+  }
+
+  const jsonData: ConsumptionLoadCurveData[] = JSON.parse(data);
+
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
+  });
+
+  const sendData = async (option: Option) => {
+    if (option.optionName !== OptionName.TEMPO) {
+      const rowSummary = await calculateRowSummary({
+        data: jsonData,
+        dateRange,
+        powerClass: typedPowerClass,
+        optionName: option.optionName,
+        offerType: option.offerType,
+      });
+
+      res.write(`data: ${JSON.stringify({ comparisonRow: rowSummary })}\n\n`);
+    }
+  };
+
+  (async () => {
+    for (const option of typedPriceMappingFile) {
+      await new Promise((resolve) =>
+        setImmediate(async () => {
+          await sendData(option);
+          resolve(null);
+        })
+      );
+    }
+    res.end(); // End the stream after all data is sent
+    await fs.unlink(filePath, (err) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+    });
+  })();
 });
 
-// Start the server
+app.get("/availableOffers", (req, res) => {
+  res.json(priceMappingFile);
+});
+
 app.listen(port, () => {
   // eslint-disable-next-line no-console
   console.info(`Server is running on http://localhost:${port}`);
