@@ -246,7 +246,8 @@ export async function calculateRowSummary({
     monthlyCost: monthlyCost / 100,
     total: Math.round(
       calculatedData.totalCost / PRICE_COEFF +
-        (monthlyCost * differenceInMonths(dateRange[1], dateRange[0])) / 100
+        (monthlyCost * (differenceInMonths(dateRange[1], dateRange[0]) + 1)) /
+          100
     ),
     computeTime: new Date().getTime() - now.getTime(),
   } as ComparisonTableInterfaceRow;

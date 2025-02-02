@@ -8,11 +8,7 @@ import HourlySeasonChart from "./HourlySeasonChart";
 export default function Simulations() {
   const { formState } = useFormContext();
   return (
-    <Stack
-      sx={{
-        textAlign: "center",
-      }}
-    >
+    <Stack textAlign={"center"}>
       <Typography variant="h5">
         Simulations du{" "}
         {formState.analyzedDateRange

@@ -2,6 +2,7 @@ import InfoRounded from "@mui/icons-material/InfoRounded";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import { Alert, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
+import Footer from "./Footer";
 
 export default function Info() {
   return (
@@ -42,11 +43,17 @@ export default function Info() {
         <ul>
           <li>
             La simulation ne calcule pas les taxes (qui seront les mêmes peu
-            importe votre fournisseur)
+            importe votre fournisseur, et proportionnelles à votre consommation)
           </li>
           <li>
             Les prix affichés ne tiennent pas compte des changements du 01
             Février 2025
+          </li>
+          <li>
+            Les simulations sont faites avec le prix actuel de l'électricité. Ce
+            qui peut expliquer une variation entre votre facturation réelle et
+            la simulation (si le prix de l'électricité a été modifié dans
+            l'intervalle de la période simulée)
           </li>
           <li>Seul EDF est pour l'instant représenté</li>
           <li>Ce simulateur est en phase de test</li>
@@ -58,6 +65,7 @@ export default function Info() {
       >
         Vos données sont conservées uniquement le temps des calculs.
       </Typography>
+      <Footer />
     </Stack>
   );
 }

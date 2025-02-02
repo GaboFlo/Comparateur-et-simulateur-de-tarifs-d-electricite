@@ -13,6 +13,7 @@ import Stepper from "@mui/material/Stepper";
 import * as React from "react";
 import CurrentOfferForm from "./components/CurrentOfferForm";
 import DataImport from "./components/DataImport";
+import Footer from "./components/Footer";
 import InfoMobile from "./components/InfoMobile";
 import Simulations from "./components/Simulations";
 import { useFormContext } from "./context/FormContext";
@@ -177,7 +178,7 @@ export default function App() {
                   gap: 1,
                   pb: { xs: 12, sm: 0 },
                   mt: { xs: 2, sm: 0 },
-                  mb: "60px",
+                  mb: 1,
                 },
                 activeStep !== 0
                   ? { justifyContent: "space-between" }
@@ -194,7 +195,6 @@ export default function App() {
                   Précédent
                 </Button>
               )}
-
               {activeStep === 0 && (
                 <Button
                   variant="contained"
@@ -206,6 +206,7 @@ export default function App() {
                 </Button>
               )}
             </Box>
+            <Footer />
           </Box>
         </Grid>
       </Grid>
