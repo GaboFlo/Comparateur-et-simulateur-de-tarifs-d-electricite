@@ -79,7 +79,7 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
       const parsedData = parseCsvToConsumptionLoadCurveData(csvContent);
       const fileId = uuidv4();
       const fullPath = `${uploadRelativeDir}/${fileId}.json`;
-      await fs.writeFile(fullPath, JSON.stringify(parsedData), (err) => {
+      fs.writeFile(fullPath, JSON.stringify(parsedData), (err) => {
         if (err) {
           res.sendStatus(500).send("Impossible to save json");
           throw err;
@@ -98,7 +98,6 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
             fileId,
             analyzedDateRange,
           });
-          return;
         }
       });
     } else {
@@ -217,7 +216,7 @@ cron.schedule("*/1 * * * *", () => {
     /* Holidays */
     const holidays = getHolidaysBetweenDates([firstDate, now]);
     const holidayPath = `${staticsRelativeDir}/holidays.json`;
-    await fs.writeFile(holidayPath, JSON.stringify(holidays), (err) => {
+    fs.writeFile(holidayPath, JSON.stringify(holidays), (err) => {
       if (err) {
         console.error("Error writing holidays file", err);
         throw err;
@@ -227,7 +226,7 @@ cron.schedule("*/1 * * * *", () => {
     /* Tempo */
     const tempoDates = await fetchTempoData();
     const tempoFilePath = `${staticsRelativeDir}/tempo.json`;
-    await fs.writeFile(tempoFilePath, JSON.stringify(tempoDates), (err) => {
+    fs.writeFile(tempoFilePath, JSON.stringify(tempoDates), (err) => {
       if (err) {
         console.error("Error writing tempo file", err);
         throw err;
