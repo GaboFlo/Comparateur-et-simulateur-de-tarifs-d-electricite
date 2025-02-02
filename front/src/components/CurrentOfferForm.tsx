@@ -35,7 +35,7 @@ export const getAvailableOptionsForOffer = (
   const availableOptions = mapping
     .filter((item) => item.offerType === offerType)
     .map((item) => item.optionName);
-  return availableOptions as OptionName[];
+  return availableOptions;
 };
 
 export default function CurrentOfferForm() {

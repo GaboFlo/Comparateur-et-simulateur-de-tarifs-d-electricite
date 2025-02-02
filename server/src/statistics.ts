@@ -31,22 +31,21 @@ export const analyseHourByHourBySeason = ({
     Hiver: {},
   };
 
-  data
-    .filter((record) => {
-      const date = new Date(record.recordedAt);
-      return date >= dateRange[0] && date <= dateRange[1];
-    })
-    .forEach((record) => {
-      const date = new Date(record.recordedAt);
-      const hour = date.getHours().toString().padStart(2, "0");
-      const season = getSeason(date);
+  const filteredData = data.filter((record) => {
+    const date = new Date(record.recordedAt);
+    return date >= dateRange[0] && date <= dateRange[1];
+  });
+  for (const record of filteredData) {
+    const date = new Date(record.recordedAt);
+    const hour = date.getHours().toString().padStart(2, "0");
+    const season = getSeason(date);
 
-      if (!seasons[season][hour]) {
-        seasons[season][hour] = 0;
-      }
-      /* Divides by 1000 for kWh and /2 as half-hour*/
-      seasons[season][hour] += record.value / 1000 / 2;
-    });
+    if (!seasons[season][hour]) {
+      seasons[season][hour] = 0;
+    }
+    /* Divides by 1000 for kWh and /2 as half-hour*/
+    seasons[season][hour] += record.value / 1000 / 2;
+  }
 
   const seasonHourlys: SeasonHourlyAnalysis[] = [];
 
@@ -70,10 +69,14 @@ export const analyseHourByHourBySeason = ({
       });
     }
 
+    const hourly = seasonHourlysArray.sort((a, b) =>
+      a.hour.localeCompare(b.hour)
+    );
+
     seasonHourlys.push({
       season: season as Season,
       seasonTotalSum: Math.round(seasonTotalSum),
-      hourly: seasonHourlysArray.sort((a, b) => a.hour.localeCompare(b.hour)),
+      hourly,
     });
   }
 

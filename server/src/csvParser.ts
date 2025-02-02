@@ -20,7 +20,8 @@ export function parseCsvToConsumptionLoadCurveData(
       continue;
     }
 
-    const dateMatch = line.match(/^(\d{2}\/\d{2}\/\d{4});;/);
+    const dateRegex = /^(\d{2}\/\d{2}\/\d{4});;/;
+    const dateMatch = dateRegex.exec(line);
     if (dateMatch) {
       currentDateString = dateMatch[1];
       continue; // Skip the date line itself

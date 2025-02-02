@@ -24,7 +24,7 @@ export default function TooltipModal({
   open,
   imgPath,
   imgDescription,
-}: Props) {
+}: Readonly<Props>) {
   const style = {
     position: "absolute",
     top: "50%",

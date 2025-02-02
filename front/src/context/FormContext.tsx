@@ -1,5 +1,11 @@
 import { endOfDay, startOfDay, subYears } from "date-fns";
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import {
   OfferType,
   OptionName,
@@ -54,9 +60,12 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     dateRange: [lastYearStart, lastYearEnd],
   });
 
+  const contextValue = useMemo(
+    () => ({ formState, setFormState }),
+    [formState]
+  );
+
   return (
-    <FormContext.Provider value={{ formState, setFormState }}>
-      {children}
-    </FormContext.Provider>
+    <FormContext.Provider value={contextValue}>{children}</FormContext.Provider>
   );
 };

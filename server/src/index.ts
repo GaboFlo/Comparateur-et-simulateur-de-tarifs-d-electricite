@@ -40,13 +40,12 @@ export const staticsRelativeDir = "./statics";
 const uploadHandler = async (req: Request, res: Response): Promise<void> => {
   if (!req.file) {
     res.status(400).send("No file uploaded.");
-    return;
+    throw new Error("No file uploaded.");
   }
 
   const { start, end } = req.query;
   if (!start || !end) {
     res.status(400).send("Missing query parameters");
-    return;
   }
   const startNumber = Number(start);
   const endNumber = Number(end);
@@ -54,7 +53,6 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
 
   if (isNaN(startNumber) || isNaN(endNumber)) {
     res.status(400).send("Invalid start or end query parameters");
-    return;
   }
 
   const zipFilePath = req.file.path;
@@ -81,7 +79,7 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
       await fs.writeFile(fullPath, JSON.stringify(parsedData), (err) => {
         if (err) {
           res.sendStatus(500).send("Impossible to save json");
-          return;
+          throw err;
         } else {
           const seasonData = analyseHourByHourBySeason({
             data: parsedData,
@@ -98,16 +96,14 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
       });
     } else {
       res.sendStatus(404).send("CSV file not found in the zip.");
-      return;
     }
   } catch (error) {
     res.sendStatus(500).send("Error extracting zip file.");
-    return;
   }
-  await fs.unlink(zipFilePath, (err) => {
+  fs.unlink(zipFilePath, (err) => {
     if (err) {
       console.error(err);
-      return;
+      throw err;
     }
   });
 };
@@ -124,7 +120,6 @@ app.get("/stream/:fileId", async (req, res) => {
 
   if (!fileId || !start || !end || !powerClass) {
     res.status(400).send("Missing fields");
-    return;
   }
 
   const dateRange: [Date, Date] = [
@@ -140,11 +135,11 @@ app.get("/stream/:fileId", async (req, res) => {
     data = await readFileAsString(filePath);
     if (!data) {
       res.sendStatus(500);
-      return;
+      throw new Error("No data found");
     }
   } catch {
     res.sendStatus(500);
-    return;
+    throw new Error("Error reading file");
   }
 
   let jsonData: ConsumptionLoadCurveData[] = JSON.parse(data);
@@ -188,11 +183,11 @@ app.get("/stream/:fileId", async (req, res) => {
         })
       );
     }
-    res.end(); // End the stream after all data is sent
-    await fs.unlink(filePath, (err) => {
+    res.end();
+    fs.unlink(filePath, (err) => {
       if (err) {
         console.error(err);
-        return;
+        throw err;
       }
     });
   })();
@@ -218,7 +213,7 @@ cron.schedule("10 */3 * * *", () => {
     await fs.writeFile(holidayPath, JSON.stringify(holidays), (err) => {
       if (err) {
         console.error("Error writing holidays file", err);
-        return;
+        throw err;
       }
     });
 
@@ -228,7 +223,7 @@ cron.schedule("10 */3 * * *", () => {
     await fs.writeFile(tempoFilePath, JSON.stringify(tempoDates), (err) => {
       if (err) {
         console.error("Error writing tempo file", err);
-        return;
+        throw err;
       }
     });
   })().catch((err) => {

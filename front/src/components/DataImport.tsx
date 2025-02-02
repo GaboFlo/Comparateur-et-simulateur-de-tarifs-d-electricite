@@ -20,7 +20,7 @@ import TooltipModal from "./TooltipModal";
 interface Props {
   handleNext: () => void;
 }
-export default function DataImport({ handleNext }: Props) {
+export default function DataImport({ handleNext }: Readonly<Props>) {
   const { formState, setFormState } = useFormContext();
 
   React.useEffect(() => {

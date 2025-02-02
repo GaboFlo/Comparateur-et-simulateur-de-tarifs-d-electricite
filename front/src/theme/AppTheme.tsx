@@ -17,7 +17,7 @@ interface AppThemeProps {
   themeComponents?: ThemeOptions["components"];
 }
 
-export default function AppTheme(props: AppThemeProps) {
+export default function AppTheme(props: Readonly<AppThemeProps>) {
   const { children, disableCustomTheme, themeComponents } = props;
   const theme = React.useMemo(() => {
     return disableCustomTheme

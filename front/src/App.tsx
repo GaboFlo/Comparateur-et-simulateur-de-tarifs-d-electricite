@@ -26,7 +26,7 @@ const steps = [
   "Simulations",
 ];
 
-export default function App(props: { disableCustomTheme?: boolean }) {
+export default function App() {
   const { formState } = useFormContext();
 
   const [activeStep, setActiveStep] = React.useState(0);
@@ -51,7 +51,7 @@ export default function App(props: { disableCustomTheme?: boolean }) {
   }
 
   return (
-    <AppTheme {...props}>
+    <AppTheme>
       {formState.isGlobalLoading ? (
         <LinearProgress sx={{ height: "5px" }} />
       ) : (
