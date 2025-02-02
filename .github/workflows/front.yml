@@ -8,7 +8,7 @@ on:
       - "front/**"
 
 jobs:
-  tests:
+  code_quality:
     runs-on: ubuntu-latest
     steps:
       - uses: szenius/set-timezone@v2.0
