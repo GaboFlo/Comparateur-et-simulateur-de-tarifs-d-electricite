@@ -33,4 +33,4 @@ jobs:
         run: |
           cd server && npm i -g depcheck && npm run depcheck:ci
       - name: Run tests
-        run: npm run test
+        run: cd server && npm run test
