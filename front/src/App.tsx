@@ -11,6 +11,7 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import * as React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import CurrentOfferForm from "./components/CurrentOfferForm";
 import DataImport from "./components/DataImport";
 import Footer from "./components/Footer";
@@ -28,13 +29,29 @@ const steps = [
 
 export default function App() {
   const { formState } = useFormContext();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const query = new URLSearchParams(location.search);
+  const stepParam = query.get("step");
+  const [activeStep, setActiveStep] = React.useState(
+    stepParam ? parseInt(stepParam) : 0
+  );
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  React.useEffect(() => {
+    if (stepParam && parseInt(stepParam) !== activeStep) {
+      setActiveStep(parseInt(stepParam));
+    }
+  }, [activeStep, stepParam]);
+
+  const handleStepChange = (step: number) => {
+    navigate(`?step=${step}`);
+  };
+
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    handleStepChange(activeStep + 1);
   };
   const handleBack = () => {
-    setActiveStep(activeStep - 1);
+    handleStepChange(activeStep - 1);
   };
 
   function getStepContent(step: number) {

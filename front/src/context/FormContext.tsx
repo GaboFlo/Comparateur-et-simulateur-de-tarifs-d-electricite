@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import {
   OfferType,
-  OptionName,
+  OptionKey,
   PowerClass,
   PriceMappingFile,
   SeasonHourlyAnalysis,
@@ -20,7 +20,7 @@ interface FormState {
   allOffers?: PriceMappingFile;
   supplier: AvailableSuppliers;
   offerType: OfferType;
-  optionType: OptionName | "";
+  optionType: OptionKey | "";
   powerClass: PowerClass;
   isGlobalLoading: boolean;
   seasonHourlyAnalysis?: SeasonHourlyAnalysis[];
@@ -54,7 +54,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [formState, setFormState] = useState<FormState>({
     supplier: "EDF",
     offerType: OfferType.BLEU,
-    optionType: OptionName.BASE,
+    optionType: OptionKey.BASE,
     powerClass: 6,
     isGlobalLoading: false,
     dateRange: [lastYearStart, lastYearEnd],

@@ -1,5 +1,6 @@
 import { LicenseInfo } from "@mui/x-date-pickers-pro";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import { FormProvider } from "./context/FormContext";
 import "./index.css";
@@ -12,7 +13,9 @@ LicenseInfo.setLicenseKey(
 );
 
 root.render(
-  <FormProvider>
-    <App />
-  </FormProvider>
+  <BrowserRouter>
+    <FormProvider>
+      <App />
+    </FormProvider>
+  </BrowserRouter>
 );

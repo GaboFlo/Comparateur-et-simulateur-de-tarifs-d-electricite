@@ -3,10 +3,10 @@ export type PriceMappingFile = Option[];
 export interface FullCalculatedData {
   detailedData: CalculatedData[];
   totalCost: number;
-  optionName: OptionName;
+  optionKey: OptionKey;
   offerType: OfferType;
 }
-export enum OptionName {
+export enum OptionKey {
   BASE = "BASE",
   HPHC = "HPHC",
   TEMPO = "TEMPO",
@@ -94,7 +94,9 @@ export interface Mapping {
 export type Season = "Été" | "Hiver" | "Automne" | "Printemps";
 
 export interface Option {
-  optionName: OptionName;
+  optionKey: OptionKey;
+  optionName: string;
+  link: string;
   offerType: OfferType;
   subscriptions: Subscription[];
   mappings: Mapping[];
@@ -111,7 +113,7 @@ export type PowerClass = 6 | 9 | 12 | 15 | 18 | 24 | 30 | 36;
 export interface ComparisonTableInterfaceRow {
   provider: "EDF";
   offerType: OfferType;
-  optionName: OptionName;
+  optionKey: OptionKey;
   totalConsumptionCost: number;
   monthlyCost: number;
   total: number;

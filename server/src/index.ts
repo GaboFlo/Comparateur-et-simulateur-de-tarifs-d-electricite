@@ -137,15 +137,11 @@ app.get("/stream/:fileId", async (req, res) => {
   const filePath = path.join(uploadRelativeDir, `${fileId}.json`);
 
   let data: string | undefined;
-  try {
-    data = await readFileAsString(filePath);
-    if (!data) {
-      res.sendStatus(500);
-      throw new Error("No data found");
-    }
-  } catch {
+
+  data = await readFileAsString(filePath);
+  if (!data) {
     res.sendStatus(500);
-    throw new Error("Error reading file");
+    throw new Error("No data found");
   }
 
   let jsonData: ConsumptionLoadCurveData[] = JSON.parse(data);
@@ -169,8 +165,10 @@ app.get("/stream/:fileId", async (req, res) => {
       data: jsonData,
       dateRange,
       powerClass: typedPowerClass,
-      optionName: option.optionName,
+      optionKey: option.optionKey,
       offerType: option.offerType,
+      optionName: option.optionName,
+      link: option.link,
     });
 
     res.write(`data: ${JSON.stringify({ comparisonRow: rowSummary })}\n\n`);

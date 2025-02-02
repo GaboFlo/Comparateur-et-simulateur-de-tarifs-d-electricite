@@ -9,7 +9,7 @@ import {
   GridMapping,
   Mapping,
   OfferType,
-  OptionName,
+  OptionKey,
   PowerClass,
   PriceMappingFile,
   Season,
@@ -84,11 +84,11 @@ export function getSeason(date: Date) {
 export function findMonthlySubscriptionCost(
   powerClass: PowerClass,
   offerType: OfferType,
-  optionName: OptionName
+  optionKey: OptionKey
 ) {
   const priceMappingData = price_mapping as PriceMappingFile;
   for (const elt of priceMappingData) {
-    if (elt.offerType === offerType && elt.optionName === optionName) {
+    if (elt.offerType === offerType && elt.optionKey === optionKey) {
       for (const sub of elt.subscriptions) {
         if (sub.powerClass === powerClass) {
           return sub.monthlyCost;
@@ -97,7 +97,7 @@ export function findMonthlySubscriptionCost(
     }
   }
   throw new Error(
-    `Subscription not found for powerClass: ${powerClass}, offerType: ${offerType}, optionName: ${optionName}`
+    `Subscription not found for powerClass: ${powerClass}, offerType: ${offerType}, optionKey: ${optionKey}`
   );
 }
 

@@ -1,4 +1,4 @@
-export enum OptionName {
+export enum OptionKey {
   BASE = "BASE",
   HPHC = "HPHC",
   TEMPO = "TEMPO",
@@ -51,7 +51,9 @@ export interface Mapping {
   include_holidays?: boolean;
 }
 export interface Option {
-  optionName: OptionName;
+  optionKey: OptionKey;
+  optionName: string;
+  link: string;
   offerType: OfferType;
   subscriptions: Subscription[];
   mappings: Mapping[];
@@ -65,8 +67,10 @@ export interface Subscription {
 export interface ComparisonTableInterfaceRow {
   provider: "EDF";
   offerType: OfferType;
-  optionName: OptionName;
+  optionKey: OptionKey;
+  optionName: string;
   totalConsumptionCost: number;
   monthlyCost: number;
   total: number;
+  link: string;
 }

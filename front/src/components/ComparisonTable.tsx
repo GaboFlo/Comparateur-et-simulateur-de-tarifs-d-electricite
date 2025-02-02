@@ -1,4 +1,4 @@
-import { CircularProgress, LinearProgress } from "@mui/material";
+import { CircularProgress, LinearProgress, Link } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -101,6 +101,24 @@ export function ComparisonTable() {
     fetchData();
   }, []);
 
+  const currentOfferTotal =
+    rowSummaries.find(
+      (row) =>
+        row.offerType === formState.offerType &&
+        row.optionKey === formState.optionType
+    )?.total ?? 0;
+
+  const getColorForPercentage = (percentage: number) => {
+    if (percentage === 0) {
+      return "inherit";
+    }
+    if (percentage >= 0) {
+      return "red";
+    } else {
+      return "green";
+    }
+  };
+
   return (
     <TableContainer component={Paper} sx={{ my: 3 }}>
       {formState.isGlobalLoading || !rowSummaries ? (
@@ -110,17 +128,20 @@ export function ComparisonTable() {
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell>Fournisseur</StyledTableCell>
-                <StyledTableCell align="right">Offre</StyledTableCell>
-                <StyledTableCell align="right">Option</StyledTableCell>
-                <StyledTableCell align="right">
+                <StyledTableCell align="center">Fournisseur</StyledTableCell>
+                <StyledTableCell align="center">Offre</StyledTableCell>
+                <StyledTableCell align="center">Option</StyledTableCell>
+                <StyledTableCell align="center">
                   Simulation consommation (€)
                 </StyledTableCell>
-                <StyledTableCell align="right">
+                <StyledTableCell align="center">
                   Abonnement mensuel (€)
                 </StyledTableCell>
-                <StyledTableCell align="right">
+                <StyledTableCell align="center">
                   Total sur la période (sans taxes, €)
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  % de différence
                 </StyledTableCell>
               </TableRow>
             </TableHead>
@@ -131,28 +152,55 @@ export function ComparisonTable() {
                 })
                 .map((row) => (
                   <StyledTableRow
-                    key={`${row.provider}-${row.offerType}-${row.optionName}`}
+                    key={`${row.provider}-${row.offerType}-${row.optionKey}`}
                     highlight={
                       row.offerType === formState.offerType &&
-                      row.optionName === formState.optionType
+                      row.optionKey === formState.optionType
                     }
                   >
-                    <StyledTableCell component="th" scope="row">
+                    <StyledTableCell align="center">
                       {row.provider}
                     </StyledTableCell>
-                    <StyledTableCell component="th" scope="row">
+                    <StyledTableCell align="center">
                       {row.offerType}
                     </StyledTableCell>
-                    <StyledTableCell align="right">
-                      {row.optionName}
+                    <StyledTableCell align="center">
+                      <Link
+                        href={row.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        underline="hover"
+                      >
+                        {row.optionName}
+                      </Link>
                     </StyledTableCell>
-                    <StyledTableCell align="right">
+                    <StyledTableCell align="center">
                       {row.totalConsumptionCost}
                     </StyledTableCell>
-                    <StyledTableCell align="right">
+                    <StyledTableCell align="center">
                       {row.monthlyCost}
                     </StyledTableCell>
-                    <StyledTableCell align="right">{row.total}</StyledTableCell>
+                    <StyledTableCell align="center">
+                      {row.total}
+                    </StyledTableCell>
+                    <StyledTableCell
+                      align="center"
+                      style={{
+                        color: getColorForPercentage(
+                          (100 * (row.total - currentOfferTotal)) / row.total
+                        ),
+                      }}
+                    >
+                      {Math.round(
+                        (100 * (row.total - currentOfferTotal)) / row.total
+                      ) > 0
+                        ? "+"
+                        : ""}
+                      {Math.round(
+                        (100 * (row.total - currentOfferTotal)) / row.total
+                      )}{" "}
+                      %
+                    </StyledTableCell>
                   </StyledTableRow>
                 ))}
             </TableBody>

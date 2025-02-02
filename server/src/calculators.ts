@@ -13,7 +13,7 @@ import {
   Mapping,
   OfferType,
   Option,
-  OptionName,
+  OptionKey,
   PowerClass,
   PriceMappingFile,
   SlotType,
@@ -30,7 +30,7 @@ import {
 
 interface CalculateProps {
   data: CalculatedData[];
-  optionName: OptionName;
+  optionKey: OptionKey;
   offerType: OfferType;
   tempoDates?: TempoDates;
 }
@@ -72,7 +72,7 @@ function calculateHpHcPrices(
   item: CalculatedData
 ): Cost {
   const commonThrowError = `${option.offerType}-${
-    option.optionName
+    option.optionKey
   }-${endOfSlotRecorded.toISOString()}`;
 
   const applicableHpHcGrids = hphc_mapping.find((item) =>
@@ -161,16 +161,16 @@ function calculateTempoPrices(
 
 export async function calculatePrices({
   data,
-  optionName,
+  optionKey,
   offerType,
 }: CalculateProps): Promise<FullCalculatedData> {
   const priceMappingData = price_mapping as PriceMappingFile;
   const hpHcMappingData = hphc_mapping as HpHcFile;
   const option = priceMappingData.find(
-    (item) => item.optionName === optionName && item.offerType === offerType
+    (item) => item.optionKey === optionKey && item.offerType === offerType
   );
   if (!option) {
-    throw new Error(`No option found ${offerType}-${optionName}`);
+    throw new Error(`No option found ${offerType}-${optionKey}`);
   }
 
   const new_data: CalculatedData[] = [];
@@ -178,7 +178,7 @@ export async function calculatePrices({
 
   for (const item of data) {
     const endOfSlotRecorded = new Date(item.recordedAt);
-    const commonThrowError = `${offerType}-${optionName}-${endOfSlotRecorded.toISOString()}`;
+    const commonThrowError = `${offerType}-${optionKey}-${endOfSlotRecorded.toISOString()}`;
 
     let new_cost: Cost | undefined = undefined;
 
@@ -206,22 +206,26 @@ export async function calculatePrices({
     }
   }
 
-  return { detailedData: new_data, totalCost, offerType, optionName };
+  return { detailedData: new_data, totalCost, offerType, optionKey };
 }
 
 interface FullCalculatePricesInterface {
   data: ConsumptionLoadCurveData[];
   powerClass: PowerClass;
   dateRange: [Date, Date];
-  optionName: OptionName;
+  optionKey: OptionKey;
   offerType: OfferType;
+  optionName: string;
+  link: string;
 }
 
 export async function calculateRowSummary({
   data,
   powerClass,
   dateRange,
+  optionKey,
   optionName,
+  link,
   offerType,
 }: FullCalculatePricesInterface) {
   const now = new Date();
@@ -229,19 +233,21 @@ export async function calculateRowSummary({
   const calculatedData = await calculatePrices({
     data,
     offerType,
-    optionName,
+    optionKey,
   });
 
   const monthlyCost = findMonthlySubscriptionCost(
     powerClass,
     offerType,
-    optionName
+    optionKey
   );
 
   return {
     provider: "EDF",
     offerType,
+    optionKey,
     optionName,
+    link,
     totalConsumptionCost: Math.round(calculatedData.totalCost / PRICE_COEFF),
     monthlyCost: monthlyCost / 100,
     total: Math.round(

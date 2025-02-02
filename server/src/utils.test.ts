@@ -1,5 +1,5 @@
 import hphc_mapping from "../statics/hp_hc.json";
-import { HpHcFileMapping, OfferType, OptionName, PowerClass } from "./types";
+import { HpHcFileMapping, OfferType, OptionKey, PowerClass } from "./types";
 import {
   findFirstAndLastDate,
   findMonthlySubscriptionCost,
@@ -109,7 +109,7 @@ describe("findMonthlySubscriptionCost", () => {
     const monthly = findMonthlySubscriptionCost(
       9 as PowerClass,
       OfferType.BLEU,
-      OptionName.BASE
+      OptionKey.BASE
     );
     expect(monthly).toBe(1589);
   });

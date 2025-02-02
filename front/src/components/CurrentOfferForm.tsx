@@ -13,7 +13,7 @@ import { styled } from "@mui/system";
 import { useEffect } from "react";
 import { useFormContext } from "../context/FormContext";
 import { getAvailableOffers } from "../services/httpCalls";
-import { OfferType, OptionName, PowerClass, PriceMappingFile } from "../types";
+import { OfferType, Option, PowerClass, PriceMappingFile } from "../types";
 
 const FormGrid = styled(Grid)(() => ({
   display: "flex",
@@ -30,11 +30,11 @@ const getDistinctOfferTypes = (mapping: PriceMappingFile) => {
 export const getAvailableOptionsForOffer = (
   mapping: PriceMappingFile,
   offerType: OfferType
-): OptionName[] => {
+): Option[] => {
   if (!offerType) return [];
-  const availableOptions = mapping
-    .filter((item) => item.offerType === offerType)
-    .map((item) => item.optionName);
+  const availableOptions = mapping.filter(
+    (item) => item.offerType === offerType
+  );
   return availableOptions;
 };
 
@@ -65,7 +65,7 @@ export default function CurrentOfferForm() {
         newState.optionType = getAvailableOptionsForOffer(
           formState.allOffers,
           newState.offerType
-        )[0];
+        )[0].optionKey;
       }
       return newState;
     });
@@ -94,7 +94,7 @@ export default function CurrentOfferForm() {
         </Select>
       </FormControl>
       <FormControl fullWidth sx={{ marginY: 1 }}>
-        <FormLabel required>Offre</FormLabel>
+        <FormLabel required>Offre actuelle</FormLabel>
         <Select
           id="offerType"
           name="offerType"
@@ -116,7 +116,7 @@ export default function CurrentOfferForm() {
       </FormControl>
 
       <FormControl fullWidth sx={{ marginY: 1 }}>
-        <FormLabel required>Option</FormLabel>
+        <FormLabel required>Option actuelle</FormLabel>
         <Select
           id="optionType"
           name="optionType"
@@ -130,8 +130,8 @@ export default function CurrentOfferForm() {
               formState.allOffers,
               formState.offerType
             ).map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
+              <MenuItem key={option.optionKey} value={option.optionKey}>
+                {option.optionName}
               </MenuItem>
             ))}
         </Select>

@@ -4,7 +4,7 @@ import {
   ConsumptionLoadCurveData,
   FullCalculatedData,
   OfferType,
-  OptionName,
+  OptionKey,
   TempoDates,
 } from "./types";
 
@@ -45,11 +45,11 @@ describe("calculateTempoPrices", () => {
         value: 270,
       },
     ];
-    const optionName = OptionName.TEMPO;
+    const optionKey = OptionKey.TEMPO;
     const offerType = OfferType.BLEU;
     const result = await calculatePrices({
       data,
-      optionName,
+      optionKey,
       offerType,
       tempoDates,
     });
@@ -135,7 +135,7 @@ describe("calculateTempoPrices", () => {
         },
       ],
       totalCost: 6008472 / 2,
-      optionName,
+      optionKey,
       offerType,
     };
     expect(result).toEqual(expected);
@@ -155,13 +155,13 @@ describe("calculateBasePrices", () => {
   ];
 
   const basePrice = 2516;
-  const optionName = OptionName.BASE;
+  const optionKey = OptionKey.BASE;
   const offerType = OfferType.BLEU;
 
   it(OfferType.BLEU, async () => {
     const result = await calculatePrices({
       data,
-      optionName,
+      optionKey,
       offerType,
     });
 
@@ -188,7 +188,7 @@ describe("calculateBasePrices", () => {
       ],
       totalCost: (270 * basePrice + 422 * basePrice) / 2,
       offerType,
-      optionName,
+      optionKey,
     };
     expect(result).toEqual(expected);
   });
@@ -212,17 +212,17 @@ describe("calculateHpHcPrices", () => {
     ];
     const hpPrice = 2700;
     const hcPrice = 2068;
-    const optionName = OptionName.HPHC;
+    const optionKey = OptionKey.HPHC;
     const offerType = OfferType.BLEU;
     const result = await calculatePrices({
       data,
-      optionName,
+      optionKey,
       offerType,
     });
 
     const expected: FullCalculatedData = {
       totalCost: (270 * hpPrice + 422 * hpPrice + 100 * hcPrice) / 2,
-      optionName,
+      optionKey,
       offerType,
       detailedData: [
         {
