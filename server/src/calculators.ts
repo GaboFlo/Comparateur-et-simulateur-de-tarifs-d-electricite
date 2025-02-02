@@ -1,6 +1,5 @@
 import axios from "axios";
 import { differenceInMonths, format, subDays } from "date-fns";
-
 import {
   CalculatedData,
   ComparisonTableInterfaceRow,
@@ -20,11 +19,12 @@ import {
   TempoDates,
   TempoMapping,
 } from "../../front/src/types";
-import hphc_mapping from "./hp_hc.json";
-import price_mapping from "./price_mapping.json";
+import allHolidays from "../statics/holidays.json";
+import hphc_mapping from "../statics/hp_hc.json";
+import price_mapping from "../statics/price_mapping.json";
+import tempo_file from "../statics/tempo.json";
 import {
   findMonthlySubscriptionCost,
-  isFrenchHoliday,
   isHpOrHcSlot,
   PRICE_COEFF,
 } from "./utils";
@@ -37,9 +37,16 @@ interface CalculateProps {
 }
 
 function isDayApplicable(mapping: Mapping, endOfSlotRecorded: Date) {
+  const holidays = allHolidays;
+  const normalizedDate = new Date(
+    endOfSlotRecorded.getFullYear(),
+    endOfSlotRecorded.getMonth(),
+    endOfSlotRecorded.getDate()
+  );
   return (
     mapping.applicableDays.includes(endOfSlotRecorded.getDay()) ||
-    (mapping.include_holidays && isFrenchHoliday(endOfSlotRecorded))
+    (mapping.include_holidays &&
+      holidays.includes(normalizedDate.toISOString()))
   );
 }
 
@@ -142,6 +149,7 @@ function calculateTempoPrices(
   item: CalculatedData,
   tempoMapping: TempoMapping[]
 ): Cost {
+  /* TODO perfs */
   // Determine hourType
   const endOfSlotRecorded = new Date(item.recordedAt);
   const hour = endOfSlotRecorded.getHours();
@@ -191,13 +199,6 @@ export async function calculatePrices({
   if (!option) {
     throw new Error(`No option found ${offerType}-${optionName}`);
   }
-  let tempoDates: TempoDates | undefined = undefined;
-  if (optionName === OptionName.TEMPO) {
-    tempoDates = await fetchTempoData();
-    if (!tempoDates) {
-      throw new Error(`No tempoDates found`);
-    }
-  }
 
   const new_data: CalculatedData[] = [];
   let totalCost = 0;
@@ -217,11 +218,8 @@ export async function calculatePrices({
       );
     }
     if (option.tempoMappings) {
-      new_cost = calculateTempoPrices(
-        tempoDates ?? [],
-        item,
-        option.tempoMappings
-      );
+      const tempoDates = tempo_file as TempoDates;
+      new_cost = calculateTempoPrices(tempoDates, item, option.tempoMappings);
     }
 
     if (new_cost) {

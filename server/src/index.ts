@@ -3,18 +3,23 @@ import { endOfDay, isWithinInterval, startOfDay } from "date-fns";
 import express, { Request, Response } from "express";
 import fs from "fs";
 import multer from "multer";
+import cron from "node-cron";
 import path from "path";
 import unzipper from "unzipper";
 import { v4 as uuidv4 } from "uuid";
 import { Option, PowerClass, PriceMappingFile } from "../../front/src/types";
-import { calculateRowSummary } from "./calculators";
+import { default as priceMappingFile } from "../statics/price_mapping.json";
+import { calculateRowSummary, fetchTempoData } from "./calculators";
 import {
   ConsumptionLoadCurveData,
   parseCsvToConsumptionLoadCurveData,
 } from "./csvParser";
-import { default as priceMappingFile } from "./price_mapping.json";
 import { analyseHourByHourBySeason } from "./statistics";
-import { findFirstAndLastDate, readFileAsString } from "./utils";
+import {
+  findFirstAndLastDate,
+  getHolidaysBetweenDates,
+  readFileAsString,
+} from "./utils";
 
 const app = express();
 const port = 10000;
@@ -26,6 +31,7 @@ app.use(cors());
 app.use(express.json());
 
 const uploadRelativeDir = "./uploads";
+export const staticsRelativeDir = "./statics";
 
 const uploadHandler = async (req: Request, res: Response): Promise<void> => {
   if (!req.file) {
@@ -163,7 +169,7 @@ app.get("/stream/:fileId", async (req, res) => {
   };
 
   (async () => {
-    for (const option of shuffleArray(typedPriceMappingFile)) {
+    for (const option of typedPriceMappingFile) {
       await new Promise((resolve) =>
         setImmediate(async () => {
           await sendData(option);
@@ -190,6 +196,29 @@ app.listen(port, () => {
   console.info(`Server is running on http://localhost:${port}`);
 });
 
-function shuffleArray<T>(array: T[]): T[] {
-  return array.sort(() => Math.random() - 0.5);
-}
+cron.schedule("1 */3 * * *", async () => {
+  const firstDate = new Date("2020-01-01");
+  const now = new Date();
+
+  /* Holidays */
+  const holidays = getHolidaysBetweenDates([firstDate, now]);
+  const holidayPath = `${staticsRelativeDir}/holidays.json`;
+  await fs.writeFile(holidayPath, JSON.stringify(holidays), (err) => {
+    if (err) {
+      console.error("Error writing holidays file", err);
+      return;
+    }
+    console.log("Holidays file written");
+  });
+
+  /* Tempo */
+  const tempoDates = await fetchTempoData();
+  const tempoFilePath = `${staticsRelativeDir}/tempo.json`;
+  await fs.writeFile(tempoFilePath, JSON.stringify(tempoDates), (err) => {
+    if (err) {
+      console.error("Error writing tempo file", err);
+      return;
+    }
+    console.log("Tempo file written");
+  });
+});

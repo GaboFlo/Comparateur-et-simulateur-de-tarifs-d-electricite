@@ -117,57 +117,6 @@
         ]
     },
     {
-        "optionName": "TEMPO",
-        "offerType": "BLEU",
-        "subscriptions": [
-            {
-                "powerClass": 6,
-                "monthlyCost": 1303
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1625
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 1956
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2245
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2560
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3853
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4471
-            }
-        ],
-        "tempoMappings": [
-            {
-                "tempoCodeDay": 1,
-                "HP": 1609,
-                "HC": 1296
-            },
-            {
-                "tempoCodeDay": 2,
-                "HP": 1894,
-                "HC": 1486
-            },
-            {
-                "tempoCodeDay": 3,
-                "HP": 7562,
-                "HC": 1568
-            }
-        ]
-    },
-    {
         "optionName": "WEEK_END",
         "offerType": "ZEN",
         "subscriptions": [
@@ -1107,6 +1056,57 @@
                         "slotType": "HC"
                     }
                 ]
+            }
+        ]
+    },
+    {
+        "optionName": "TEMPO",
+        "offerType": "BLEU",
+        "subscriptions": [
+            {
+                "powerClass": 6,
+                "monthlyCost": 1303
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1625
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 1956
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2245
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2560
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 3853
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4471
+            }
+        ],
+        "tempoMappings": [
+            {
+                "tempoCodeDay": 1,
+                "HP": 1609,
+                "HC": 1296
+            },
+            {
+                "tempoCodeDay": 2,
+                "HP": 1894,
+                "HC": 1486
+            },
+            {
+                "tempoCodeDay": 3,
+                "HP": 7562,
+                "HC": 1568
             }
         ]
     }

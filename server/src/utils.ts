@@ -1,5 +1,6 @@
-import { getDate, getMonth } from "date-fns";
+import { addDays, getDate, getMonth } from "date-fns";
 import Holidays from "date-holidays";
+import * as fs from "fs/promises";
 import {
   GridMapping,
   OfferType,
@@ -9,15 +10,28 @@ import {
   Season,
   SlotType,
 } from "../../front/src/types";
-import price_mapping from "./price_mapping.json";
+import price_mapping from "../statics/price_mapping.json";
 import { ConsumptionLoadCurveData } from "./csvParser";
-import * as fs from "fs/promises";
 
 export const PRICE_COEFF = 100 * 100000;
 
 const hd = new Holidays("FR");
 
-export function isFrenchHoliday(date: Date): boolean {
+export const getHolidaysBetweenDates = (range: [Date, Date]): Date[] => {
+  const holidays: Date[] = [];
+  let currentDate = range[0];
+
+  while (currentDate <= range[1]) {
+    if (isFrenchHoliday(currentDate)) {
+      holidays.push(new Date(currentDate));
+    }
+    currentDate = addDays(currentDate, 1);
+  }
+
+  return holidays;
+};
+
+function isFrenchHoliday(date: Date): boolean {
   return Boolean(hd.isHoliday(date));
 }
 
