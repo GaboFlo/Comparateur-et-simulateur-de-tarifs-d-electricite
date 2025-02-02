@@ -1,10 +1,11 @@
+import { calculatePrices } from "./calculators";
 import {
   ConsumptionLoadCurveData,
   FullCalculatedData,
   OfferType,
   OptionName,
-} from "../../front/src/types";
-import { calculatePrices, fetchTempoData } from "./calculators";
+} from "./types";
+import { fetchTempoData } from "./utils";
 
 describe("calculateTempoPrices", () => {
   it("RED days 2025-01-10 (previous is white)", async () => {
@@ -213,7 +214,6 @@ describe("calculateBasePrices", () => {
       data,
       optionName,
       offerType,
-      dateRange: [new Date("2025-01-01"), new Date("2025-01-10")],
     });
     expect(resultFilterd).toEqual(expectedFiltered);
   });

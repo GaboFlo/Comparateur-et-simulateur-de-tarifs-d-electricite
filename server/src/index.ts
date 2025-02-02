@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import cors from "cors";
 import { endOfDay, isWithinInterval, startOfDay } from "date-fns";
 import express, { Request, Response } from "express";
@@ -7,15 +8,16 @@ import cron from "node-cron";
 import path from "path";
 import unzipper from "unzipper";
 import { v4 as uuidv4 } from "uuid";
-import { Option, PowerClass, PriceMappingFile } from "../../front/src/types";
 import { default as priceMappingFile } from "../statics/price_mapping.json";
-import { calculateRowSummary, fetchTempoData } from "./calculators";
+import { calculateRowSummary } from "./calculators";
 import {
   ConsumptionLoadCurveData,
   parseCsvToConsumptionLoadCurveData,
 } from "./csvParser";
 import { analyseHourByHourBySeason } from "./statistics";
+import { Option, PowerClass, PriceMappingFile } from "./types";
 import {
+  fetchTempoData,
   findFirstAndLastDate,
   getHolidaysBetweenDates,
   readFileAsString,
@@ -102,7 +104,7 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
   }
   await fs.unlink(zipFilePath, (err) => {
     if (err) {
-      console.log(err);
+      console.error(err);
       return;
     }
   });
@@ -180,7 +182,7 @@ app.get("/stream/:fileId", async (req, res) => {
     res.end(); // End the stream after all data is sent
     await fs.unlink(filePath, (err) => {
       if (err) {
-        console.log(err);
+        console.error(err);
         return;
       }
     });
@@ -208,7 +210,6 @@ cron.schedule("1 */3 * * *", async () => {
       console.error("Error writing holidays file", err);
       return;
     }
-    console.log("Holidays file written");
   });
 
   /* Tempo */
@@ -219,6 +220,5 @@ cron.schedule("1 */3 * * *", async () => {
       console.error("Error writing tempo file", err);
       return;
     }
-    console.log("Tempo file written");
   });
 });

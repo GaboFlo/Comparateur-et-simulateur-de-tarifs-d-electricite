@@ -1,5 +1,5 @@
-import { CalculatedData } from "../../front/src/types";
 import { analyseHourByHourBySeason } from "./statistics";
+import { CalculatedData } from "./types";
 
 describe("analyseHourByHourBySeason", () => {
   it("should return the correct data", () => {

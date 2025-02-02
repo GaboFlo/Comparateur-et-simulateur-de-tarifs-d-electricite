@@ -1,5 +1,9 @@
-import axios from "axios";
 import { differenceInMonths, format, subDays } from "date-fns";
+
+import allHolidays from "../statics/holidays.json";
+import hphc_mapping from "../statics/hp_hc.json";
+import price_mapping from "../statics/price_mapping.json";
+import tempo_file from "../statics/tempo.json";
 import {
   CalculatedData,
   ComparisonTableInterfaceRow,
@@ -18,11 +22,7 @@ import {
   TempoCodeDay,
   TempoDates,
   TempoMapping,
-} from "../../front/src/types";
-import allHolidays from "../statics/holidays.json";
-import hphc_mapping from "../statics/hp_hc.json";
-import price_mapping from "../statics/price_mapping.json";
-import tempo_file from "../statics/tempo.json";
+} from "./types";
 import {
   findMonthlySubscriptionCost,
   isHpOrHcSlot,
@@ -119,19 +119,6 @@ function calculateHpHcPrices(
   return new_cost;
 }
 
-export async function fetchTempoData() {
-  try {
-    const response = await axios
-      .get(
-        "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023"
-      )
-      .then((res) => res.data);
-
-    return response as TempoDates;
-  } catch {
-    throw new Error("Error fetching tempo data");
-  }
-}
 function isHpOrHcTempoSlot(hour: number, minute: number): SlotType {
   if (
     (6 < hour && hour < 22) ||

@@ -12,8 +12,7 @@
     "lint:ci": "eslint --ext .js,.ts . | (! grep -v 'warning') | (! grep -v 'error')",
     "sort-package:check": "sort-package-json --check",
     "sort-package:sort": "sort-package-json",
-    "start": "react-scripts start",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch '**/*.test.ts' --coverage"
+    "start": "react-scripts start"
   },
   "browserslist": {
     "production": [
@@ -42,27 +41,20 @@
     "@mui/x-charts": "^7.24.1",
     "@mui/x-date-pickers": "^7.24.1",
     "@mui/x-date-pickers-pro": "^7.24.1",
-    "cra-template-typescript": "1.2.0",
     "date-fns": "^4.1.0",
-    "date-holidays": "^3.23.18",
-    "eslint": "^7.32.0",
-    "jszip": "^3.10.1",
-    "jwt-decode": "^4.0.0",
+    "eslint": "^8.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-dropzone": "^14.3.5",
     "react-scripts": "5.0.1"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.14",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "depcheck": "^1.4.7",
-    "jest": "^29.7.0",
-    "sort-package-json": "^2.5.1",
-    "ts-jest": "^29.2.5",
-    "ts-prune": "^0.10.3"
+    "eslint-config-react-app": "^7.0.1",
+    "sort-package-json": "^2.5.1"
   }
 }

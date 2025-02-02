@@ -1,6 +1,10 @@
+import axios from "axios";
 import { addDays, getDate, getMonth } from "date-fns";
 import Holidays from "date-holidays";
 import * as fs from "fs/promises";
+
+import price_mapping from "../statics/price_mapping.json";
+import { ConsumptionLoadCurveData } from "./csvParser";
 import {
   GridMapping,
   OfferType,
@@ -9,9 +13,8 @@ import {
   PriceMappingFile,
   Season,
   SlotType,
-} from "../../front/src/types";
-import price_mapping from "../statics/price_mapping.json";
-import { ConsumptionLoadCurveData } from "./csvParser";
+  TempoDates,
+} from "./types";
 
 export const PRICE_COEFF = 100 * 100000;
 
@@ -107,20 +110,26 @@ export const findFirstAndLastDate = (
 };
 
 export async function readFileAsString(filePath: string): Promise<string> {
-  try {
-    const buffer = await fs.readFile(filePath);
+  const buffer = await fs.readFile(filePath);
 
-    if (buffer instanceof Buffer) {
-      const fileContent: string = buffer.toString("utf8");
-      return fileContent;
-    } else {
-      console.error(
-        "readFile did not return a Buffer.  Check file path and permissions."
-      );
-      throw new Error("Could not read file as string."); // Ou une autre erreur appropriée
-    }
-  } catch (error) {
-    console.error("Error reading file:", error);
-    throw error;
+  if (buffer instanceof Buffer) {
+    const fileContent: string = buffer.toString("utf8");
+    return fileContent;
+  } else {
+    throw new Error("Could not read file as string."); // Ou une autre erreur appropriée
+  }
+}
+
+export async function fetchTempoData() {
+  try {
+    const response = await axios
+      .get(
+        "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023"
+      )
+      .then((res) => res.data);
+
+    return response as TempoDates;
+  } catch {
+    throw new Error("Error fetching tempo data");
   }
 }

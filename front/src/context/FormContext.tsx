@@ -10,7 +10,6 @@ import {
 
 type AvailableSuppliers = "EDF";
 
-export type ImportMode = "files" | "api";
 interface FormState {
   allOffers?: PriceMappingFile;
   supplier: AvailableSuppliers;

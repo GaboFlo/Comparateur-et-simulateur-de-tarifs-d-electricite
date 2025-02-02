@@ -1,4 +1,4 @@
-import { Season } from "../../front/src/types";
+import { Season } from "./types";
 import { getSeason } from "./utils";
 
 interface SeasonHourlyAnalysis {

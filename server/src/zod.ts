@@ -11,10 +11,4 @@ export const ConsumptionLoadCurveDataArraySchema = z.array(
   ConsumptionLoadCurveDataSchema
 );
 
-// Export the types
-export type ConsumptionLoadCurveData = z.infer<
-  typeof ConsumptionLoadCurveDataSchema
->;
-export type ConsumptionLoadCurveDataArray = z.infer<
-  typeof ConsumptionLoadCurveDataArraySchema
->;
+/* TODO */

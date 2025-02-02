@@ -4,6 +4,8 @@ on:
     branches:
       - main
   pull_request:
+    paths:
+      - "front/**"
 
 jobs:
   tests:
@@ -14,14 +16,14 @@ jobs:
           timezoneLinux: "Europe/Paris"
       - uses: actions/checkout@v4
       - name: Install modules
-        run: npm i --only-dev
+        run: cd front && npm i --only-dev
       - name: Run lint
-        run: npm run lint:ci
+        run: cd front && npm run lint:ci
       - name: Removes dead code
-        run: npm run deadcode:ci
+        run: cd front && npm run deadcode:ci
       - name: Check if package.json is sorted
         run: |
-          npm run sort-package:check
+          cd front && npm run sort-package:check
           if [ $? -eq 0 ]; then
             echo "Package.json is sorted correctly."
           else
@@ -29,6 +31,4 @@ jobs:
           fi
       - name: Depcheck
         run: |
-          npm i -g depcheck && npm run depcheck:ci
-      - name: Run tests
-        run: npm run test
+          cd front && npm i -g depcheck && npm run depcheck:ci
