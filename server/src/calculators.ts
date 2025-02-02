@@ -1,11 +1,6 @@
-import {
-  differenceInMonths,
-  endOfDay,
-  format,
-  isWithinInterval,
-  startOfDay,
-  subDays,
-} from "date-fns";
+import axios from "axios";
+import { differenceInMonths, format, subDays } from "date-fns";
+
 import {
   CalculatedData,
   ComparisonTableInterfaceRow,
@@ -38,7 +33,6 @@ interface CalculateProps {
   data: CalculatedData[];
   optionName: OptionName;
   offerType: OfferType;
-  dateRange?: [Date, Date];
   tempoDates?: TempoDates;
 }
 
@@ -120,16 +114,17 @@ function calculateHpHcPrices(
 
 export async function fetchTempoData() {
   try {
-    const response = await fetch(
-      "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023"
-    );
-    const res = await response.json();
-    return res as TempoDates;
+    const response = await axios
+      .get(
+        "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023"
+      )
+      .then((res) => res.data);
+
+    return response as TempoDates;
   } catch {
-    return undefined;
+    throw new Error("Error fetching tempo data");
   }
 }
-
 function isHpOrHcTempoSlot(hour: number, minute: number): SlotType {
   if (
     (6 < hour && hour < 22) ||
@@ -183,13 +178,11 @@ function calculateTempoPrices(
   };
 }
 
-export function calculatePrices({
+export async function calculatePrices({
   data,
   optionName,
   offerType,
-  dateRange,
-  tempoDates,
-}: CalculateProps): FullCalculatedData {
+}: CalculateProps): Promise<FullCalculatedData> {
   const priceMappingData = price_mapping as PriceMappingFile;
   const hpHcMappingData = hphc_mapping as HpHcFile;
   const option = priceMappingData.find(
@@ -198,16 +191,17 @@ export function calculatePrices({
   if (!option) {
     throw new Error(`No option found ${offerType}-${optionName}`);
   }
+  let tempoDates: TempoDates | undefined = undefined;
+  if (optionName === OptionName.TEMPO) {
+    tempoDates = await fetchTempoData();
+    if (!tempoDates) {
+      throw new Error(`No tempoDates found`);
+    }
+  }
+
   const new_data: CalculatedData[] = [];
   let totalCost = 0;
-  if (dateRange) {
-    data = data.filter((elt) => {
-      return isWithinInterval(elt.recordedAt, {
-        start: startOfDay(dateRange[0]),
-        end: endOfDay(dateRange[1]),
-      });
-    });
-  }
+
   data.forEach(async (item) => {
     const endOfSlotRecorded = new Date(item.recordedAt);
     const commonThrowError = `${offerType}-${optionName}-${endOfSlotRecorded.toISOString()}`;
@@ -223,10 +217,11 @@ export function calculatePrices({
       );
     }
     if (option.tempoMappings) {
-      if (!tempoDates) {
-        throw new Error(`No tempoDates found ${commonThrowError}`);
-      }
-      new_cost = calculateTempoPrices(tempoDates, item, option.tempoMappings);
+      new_cost = calculateTempoPrices(
+        tempoDates ?? [],
+        item,
+        option.tempoMappings
+      );
     }
 
     if (new_cost) {
@@ -258,16 +253,12 @@ export async function calculateRowSummary({
   optionName,
   offerType,
 }: FullCalculatePricesInterface) {
-  let tempoDates: TempoDates | undefined = undefined;
-  if (optionName === OptionName.TEMPO) {
-    tempoDates = await fetchTempoData();
-  }
-  const calculatedData = calculatePrices({
+  const now = new Date();
+
+  const calculatedData = await calculatePrices({
     data,
     offerType,
     optionName,
-    dateRange,
-    tempoDates,
   });
 
   const monthlyCost = findMonthlySubscriptionCost(
@@ -286,35 +277,6 @@ export async function calculateRowSummary({
       calculatedData.totalCost / PRICE_COEFF +
         (monthlyCost * differenceInMonths(dateRange[1], dateRange[0])) / 100
     ),
+    computeTime: new Date().getTime() - now.getTime(),
   } as ComparisonTableInterfaceRow;
-}
-
-interface FullCalculatePricesForAllOptionsInterface {
-  data: ConsumptionLoadCurveData[];
-  powerClass: PowerClass;
-  dateRange: [Date, Date];
-}
-
-export async function calculateRowSummaryForAllOptions({
-  data,
-  powerClass,
-  dateRange,
-}: FullCalculatePricesForAllOptionsInterface) {
-  const priceMappingData = price_mapping as PriceMappingFile;
-  let dataToReturn: ComparisonTableInterfaceRow[] = [];
-  for (const option of priceMappingData) {
-    /* TODO  Perfs */
-
-    dataToReturn = [
-      ...dataToReturn,
-      await calculateRowSummary({
-        data,
-        powerClass,
-        dateRange,
-        optionName: option.optionName,
-        offerType: option.offerType,
-      }),
-    ];
-  }
-  return dataToReturn;
 }

@@ -1,16 +1,12 @@
 import cors from "cors";
+import { endOfDay, isWithinInterval, startOfDay } from "date-fns";
 import express, { Request, Response } from "express";
 import fs from "fs";
 import multer from "multer";
 import path from "path";
 import unzipper from "unzipper";
 import { v4 as uuidv4 } from "uuid";
-import {
-  Option,
-  OptionName,
-  PowerClass,
-  PriceMappingFile,
-} from "../../front/src/types";
+import { Option, PowerClass, PriceMappingFile } from "../../front/src/types";
 import { calculateRowSummary } from "./calculators";
 import {
   ConsumptionLoadCurveData,
@@ -138,7 +134,7 @@ app.get("/stream/:fileId", async (req, res) => {
     return;
   }
 
-  const jsonData: ConsumptionLoadCurveData[] = JSON.parse(data);
+  let jsonData: ConsumptionLoadCurveData[] = JSON.parse(data);
 
   res.writeHead(200, {
     "Content-Type": "text/event-stream",
@@ -147,21 +143,27 @@ app.get("/stream/:fileId", async (req, res) => {
   });
 
   const sendData = async (option: Option) => {
-    if (option.optionName !== OptionName.TEMPO) {
-      const rowSummary = await calculateRowSummary({
-        data: jsonData,
-        dateRange,
-        powerClass: typedPowerClass,
-        optionName: option.optionName,
-        offerType: option.offerType,
+    if (dateRange) {
+      jsonData = jsonData.filter((elt) => {
+        return isWithinInterval(elt.recordedAt, {
+          start: startOfDay(dateRange[0]),
+          end: endOfDay(dateRange[1]),
+        });
       });
-
-      res.write(`data: ${JSON.stringify({ comparisonRow: rowSummary })}\n\n`);
     }
+    const rowSummary = await calculateRowSummary({
+      data: jsonData,
+      dateRange,
+      powerClass: typedPowerClass,
+      optionName: option.optionName,
+      offerType: option.offerType,
+    });
+
+    res.write(`data: ${JSON.stringify({ comparisonRow: rowSummary })}\n\n`);
   };
 
   (async () => {
-    for (const option of typedPriceMappingFile) {
+    for (const option of shuffleArray(typedPriceMappingFile)) {
       await new Promise((resolve) =>
         setImmediate(async () => {
           await sendData(option);
@@ -187,3 +189,7 @@ app.listen(port, () => {
   // eslint-disable-next-line no-console
   console.info(`Server is running on http://localhost:${port}`);
 });
+
+function shuffleArray<T>(array: T[]): T[] {
+  return array.sort(() => Math.random() - 0.5);
+}
