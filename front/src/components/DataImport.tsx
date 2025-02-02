@@ -27,11 +27,11 @@ export default function DataImport({ handleNext }: Props) {
     setFormState((prevState) => {
       return { ...prevState, isGlobalLoading: false };
     });
-  }, []);
+  }, [setFormState]);
 
-  const onDrop = (acceptedFiles: File[]) => {
+  const onDrop = async (acceptedFiles: File[]) => {
     formState.isGlobalLoading = true;
-    acceptedFiles.forEach(async (file) => {
+    for (const file of acceptedFiles) {
       const formData = new FormData();
       formData.append("file", file);
       try {
@@ -55,7 +55,7 @@ export default function DataImport({ handleNext }: Props) {
       } catch (error) {
         alert("An error occurred during upload.");
       }
-    });
+    }
   };
 
   const { getRootProps, getInputProps } = useDropzone({

@@ -190,7 +190,7 @@ export async function calculatePrices({
   const new_data: CalculatedData[] = [];
   let totalCost = 0;
 
-  data.forEach(async (item) => {
+  for (const item of data) {
     const endOfSlotRecorded = new Date(item.recordedAt);
     const commonThrowError = `${offerType}-${optionName}-${endOfSlotRecorded.toISOString()}`;
 
@@ -218,7 +218,7 @@ export async function calculatePrices({
     } else {
       throw new Error(`No new_cost found ${commonThrowError}`);
     }
-  });
+  }
 
   return { detailedData: new_data, totalCost, offerType, optionName };
 }

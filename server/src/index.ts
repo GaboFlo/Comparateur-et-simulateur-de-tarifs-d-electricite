@@ -24,12 +24,14 @@ import {
 } from "./utils";
 
 const app = express();
+app.disable("x-powered-by");
 const port = 10000;
-/* const corsOptions = {
-  origin: "http://localhost:3000",
-}; */ /* TODO */
 
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:3000",
+};
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 const uploadRelativeDir = "./uploads";
@@ -110,7 +112,10 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
   });
 };
 
-const upload = multer({ dest: uploadRelativeDir });
+const upload = multer({
+  dest: uploadRelativeDir,
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2 MB file size limit
+});
 app.post("/uploadEdfFile", upload.single("file"), uploadHandler);
 
 app.get("/stream/:fileId", async (req, res) => {
@@ -173,9 +178,13 @@ app.get("/stream/:fileId", async (req, res) => {
   (async () => {
     for (const option of typedPriceMappingFile) {
       await new Promise((resolve) =>
-        setImmediate(async () => {
-          await sendData(option);
-          resolve(null);
+        setImmediate(() => {
+          (async () => {
+            await sendData(option);
+            resolve(null);
+          })().catch((err) => {
+            console.error(err);
+          });
         })
       );
     }
@@ -198,27 +207,31 @@ app.listen(port, () => {
   console.info(`Server is running on http://localhost:${port}`);
 });
 
-cron.schedule("1 */3 * * *", async () => {
-  const firstDate = new Date("2020-01-01");
-  const now = new Date();
+cron.schedule("10 */3 * * *", () => {
+  (async () => {
+    const firstDate = new Date("2020-01-01");
+    const now = new Date();
 
-  /* Holidays */
-  const holidays = getHolidaysBetweenDates([firstDate, now]);
-  const holidayPath = `${staticsRelativeDir}/holidays.json`;
-  await fs.writeFile(holidayPath, JSON.stringify(holidays), (err) => {
-    if (err) {
-      console.error("Error writing holidays file", err);
-      return;
-    }
-  });
+    /* Holidays */
+    const holidays = getHolidaysBetweenDates([firstDate, now]);
+    const holidayPath = `${staticsRelativeDir}/holidays.json`;
+    await fs.writeFile(holidayPath, JSON.stringify(holidays), (err) => {
+      if (err) {
+        console.error("Error writing holidays file", err);
+        return;
+      }
+    });
 
-  /* Tempo */
-  const tempoDates = await fetchTempoData();
-  const tempoFilePath = `${staticsRelativeDir}/tempo.json`;
-  await fs.writeFile(tempoFilePath, JSON.stringify(tempoDates), (err) => {
-    if (err) {
-      console.error("Error writing tempo file", err);
-      return;
-    }
+    /* Tempo */
+    const tempoDates = await fetchTempoData();
+    const tempoFilePath = `${staticsRelativeDir}/tempo.json`;
+    await fs.writeFile(tempoFilePath, JSON.stringify(tempoDates), (err) => {
+      if (err) {
+        console.error("Error writing tempo file", err);
+        return;
+      }
+    });
+  })().catch((err) => {
+    console.error(err);
   });
 });
