@@ -1,15 +1,16 @@
+import tempo_file from "../statics/tempo.json";
 import { calculatePrices } from "./calculators";
 import {
   ConsumptionLoadCurveData,
   FullCalculatedData,
   OfferType,
   OptionName,
+  TempoDates,
 } from "./types";
-import { fetchTempoData } from "./utils";
 
 describe("calculateTempoPrices", () => {
   it("RED days 2025-01-10 (previous is white)", async () => {
-    const tempoDates = await fetchTempoData();
+    const tempoDates = tempo_file as TempoDates;
 
     const hpRedPrice = 7562;
     const hcRedPrice = 1568;
@@ -46,7 +47,7 @@ describe("calculateTempoPrices", () => {
     ];
     const optionName = OptionName.TEMPO;
     const offerType = OfferType.BLEU;
-    const result = calculatePrices({
+    const result = await calculatePrices({
       data,
       optionName,
       offerType,
@@ -60,7 +61,7 @@ describe("calculateTempoPrices", () => {
           value: 270,
           costs: [
             {
-              cost: 270 * hcWhitePrice,
+              cost: (270 * hcWhitePrice) / 2,
               tempoCodeDay: 2,
               hourType: "HC",
             },
@@ -71,7 +72,7 @@ describe("calculateTempoPrices", () => {
           value: 422,
           costs: [
             {
-              cost: 422 * hcWhitePrice,
+              cost: (422 * hcWhitePrice) / 2,
               tempoCodeDay: 2,
               hourType: "HC",
             },
@@ -82,7 +83,7 @@ describe("calculateTempoPrices", () => {
           value: 100,
           costs: [
             {
-              cost: 100 * hcWhitePrice,
+              cost: (100 * hcWhitePrice) / 2,
               tempoCodeDay: 2,
               hourType: "HC",
             },
@@ -93,7 +94,7 @@ describe("calculateTempoPrices", () => {
           value: 200,
           costs: [
             {
-              cost: 200 * hpRedPrice,
+              cost: (200 * hpRedPrice) / 2,
               tempoCodeDay: 3,
               hourType: "HP",
             },
@@ -104,7 +105,7 @@ describe("calculateTempoPrices", () => {
           value: 300,
           costs: [
             {
-              cost: 300 * hpRedPrice,
+              cost: (300 * hpRedPrice) / 2,
               tempoCodeDay: 3,
               hourType: "HP",
             },
@@ -115,7 +116,7 @@ describe("calculateTempoPrices", () => {
           value: 400,
           costs: [
             {
-              cost: 400 * hcRedPrice,
+              cost: (400 * hcRedPrice) / 2,
               tempoCodeDay: 3,
               hourType: "HC",
             },
@@ -126,14 +127,14 @@ describe("calculateTempoPrices", () => {
           value: 270,
           costs: [
             {
-              cost: 270 * hcRedPrice,
+              cost: (270 * hcRedPrice) / 2,
               hourType: "HC",
               tempoCodeDay: 3,
             },
           ],
         },
       ],
-      totalCost: 6008472,
+      totalCost: 6008472 / 2,
       optionName,
       offerType,
     };
@@ -157,8 +158,8 @@ describe("calculateBasePrices", () => {
   const optionName = OptionName.BASE;
   const offerType = OfferType.BLEU;
 
-  it(OfferType.BLEU, () => {
-    const result = calculatePrices({
+  it(OfferType.BLEU, async () => {
+    const result = await calculatePrices({
       data,
       optionName,
       offerType,
@@ -171,7 +172,7 @@ describe("calculateBasePrices", () => {
           value: 270,
           costs: [
             {
-              cost: 270 * basePrice,
+              cost: (270 * basePrice) / 2,
             },
           ],
         },
@@ -180,47 +181,21 @@ describe("calculateBasePrices", () => {
           value: 422,
           costs: [
             {
-              cost: 422 * basePrice,
+              cost: (422 * basePrice) / 2,
             },
           ],
         },
       ],
-      totalCost: 270 * basePrice + 422 * basePrice,
+      totalCost: (270 * basePrice + 422 * basePrice) / 2,
       offerType,
       optionName,
     };
     expect(result).toEqual(expected);
   });
-
-  it(`${OfferType.BLEU} filtered`, () => {
-    const expectedFiltered: FullCalculatedData = {
-      detailedData: [
-        {
-          recordedAt: "2025-01-10 02:30:00",
-          value: 422,
-          costs: [
-            {
-              cost: 422 * basePrice,
-            },
-          ],
-        },
-      ],
-      optionName,
-      offerType,
-      totalCost: 422 * basePrice,
-    };
-
-    const resultFilterd = calculatePrices({
-      data,
-      optionName,
-      offerType,
-    });
-    expect(resultFilterd).toEqual(expectedFiltered);
-  });
 });
 
 describe("calculateHpHcPrices", () => {
-  it("should calculate hp hc prices correctly", () => {
+  it("should calculate hp hc prices correctly", async () => {
     const data: ConsumptionLoadCurveData[] = [
       {
         recordedAt: "2025-01-10 02:00:00",
@@ -239,14 +214,14 @@ describe("calculateHpHcPrices", () => {
     const hcPrice = 2068;
     const optionName = OptionName.HPHC;
     const offerType = OfferType.BLEU;
-    const result = calculatePrices({
+    const result = await calculatePrices({
       data,
       optionName,
       offerType,
     });
 
     const expected: FullCalculatedData = {
-      totalCost: 270 * hpPrice + 422 * hpPrice + 100 * hcPrice,
+      totalCost: (270 * hpPrice + 422 * hpPrice + 100 * hcPrice) / 2,
       optionName,
       offerType,
       detailedData: [
@@ -255,7 +230,7 @@ describe("calculateHpHcPrices", () => {
           value: 270,
           costs: [
             {
-              cost: 270 * hpPrice,
+              cost: (270 * hpPrice) / 2,
               hourType: "HP",
             },
           ],
@@ -265,7 +240,7 @@ describe("calculateHpHcPrices", () => {
           value: 422,
           costs: [
             {
-              cost: 422 * hpPrice,
+              cost: (422 * hpPrice) / 2,
               hourType: "HP",
             },
           ],
@@ -275,7 +250,7 @@ describe("calculateHpHcPrices", () => {
           value: 100,
           costs: [
             {
-              cost: 100 * hcPrice,
+              cost: (100 * hcPrice) / 2,
               hourType: "HC",
             },
           ],

@@ -167,7 +167,7 @@ function calculateTempoPrices(
   const relevantCost =
     slotType === "HP" ? relevantTempoMapping.HP : relevantTempoMapping.HC;
   return {
-    cost: item.value * relevantCost,
+    cost: (item.value * relevantCost) / 2,
     hourType: slotType,
     tempoCodeDay,
   };
