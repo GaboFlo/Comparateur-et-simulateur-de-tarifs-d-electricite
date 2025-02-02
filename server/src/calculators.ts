@@ -121,7 +121,8 @@ function calculateTempoPrices(
   item: CalculatedData,
   tempoMapping: TempoMapping[]
 ): Cost {
-  /* TODO perfs */
+  /* Améliorer les perfs */
+
   // Determine hourType
   const endOfSlotRecorded = new Date(item.recordedAt);
   const hour = endOfSlotRecorded.getHours();
