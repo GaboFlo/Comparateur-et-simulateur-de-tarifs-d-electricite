@@ -29,7 +29,7 @@ const getDistinctOfferTypes = (mapping: PriceMappingFile) => {
 
 export const getAvailableOptionsForOffer = (
   mapping: PriceMappingFile,
-  offerType: OfferType | ""
+  offerType: OfferType
 ): OptionName[] => {
   if (!offerType) return [];
   const availableOptions = mapping
@@ -50,14 +50,22 @@ export default function CurrentOfferForm() {
       });
     };
     fetchOffers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (event: SelectChangeEvent<string | number>) => {
     const { name, value } = event.target;
     setFormState((prevState) => {
       const newState = { ...prevState, [name]: value };
-      if (name === "offerType" && value !== prevState.offerType) {
-        newState.optionType = ""; // Reset optionType when offerType changes
+      if (
+        name === "offerType" &&
+        value !== prevState.offerType &&
+        formState.allOffers
+      ) {
+        newState.optionType = getAvailableOptionsForOffer(
+          formState.allOffers,
+          newState.offerType
+        )[0];
       }
       return newState;
     });

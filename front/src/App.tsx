@@ -1,5 +1,6 @@
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
+import { LinearProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -10,8 +11,6 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import * as React from "react";
-/* import Info from "./components/Info";*/
-import { LinearProgress } from "@mui/material";
 import CurrentOfferForm from "./components/CurrentOfferForm";
 import DataImport from "./components/DataImport";
 import InfoMobile from "./components/InfoMobile";
@@ -120,7 +119,7 @@ export default function App() {
               </Stepper>
             </Box>
           </Box>
-          <Card sx={{ display: { xs: "flex", md: "none" }, width: "100%" }}>
+          <Card sx={{ display: { xs: "flex" }, width: "100%" }}>
             <CardContent
               sx={{
                 display: "flex",

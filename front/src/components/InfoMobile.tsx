@@ -4,12 +4,19 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
+import { Stack } from "@mui/system";
 import * as React from "react";
 import Info from "./Info";
-import { Stack } from "@mui/system";
 
 export default function InfoMobile() {
   const [open, setOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!localStorage.getItem("explanation_modal_opened")) {
+      setOpen(true);
+      localStorage.setItem("explanation_modal_opened", "true");
+    }
+  }, []);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -34,7 +41,7 @@ export default function InfoMobile() {
         endIcon={<ExpandMoreRoundedIcon />}
         onClick={toggleDrawer(true)}
       >
-        Pourquoi ce site ?
+        Comment ça marche ?
       </Button>
       <Drawer
         open={open}

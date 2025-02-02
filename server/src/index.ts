@@ -49,7 +49,10 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
   }
   const startNumber = Number(start);
   const endNumber = Number(end);
-  const dateRange: [Date, Date] = [new Date(startNumber), new Date(endNumber)];
+  const askedDateRange: [Date, Date] = [
+    new Date(startNumber),
+    new Date(endNumber),
+  ];
 
   if (isNaN(startNumber) || isNaN(endNumber)) {
     res.status(400).send("Invalid start or end query parameters");
@@ -81,16 +84,20 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
           res.sendStatus(500).send("Impossible to save json");
           throw err;
         } else {
+          const dateRangeOfFile = findFirstAndLastDate(parsedData);
+          const analyzedDateRange: [number, number] = [
+            Math.max(dateRangeOfFile[0], askedDateRange[0].getTime()),
+            Math.min(dateRangeOfFile[1], askedDateRange[1].getTime()),
+          ];
           const seasonData = analyseHourByHourBySeason({
             data: parsedData,
-            dateRange,
+            dateRange: analyzedDateRange,
           });
           res.send({
             seasonData,
             fileId,
-            analyzedDateRange: findFirstAndLastDate(parsedData),
+            analyzedDateRange,
           });
-          // Delete the file after sending the response
           return;
         }
       });

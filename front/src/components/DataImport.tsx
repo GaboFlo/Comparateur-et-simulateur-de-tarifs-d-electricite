@@ -24,6 +24,16 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   const { formState, setFormState } = useFormContext();
 
   React.useEffect(() => {
+    const explanationOpened = localStorage.getItem(
+      "explanation_edf_zip_opened"
+    );
+    if (explanationOpened !== "true") {
+      setOpenToolTipCsv(true);
+      localStorage.setItem("explanation_edf_zip_opened", "true");
+    }
+  }, []);
+
+  React.useEffect(() => {
     setFormState((prevState) => {
       return { ...prevState, isGlobalLoading: false };
     });
@@ -128,7 +138,8 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
               >
                 <Grid>
                   Vous pouvez télécharger votre consommation, par pallier de 30
-                  minutes, sur votre Espace EDF
+                  minutes, sur votre Espace EDF. Le fichier ZIP doit être
+                  réimporté ici.
                 </Grid>
                 <Grid>
                   <Button onClick={handleTooltipCsvOpen}>
