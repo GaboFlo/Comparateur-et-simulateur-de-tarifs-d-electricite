@@ -25,7 +25,7 @@ interface FormState {
   isGlobalLoading: boolean;
   seasonHourlyAnalysis?: SeasonHourlyAnalysis[];
   dateRange: [Date, Date];
-  analyzedDateRange?: [Date, Date];
+  analyzedDateRange?: [number, number];
   fileId?: string;
 }
 

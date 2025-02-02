@@ -1,6 +1,13 @@
 import hphc_mapping from "../statics/hp_hc.json";
 import { HpHcFileMapping, OfferType, OptionName, PowerClass } from "./types";
-import { findMonthlySubscriptionCost, getSeason, isHpOrHcSlot } from "./utils";
+import {
+  findFirstAndLastDate,
+  findMonthlySubscriptionCost,
+  getHolidaysBetweenDates,
+  getSeason,
+  isHoliday,
+  isHpOrHcSlot,
+} from "./utils";
 
 describe("isHpOrHcSlot", () => {
   const hphcMapping = hphc_mapping as HpHcFileMapping[];
@@ -105,5 +112,67 @@ describe("findMonthlySubscriptionCost", () => {
       OptionName.BASE
     );
     expect(monthly).toBe(1589);
+  });
+});
+
+describe("findFirstAndLastDate", () => {
+  it("findFirstAndLastDate", () => {
+    const data = [
+      {
+        recordedAt: "2025-01-10 02:00:00",
+        value: 270,
+      },
+      {
+        recordedAt: "2025-01-10 02:30:00",
+        value: 422,
+      },
+      {
+        recordedAt: "2025-01-10 06:00:00",
+        value: 100,
+      },
+      {
+        recordedAt: "2025-01-10 06:30:00",
+        value: 200,
+      },
+      {
+        recordedAt: "2025-01-10 22:00:00",
+        value: 300,
+      },
+      {
+        recordedAt: "2025-01-10 22:30:00",
+        value: 400,
+      },
+      {
+        recordedAt: "2025-01-11 01:00:00",
+        value: 270,
+      },
+    ];
+    expect(findFirstAndLastDate(data)).toStrictEqual([
+      new Date("2025-01-10T01:00:00.000Z").getTime(),
+      new Date("2025-01-11").getTime(),
+    ]);
+  });
+});
+describe("Holidays", () => {
+  const holidays = getHolidaysBetweenDates([
+    new Date("2024-12-01"),
+    new Date("2025-05-31"),
+  ]);
+  it("getHolidaysBetweenDates", () => {
+    expect(holidays).toEqual([
+      "2024-12-25",
+      "2025-01-01",
+      "2025-04-21",
+      "2025-05-01",
+      "2025-05-08",
+      "2025-05-25",
+      "2025-05-29",
+    ]);
+  });
+  it("isHoliday", () => {
+    expect(isHoliday(new Date("2025-01-01 00:00:00"))).toBe(false);
+    expect(isHoliday(new Date("2025-01-01 02:30:00"))).toBe(true);
+    expect(isHoliday(new Date("2025-01-01 23:30:00"))).toBe(true);
+    expect(isHoliday(new Date("2025-01-02 00:00:00"))).toBe(true);
   });
 });

@@ -1,12 +1,13 @@
 import axios from "axios";
-import { addDays, getDate, getMonth } from "date-fns";
+import { addDays, format, getDate, getMonth, subMinutes } from "date-fns";
 import Holidays from "date-holidays";
 import * as fs from "fs/promises";
-
+import allHolidays from "../statics/holidays.json";
 import price_mapping from "../statics/price_mapping.json";
 import { ConsumptionLoadCurveData } from "./csvParser";
 import {
   GridMapping,
+  Mapping,
   OfferType,
   OptionName,
   PowerClass,
@@ -20,13 +21,13 @@ export const PRICE_COEFF = 100 * 100000;
 
 const hd = new Holidays("FR");
 
-export const getHolidaysBetweenDates = (range: [Date, Date]): Date[] => {
-  const holidays: Date[] = [];
+export const getHolidaysBetweenDates = (range: [Date, Date]) => {
+  const holidays: string[] = [];
   let currentDate = range[0];
 
   while (currentDate <= range[1]) {
     if (isFrenchHoliday(currentDate)) {
-      holidays.push(new Date(currentDate));
+      holidays.push(format(new Date(currentDate), "yyyy-MM-dd"));
     }
     currentDate = addDays(currentDate, 1);
   }
@@ -100,18 +101,15 @@ export function findMonthlySubscriptionCost(
   );
 }
 
-export const findFirstAndLastDate = (
-  data: ConsumptionLoadCurveData[]
-): [Date, Date] => {
+export const findFirstAndLastDate = (data: ConsumptionLoadCurveData[]) => {
   const dates = data.map((item) => new Date(item.recordedAt)?.getTime());
-  const firstDate = new Date(Math.min(...dates));
-  const lastDate = new Date(Math.max(...dates));
+  const firstDate = Math.min(...dates);
+  const lastDate = Math.max(...dates);
   return [firstDate, lastDate];
 };
 
 export async function readFileAsString(filePath: string): Promise<string> {
   const buffer = await fs.readFile(filePath);
-
   if (buffer instanceof Buffer) {
     const fileContent: string = buffer.toString("utf8");
     return fileContent;
@@ -132,4 +130,17 @@ export async function fetchTempoData() {
   } catch {
     throw new Error("Error fetching tempo data");
   }
+}
+
+export function isHoliday(endOfSlotRecorded: Date) {
+  const holidays = allHolidays;
+  const minuteBefore = subMinutes(endOfSlotRecorded, 1);
+  return holidays.includes(format(minuteBefore, "yyyy-MM-dd"));
+}
+
+export function isDayApplicable(mapping: Mapping, endOfSlotRecorded: Date) {
+  return (
+    mapping.applicableDays.includes(endOfSlotRecorded.getDay()) ||
+    (mapping.include_holidays && isHoliday(endOfSlotRecorded))
+  );
 }

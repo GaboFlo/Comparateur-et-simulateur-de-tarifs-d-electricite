@@ -1,6 +1,4 @@
 import { differenceInMonths, format, subDays } from "date-fns";
-
-import allHolidays from "../statics/holidays.json";
 import hphc_mapping from "../statics/hp_hc.json";
 import price_mapping from "../statics/price_mapping.json";
 import tempo_file from "../statics/tempo.json";
@@ -25,6 +23,7 @@ import {
 } from "./types";
 import {
   findMonthlySubscriptionCost,
+  isDayApplicable,
   isHpOrHcSlot,
   PRICE_COEFF,
 } from "./utils";
@@ -34,20 +33,6 @@ interface CalculateProps {
   optionName: OptionName;
   offerType: OfferType;
   tempoDates?: TempoDates;
-}
-
-function isDayApplicable(mapping: Mapping, endOfSlotRecorded: Date) {
-  const holidays = allHolidays;
-  const normalizedDate = new Date(
-    endOfSlotRecorded.getFullYear(),
-    endOfSlotRecorded.getMonth(),
-    endOfSlotRecorded.getDate()
-  );
-  return (
-    mapping.applicableDays.includes(endOfSlotRecorded.getDay()) ||
-    (mapping.include_holidays &&
-      holidays.includes(normalizedDate.toISOString()))
-  );
 }
 
 function findCorrespondingMapping(
