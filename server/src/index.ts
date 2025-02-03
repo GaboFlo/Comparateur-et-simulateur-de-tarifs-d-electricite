@@ -206,7 +206,7 @@ app.listen(port, () => {
   console.info(`Server is running on http://localhost:${port}`);
 });
 
-cron.schedule("*/1 * * * *", () => {
+cron.schedule("10 */3 * * *", () => {
   (async () => {
     const firstDate = new Date("2020-01-01");
     const now = new Date();
