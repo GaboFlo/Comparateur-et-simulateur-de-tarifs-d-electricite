@@ -1,7 +1,7 @@
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded";
-import { Button, CircularProgress } from "@mui/material";
+import { CircularProgress, IconButton } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
@@ -129,24 +129,18 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                 width: "100%",
               }}
             >
-              <Grid
-                container
-                alignItems="center"
-                justifyContent="flex-end"
-                spacing={1}
-                direction="row"
+              Vous pouvez télécharger votre consommation, par pallier de 30
+              minutes, sur votre Espace EDF. Le fichier ZIP doit être réimporté
+              ici.{" "}
+              <IconButton
+                onClick={handleTooltipCsvOpen}
+                size="medium"
+                sx={{
+                  border: "none",
+                }}
               >
-                <Grid>
-                  Vous pouvez télécharger votre consommation, par pallier de 30
-                  minutes, sur votre Espace EDF. Le fichier ZIP doit être
-                  réimporté ici.
-                </Grid>
-                <Grid>
-                  <Button onClick={handleTooltipCsvOpen}>
-                    <HelpOutlineIcon sx={{ height: 20 }} />
-                  </Button>
-                </Grid>
-              </Grid>
+                <HelpOutlineIcon />
+              </IconButton>
               <TooltipModal
                 title="Comment télécharger votre consommation ?"
                 description="Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/><br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."

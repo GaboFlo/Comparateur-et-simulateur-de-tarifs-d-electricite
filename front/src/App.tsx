@@ -21,11 +21,7 @@ import { useFormContext } from "./context/FormContext";
 import AppTheme from "./theme/AppTheme";
 import ColorModeIconDropdown from "./theme/ColorModeIconDropdown";
 
-const steps = [
-  "Votre offre actuelle",
-  "Vos données de consommation",
-  "Simulations",
-];
+const steps = ["Votre offre actuelle", "Votre consommation", "Simulations"];
 
 export default function App() {
   const { formState } = useFormContext();
@@ -40,6 +36,9 @@ export default function App() {
   React.useEffect(() => {
     if (stepParam && parseInt(stepParam) !== activeStep) {
       setActiveStep(parseInt(stepParam));
+    }
+    if (!formState.seasonHourlyAnalysis && activeStep === 2) {
+      handleBack();
     }
   }, [activeStep, stepParam]);
 

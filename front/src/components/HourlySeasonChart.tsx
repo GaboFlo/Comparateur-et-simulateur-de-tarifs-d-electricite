@@ -1,6 +1,6 @@
 import { Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import { PieChart } from "@mui/x-charts";
+import { pieArcLabelClasses, PieChart } from "@mui/x-charts";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useFormContext } from "../context/FormContext";
 import { Season } from "../types";
@@ -8,9 +8,10 @@ import { Season } from "../types";
 export default function HourlySeasonChart() {
   const { formState } = useFormContext();
 
-  function valueFormatter(value: number | null) {
+  const valueFormatter = (value: number | null) => {
     return value ? `${Math.round(value).toFixed(0)} kWh` : "N/A";
-  }
+  };
+  const pieValueFormatter = (item: { value: number }) => `${item.value} kWh`;
 
   const colorPalette: Record<Season, string> = {
     Été: "#FFD700",
@@ -75,23 +76,24 @@ export default function HourlySeasonChart() {
           <PieChart
             series={[
               {
-                data: formState.seasonHourlyAnalysis.map(
-                  (d) => ({
-                    id: d.season,
-                    label: d.season,
-                    value: d.seasonTotalSum,
-                    color: getColor(d.season),
-                  }),
-                  valueFormatter
-                ),
+                data: formState.seasonHourlyAnalysis.map((d) => ({
+                  id: d.season,
+                  label: d.season,
+                  value: d.seasonTotalSum,
+                  color: getColor(d.season),
+                  arcLabel: (item: { value: any }) => `${item.value} lol`,
+                  arcLabelMinAngle: 35,
+                  arcLabelRadius: "60%",
+                })),
+                valueFormatter: pieValueFormatter,
               },
             ]}
-            height={300}
-            slotProps={{
-              legend: {
-                hidden: false,
+            sx={{
+              [`& .${pieArcLabelClasses.root}`]: {
+                fontWeight: "bold",
               },
             }}
+            height={300}
           />
         </>
       )}

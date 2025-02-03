@@ -8,9 +8,12 @@ export default function Footer() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          flexWrap: "wrap",
+          whiteSpace: "nowrap",
+          gap: "1rem",
         }}
       >
-        &copy; 2025{" "}
+        &copy; 2025
         <Link
           href="https://gaboflo.fr"
           underline="hover"
@@ -20,7 +23,7 @@ export default function Footer() {
         >
           GaboFlo{" "}
         </Link>{" "}
-        - Tous droits réservés -{" "}
+        Tous droits réservés{" "}
         <Link
           href="https://buymeacoffee.com/gaboflo"
           underline="hover"
@@ -30,7 +33,6 @@ export default function Footer() {
         >
           🎉 Me soutenir 🎉
         </Link>{" "}
-        -{" "}
         <Link
           href="https://github.com/GaboFlo/ComparateurFournisseurElectricity"
           underline="hover"
@@ -38,7 +40,17 @@ export default function Footer() {
           rel="noopener noreferrer"
           sx={{ display: "inline-flex", alignItems: "center" }} // Align link content too
         >
-          💻 GitHub 💻
+          <img
+            src="./github.svg"
+            alt="GitHub"
+            style={{
+              marginRight: "0.5rem",
+              height: "1.1rem",
+              backgroundColor: "white",
+              borderRadius: "2px",
+            }}
+          />
+          GitHub
         </Link>
         <img
           src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png"

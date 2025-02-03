@@ -28,7 +28,7 @@ app.disable("x-powered-by");
 const port = 10000;
 
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: ["http://localhost:3000", "http://192.168.76.204:3000"],
 };
 app.use(cors(corsOptions));
 

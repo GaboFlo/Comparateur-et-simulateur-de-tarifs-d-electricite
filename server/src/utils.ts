@@ -109,12 +109,16 @@ export const findFirstAndLastDate = (data: ConsumptionLoadCurveData[]) => {
 };
 
 export async function readFileAsString(filePath: string): Promise<string> {
-  const buffer = await fs.readFile(filePath);
-  if (buffer instanceof Buffer) {
-    const fileContent: string = buffer.toString("utf8");
-    return fileContent;
-  } else {
-    throw new Error("Could not read file as string."); // Ou une autre erreur appropriée
+  try {
+    const buffer = await fs.readFile(filePath);
+    if (buffer instanceof Buffer) {
+      const fileContent: string = buffer.toString("utf8");
+      return fileContent;
+    } else {
+      throw new Error("Could not read file as string.");
+    }
+  } catch {
+    throw new Error("File not found");
   }
 }
 

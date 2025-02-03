@@ -10,7 +10,7 @@ export default function Simulations() {
   return (
     <Stack textAlign={"center"}>
       <Typography variant="h5">
-        Simulations du{" "}
+        Selon votre consommation du{" "}
         {formState.analyzedDateRange
           ? format(formState.analyzedDateRange[0], "dd/MM/yyyy")
           : format(formState.dateRange[0], "dd/MM/yyyy")}{" "}
