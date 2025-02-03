@@ -1,4 +1,4 @@
-import tempo_file from "../statics/tempo.json";
+import tempo_file from "../assets/tempo.json";
 import { calculatePrices } from "./calculators";
 import {
   ConsumptionLoadCurveData,

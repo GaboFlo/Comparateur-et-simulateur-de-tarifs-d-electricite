@@ -35,7 +35,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 const uploadRelativeDir = "./uploads";
-export const staticsRelativeDir = "./statics";
+export const assetsRelativeDir = "./assets";
 
 const uploadHandler = async (req: Request, res: Response): Promise<void> => {
   if (!req.file) {
@@ -213,7 +213,7 @@ cron.schedule("*/1 * * * *", () => {
 
     /* Holidays */
     const holidays = getHolidaysBetweenDates([firstDate, now]);
-    const holidayPath = `${staticsRelativeDir}/holidays.json`;
+    const holidayPath = `${assetsRelativeDir}/holidays.json`;
     fs.writeFile(holidayPath, JSON.stringify(holidays), (err) => {
       if (err) {
         console.error("Error writing holidays file", err);
@@ -223,7 +223,7 @@ cron.schedule("*/1 * * * *", () => {
 
     /* Tempo */
     const tempoDates = await fetchTempoData();
-    const tempoFilePath = `${staticsRelativeDir}/tempo.json`;
+    const tempoFilePath = `${assetsRelativeDir}/tempo.json`;
     fs.writeFile(tempoFilePath, JSON.stringify(tempoDates), (err) => {
       if (err) {
         console.error("Error writing tempo file", err);

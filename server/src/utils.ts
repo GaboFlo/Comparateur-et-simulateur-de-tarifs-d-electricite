@@ -2,7 +2,7 @@ import axios from "axios";
 import { addDays, format, getDate, getMonth, subMinutes } from "date-fns";
 import Holidays from "date-holidays";
 import * as fs from "fs/promises";
-import allHolidays from "../statics/holidays.json";
+import allHolidays from "../assets/holidays.json";
 import price_mapping from "../statics/price_mapping.json";
 import { ConsumptionLoadCurveData } from "./csvParser";
 import {

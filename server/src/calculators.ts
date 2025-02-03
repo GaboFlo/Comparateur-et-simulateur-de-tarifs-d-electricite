@@ -1,7 +1,7 @@
 import { differenceInMonths, format, subDays } from "date-fns";
+import tempo_file from "../assets/tempo.json";
 import hphc_mapping from "../statics/hp_hc.json";
 import price_mapping from "../statics/price_mapping.json";
-import tempo_file from "../statics/tempo.json";
 import {
   CalculatedData,
   ComparisonTableInterfaceRow,
