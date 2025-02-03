@@ -2,6 +2,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   Backdrop,
   Box,
+  Button,
   Fade,
   IconButton,
   Modal,
@@ -76,7 +77,7 @@ export default function TooltipModal({
             {description && linkifiedDescription && (
               <Typography
                 id="modal-modal-description"
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, textAlign: "justify" }}
                 dangerouslySetInnerHTML={{ __html: linkifiedDescription }}
               />
             )}
@@ -92,6 +93,11 @@ export default function TooltipModal({
                 maxWidth: "80%",
               }}
             />
+            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+              <Button variant="contained" onClick={handleClose} sx={{ mt: 2 }}>
+                J'ai compris
+              </Button>
+            </Box>
           </Box>
         </Fade>
       </Modal>

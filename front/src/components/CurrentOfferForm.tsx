@@ -1,19 +1,28 @@
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import {
   CircularProgress,
   FormControl,
   FormLabel,
   Grid,
+  Link,
   ListItemIcon,
   ListItemText,
   MenuItem,
   Select,
   SelectChangeEvent,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/system";
 import { useEffect } from "react";
 import { useFormContext } from "../context/FormContext";
 import { getAvailableOffers } from "../services/httpCalls";
-import { OfferType, Option, PowerClass, PriceMappingFile } from "../types";
+import {
+  OfferType,
+  Option,
+  OptionKey,
+  PowerClass,
+  PriceMappingFile,
+} from "../types";
 
 const FormGrid = styled(Grid)(() => ({
   display: "flex",
@@ -52,6 +61,12 @@ export default function CurrentOfferForm() {
     fetchOffers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const getLinkForOffer = (offerType: OfferType, optionKey: OptionKey | "") => {
+    return formState.allOffers?.find((o) => {
+      return o.offerType === offerType && o.optionKey === optionKey;
+    })?.link;
+  };
 
   const handleChange = (event: SelectChangeEvent<string | number>) => {
     const { name, value } = event.target;
@@ -135,6 +150,22 @@ export default function CurrentOfferForm() {
               </MenuItem>
             ))}
         </Select>
+        <Typography
+          sx={{ p: 1, fontWeight: "small" }}
+          variant="caption"
+          gutterBottom
+        >
+          <Link
+            href={getLinkForOffer(formState.offerType, formState.optionType)}
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="hover"
+          >
+            <OpenInNewIcon sx={{ fontSize: "1rem", mr: 0.5 }} />
+            Perdu ? Cliquez ici pour découvrir le descriptif de l'option pour
+            voir si elle correspond à votre situation.
+          </Link>
+        </Typography>
       </FormControl>
       <FormControl fullWidth sx={{ marginY: 1 }}>
         <FormLabel required>Puissance (kVA)</FormLabel>

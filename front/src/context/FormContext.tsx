@@ -27,6 +27,7 @@ interface FormState {
   dateRange: [Date, Date];
   analyzedDateRange?: [number, number];
   fileId?: string;
+  optionLink?: string;
 }
 
 interface FormContextProps {

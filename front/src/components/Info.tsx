@@ -15,7 +15,8 @@ export default function Info() {
         simulations sur la base de vos déclarations approximatives et qui ne
         prennent pas en compte votre consommation réelle. Ces sites vous
         demandent votre adresse mail pour recevoir vos données simulées (et vous
-        envoyer des mails par la suite).
+        envoyer des mails par la suite). <br /> L'objectif de ce simulateur est
+        de s'affranchir de ces défaut, avec un code open-source.
       </Typography>
       <Alert
         severity="info"
@@ -55,8 +56,21 @@ export default function Info() {
             la simulation (si le prix de l'électricité a été modifié dans
             l'intervalle de la période simulée)
           </li>
-          <li>Seul EDF est pour l'instant représenté</li>
-          <li>Ce simulateur est en phase de test</li>
+          <li>
+            Seules les offres d'EDF sont pour l'instant reprises (version bêta
+            de ce comparateur, aucunement affiliée à EDF)
+          </li>
+          <li>
+            Ce simulateur reste en phase de test, pour toutes suggestions,
+            remontées de bugs, ou participations merci de passer uniquement par{" "}
+            <a
+              href="https://github.com/GaboFlo/ComparateurFournisseurElectricity/issues"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub
+            </a>
+          </li>
         </ul>
       </Alert>{" "}
       <Typography

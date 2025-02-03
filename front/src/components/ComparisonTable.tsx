@@ -1,3 +1,4 @@
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { CircularProgress, LinearProgress, Link } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
@@ -165,13 +166,14 @@ export function ComparisonTable() {
                       {row.offerType}
                     </StyledTableCell>
                     <StyledTableCell align="center">
+                      {row.optionName}{" "}
                       <Link
                         href={row.link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        underline="hover"
+                        underline="none"
                       >
-                        {row.optionName}
+                        <OpenInNewIcon sx={{ fontSize: "1rem" }} />
                       </Link>
                     </StyledTableCell>
                     <StyledTableCell align="center">

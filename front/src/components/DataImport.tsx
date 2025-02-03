@@ -149,7 +149,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
               </Grid>
               <TooltipModal
                 title="Comment télécharger votre consommation ?"
-                description="Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."
+                description="Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/><br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."
                 open={openTooltipCsv}
                 handleClose={handleTooltipCsvClose}
                 imgPath="/edf-download.png"
