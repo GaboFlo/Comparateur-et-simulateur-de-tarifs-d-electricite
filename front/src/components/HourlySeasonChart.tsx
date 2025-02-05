@@ -1,4 +1,4 @@
-import { Paper } from "@mui/material";
+import { Divider, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { pieArcLabelClasses, PieChart } from "@mui/x-charts";
 import { BarChart } from "@mui/x-charts/BarChart";
@@ -27,14 +27,15 @@ export default function HourlySeasonChart() {
   const chartSetting = {
     yAxis: [
       {
-        label: "Consommation (kWh)",
+        label: `Consommation (kWh)
+        `,
       },
     ],
     height: 300,
   };
 
   return (
-    <Paper>
+    <Paper sx={{ padding: 2 }}>
       <Typography component="h2" gutterBottom variant="h6">
         Répartition de la consommation par heure et par saison
       </Typography>
@@ -45,7 +46,7 @@ export default function HourlySeasonChart() {
       ) : (
         <>
           <BarChart
-            borderRadius={5}
+            borderRadius={10}
             xAxis={[
               {
                 scaleType: "band",
@@ -61,7 +62,7 @@ export default function HourlySeasonChart() {
               valueFormatter,
               color: getColor(d.season),
             }))}
-            margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
+            margin={{ left: 75, right: 20, top: 20, bottom: 20 }}
             grid={{ horizontal: true }}
             slotProps={{
               axisLabel: {
@@ -73,15 +74,25 @@ export default function HourlySeasonChart() {
             }}
             {...chartSetting}
           />
+          <Typography component="h3" gutterBottom variant="body2">
+            Heure
+          </Typography>
+          <Divider sx={{ m: 2 }} />
+          <Typography component="h2" gutterBottom variant="h6">
+            Répartition de la consommation par saison
+          </Typography>
           <PieChart
             series={[
               {
+                arcLabel: (item: { value: any }) =>
+                  `${Math.round(
+                    (item.value / formState.totalConsumption) * 100
+                  )}%`,
                 data: formState.seasonHourlyAnalysis.map((d) => ({
                   id: d.season,
                   label: d.season,
                   value: d.seasonTotalSum,
                   color: getColor(d.season),
-                  arcLabel: (item: { value: any }) => `${item.value} lol`,
                   arcLabelMinAngle: 35,
                   arcLabelRadius: "60%",
                 })),
@@ -92,6 +103,7 @@ export default function HourlySeasonChart() {
               [`& .${pieArcLabelClasses.root}`]: {
                 fontWeight: "bold",
               },
+              padding: 2,
             }}
             height={300}
           />

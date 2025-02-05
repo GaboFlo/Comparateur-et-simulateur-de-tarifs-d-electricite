@@ -56,6 +56,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
             seasonHourlyAnalysis: response.seasonData,
             analyzedDateRange: response.analyzedDateRange,
             fileId: response.fileId,
+            totalConsumption: response.totalConsumption,
             isGlobalLoading: false,
           }));
           handleNext();

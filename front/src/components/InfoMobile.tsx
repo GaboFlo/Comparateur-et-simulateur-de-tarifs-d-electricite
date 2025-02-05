@@ -30,7 +30,7 @@ export default function InfoMobile() {
       >
         <CloseIcon />
       </IconButton>
-      <Info />
+      <Info handleClose={toggleDrawer(false)} />
     </Box>
   );
 

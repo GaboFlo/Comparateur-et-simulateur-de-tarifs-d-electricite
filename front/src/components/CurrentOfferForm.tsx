@@ -168,7 +168,7 @@ export default function CurrentOfferForm() {
         </Typography>
       </FormControl>
       <FormControl fullWidth sx={{ marginY: 1 }}>
-        <FormLabel required>Puissance (kVA)</FormLabel>
+        <FormLabel required>Puissance de votre compteur (kVA)</FormLabel>
         <Select
           id="powerClass"
           name="powerClass"
@@ -182,6 +182,21 @@ export default function CurrentOfferForm() {
             </MenuItem>
           ))}
         </Select>
+        <Typography
+          sx={{ p: 1, fontWeight: "small" }}
+          variant="caption"
+          gutterBottom
+        >
+          <Link
+            href="https://particulier.edf.fr/fr/accueil/gestion-contrat/compteur/modifier-puissance-electrique.html#:~:text=O%C3%B9%20trouver%20le%20niveau%20de,au%20verso%20de%20vos%20factures."
+            target="_blank"
+            rel="noopener noreferrer"
+            underline="hover"
+          >
+            <OpenInNewIcon sx={{ fontSize: "1rem", mr: 0.5 }} />
+            Comment retrouver ma puissance ?
+          </Link>
+        </Typography>
       </FormControl>
     </FormGrid>
   );

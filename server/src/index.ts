@@ -93,10 +93,15 @@ const uploadHandler = async (req: Request, res: Response): Promise<void> => {
             data: parsedData,
             dateRange: analyzedDateRange,
           });
+          const totalConsumption = seasonData.reduce(
+            (acc, cur) => acc + cur.seasonTotalSum,
+            0
+          );
           res.send({
             seasonData,
             fileId,
             analyzedDateRange,
+            totalConsumption,
           });
         }
       });

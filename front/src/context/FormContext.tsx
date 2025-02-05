@@ -28,6 +28,7 @@ interface FormState {
   analyzedDateRange?: [number, number];
   fileId?: string;
   optionLink?: string;
+  totalConsumption: number;
 }
 
 interface FormContextProps {
@@ -59,6 +60,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     powerClass: 6,
     isGlobalLoading: false,
     dateRange: [lastYearStart, lastYearEnd],
+    totalConsumption: 1,
   });
 
   const contextValue = useMemo(

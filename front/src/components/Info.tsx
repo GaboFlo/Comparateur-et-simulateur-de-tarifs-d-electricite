@@ -1,10 +1,10 @@
 import InfoRounded from "@mui/icons-material/InfoRounded";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
-import { Alert, Stack } from "@mui/material";
+import { Alert, Box, Button, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Footer from "./Footer";
 
-export default function Info() {
+export default function Info({ handleClose }: { handleClose: () => void }) {
   return (
     <Stack>
       <Typography
@@ -24,9 +24,9 @@ export default function Info() {
         sx={{ m: 1, textAlign: "justify" }}
       >
         Ce site vous permet de simuler réellement un changement de contrat, sur
-        la base précise de vos consommations, 30 minutes par 30 minutes sur vos
-        derniers mois, que vous exporterez via EDF. <br /> La simulation est
-        directement accessible à la fin des deux étapes.
+        la base précise de vos consommations, heure par heure sur vos derniers
+        mois, que vous exporterez via EDF. <br /> La simulation est directement
+        accessible à la fin des deux étapes.
       </Alert>
       <Typography
         variant="body1"
@@ -79,6 +79,15 @@ export default function Info() {
       >
         Vos données sont conservées uniquement le temps des calculs.
       </Typography>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+        <Button
+          variant="contained"
+          onClick={handleClose}
+          sx={{ mt: 2, marginRight: 3 }}
+        >
+          J'ai compris
+        </Button>
+      </Box>
       <Footer />
     </Stack>
   );
