@@ -125,12 +125,17 @@ export default function App() {
                 activeStep={activeStep}
                 sx={{ width: "100%", height: 40 }}
               >
-                {steps.map((label) => (
+                {steps.map((label, index) => (
                   <Step
                     sx={{ ":first-child": { pl: 0 }, ":last-child": { pr: 0 } }}
                     key={label}
+                    onClick={
+                      index !== 2 ? () => handleStepChange(index) : undefined
+                    }
                   >
-                    <StepLabel>{label}</StepLabel>
+                    <StepLabel className={index !== 2 ? "clickable-step" : ""}>
+                      {label}
+                    </StepLabel>
                   </Step>
                 ))}
               </Stepper>
@@ -164,7 +169,7 @@ export default function App() {
               alternativeLabel
               sx={{ display: { sm: "flex", md: "none" } }}
             >
-              {steps.map((label) => (
+              {steps.map((label, index) => (
                 <Step
                   sx={{
                     ":first-child": { pl: 0 },
@@ -172,11 +177,15 @@ export default function App() {
                     "& .MuiStepConnector-root": { top: { xs: 6, sm: 12 } },
                   }}
                   key={label}
+                  onClick={
+                    index !== 2 ? () => handleStepChange(index) : undefined
+                  }
                 >
                   <StepLabel
                     sx={{
                       ".MuiStepLabel-labelContainer": { maxWidth: "70px" },
                     }}
+                    className={index !== 2 ? "clickable-step" : ""}
                   >
                     {label}
                   </StepLabel>

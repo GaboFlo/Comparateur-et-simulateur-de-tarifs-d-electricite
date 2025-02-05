@@ -87,117 +87,121 @@ export default function CurrentOfferForm() {
   };
 
   return (
-    <FormGrid container>
-      <FormControl fullWidth sx={{ marginY: 1 }}>
-        <FormLabel required>Fournisseur actuel</FormLabel>
-        <Select
-          id="supplier"
-          name="supplier"
-          type="name"
-          required
-          value={formState.supplier}
-          onChange={handleChange}
-          disabled
-          sx={{ height: "55px" }}
-        >
-          <MenuItem value="EDF">
-            <ListItemIcon sx={{ marginRight: 1 }}>
-              <img src="/edf.png" alt="EDF" width="24" height="24" />
-            </ListItemIcon>
-            <ListItemText primary="EDF" />
-          </MenuItem>
-        </Select>
-      </FormControl>
-      <FormControl fullWidth sx={{ marginY: 1 }}>
-        <FormLabel required>Offre actuelle</FormLabel>
-        <Select
-          id="offerType"
-          name="offerType"
-          value={formState.offerType}
-          onChange={handleChange}
-          required
-          fullWidth
-        >
-          {!formState.allOffers ? (
-            <CircularProgress />
-          ) : (
-            getDistinctOfferTypes(formState.allOffers).map((value) => (
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={6}>
+        <FormControl fullWidth sx={{ marginY: 1 }}>
+          <FormLabel required>Fournisseur actuel</FormLabel>
+          <Select
+            id="supplier"
+            name="supplier"
+            type="name"
+            required
+            value={formState.supplier}
+            onChange={handleChange}
+            disabled
+            sx={{ height: "55px" }}
+          >
+            <MenuItem value="EDF">
+              <ListItemIcon sx={{ marginRight: 1 }}>
+                <img src="/edf.png" alt="EDF" width="24" height="24" />
+              </ListItemIcon>
+              <ListItemText primary="EDF" />
+            </MenuItem>
+          </Select>
+        </FormControl>{" "}
+        <FormControl fullWidth sx={{ marginY: 1 }}>
+          <FormLabel required>Option actuelle</FormLabel>
+          <Select
+            id="optionType"
+            name="optionType"
+            value={formState.optionType}
+            onChange={handleChange}
+            required
+            disabled={!formState.offerType || !formState.allOffers}
+          >
+            {formState.allOffers &&
+              getAvailableOptionsForOffer(
+                formState.allOffers,
+                formState.offerType
+              ).map((option) => (
+                <MenuItem key={option.optionKey} value={option.optionKey}>
+                  {option.optionName}
+                </MenuItem>
+              ))}
+          </Select>
+          <Typography
+            sx={{ p: 1, fontWeight: "small" }}
+            variant="caption"
+            gutterBottom
+          >
+            <Link
+              href={getLinkForOffer(formState.offerType, formState.optionType)}
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="hover"
+            >
+              <OpenInNewIcon sx={{ fontSize: "1rem", mr: 0.5 }} />
+              Perdu ? Cliquez ici pour découvrir le descriptif de l'option pour
+              voir si elle correspond à votre situation.
+            </Link>
+          </Typography>
+        </FormControl>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        {" "}
+        <FormControl fullWidth sx={{ marginY: 1 }}>
+          <FormLabel required>Offre actuelle</FormLabel>
+          <Select
+            id="offerType"
+            name="offerType"
+            value={formState.offerType}
+            onChange={handleChange}
+            required
+            fullWidth
+          >
+            {!formState.allOffers ? (
+              <CircularProgress />
+            ) : (
+              getDistinctOfferTypes(formState.allOffers).map((value) => (
+                <MenuItem key={value} value={value}>
+                  {value}
+                </MenuItem>
+              ))
+            )}
+          </Select>
+        </FormControl>
+        <FormControl fullWidth sx={{ marginY: 1 }}>
+          <FormLabel required>Puissance de votre compteur (kVA)</FormLabel>
+          <Select
+            id="powerClass"
+            name="powerClass"
+            value={formState.powerClass}
+            onChange={handleChange}
+            required
+          >
+            {powerClasses.map((value: PowerClass) => (
               <MenuItem key={value} value={value}>
                 {value}
               </MenuItem>
-            ))
-          )}
-        </Select>
-      </FormControl>
-
-      <FormControl fullWidth sx={{ marginY: 1 }}>
-        <FormLabel required>Option actuelle</FormLabel>
-        <Select
-          id="optionType"
-          name="optionType"
-          value={formState.optionType}
-          onChange={handleChange}
-          required
-          disabled={!formState.offerType || !formState.allOffers}
-        >
-          {formState.allOffers &&
-            getAvailableOptionsForOffer(
-              formState.allOffers,
-              formState.offerType
-            ).map((option) => (
-              <MenuItem key={option.optionKey} value={option.optionKey}>
-                {option.optionName}
-              </MenuItem>
             ))}
-        </Select>
-        <Typography
-          sx={{ p: 1, fontWeight: "small" }}
-          variant="caption"
-          gutterBottom
-        >
-          <Link
-            href={getLinkForOffer(formState.offerType, formState.optionType)}
-            target="_blank"
-            rel="noopener noreferrer"
-            underline="hover"
+          </Select>
+          <Typography
+            sx={{ p: 1, fontWeight: "small" }}
+            variant="caption"
+            gutterBottom
           >
-            <OpenInNewIcon sx={{ fontSize: "1rem", mr: 0.5 }} />
-            Perdu ? Cliquez ici pour découvrir le descriptif de l'option pour
-            voir si elle correspond à votre situation.
-          </Link>
-        </Typography>
-      </FormControl>
-      <FormControl fullWidth sx={{ marginY: 1 }}>
-        <FormLabel required>Puissance de votre compteur (kVA)</FormLabel>
-        <Select
-          id="powerClass"
-          name="powerClass"
-          value={formState.powerClass}
-          onChange={handleChange}
-          required
-        >
-          {powerClasses.map((value: PowerClass) => (
-            <MenuItem key={value} value={value}>
-              {value}
-            </MenuItem>
-          ))}
-        </Select>
-        <Typography
-          sx={{ p: 1, fontWeight: "small" }}
-          variant="caption"
-          gutterBottom
-        >
-          <Link
-            href="https://particulier.edf.fr/fr/accueil/gestion-contrat/compteur/modifier-puissance-electrique.html#:~:text=O%C3%B9%20trouver%20le%20niveau%20de,au%20verso%20de%20vos%20factures."
-            target="_blank"
-            rel="noopener noreferrer"
-            underline="hover"
-          >
-            <OpenInNewIcon sx={{ fontSize: "1rem", mr: 0.5 }} />
-            Comment retrouver ma puissance ?
-          </Link>
-        </Typography>
-      </FormControl>
-    </FormGrid>
+            <Link
+              href="https://particulier.edf.fr/fr/accueil/gestion-contrat/compteur/modifier-puissance-electrique.html#:~:text=O%C3%B9%20trouver%20le%20niveau%20de,au%20verso%20de%20vos%20factures."
+              target="_blank"
+              rel="noopener noreferrer"
+              underline="hover"
+            >
+              <OpenInNewIcon sx={{ fontSize: "1rem", mr: 0.5 }} />
+              Comment retrouver ma puissance ?
+            </Link>
+          </Typography>
+        </FormControl>
+      </Grid>
+    </Grid>
   );
 }

@@ -134,13 +134,13 @@ export function ComparisonTable() {
                 <StyledTableCell align="center">Offre</StyledTableCell>
                 <StyledTableCell align="center">Option</StyledTableCell>
                 <StyledTableCell align="center">
-                  Simulation consommation (€)
-                </StyledTableCell>
-                <StyledTableCell align="center">
                   Abonnement mensuel (€)
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  Total sur la période (sans taxes, €)
+                  Coût simulé de votre consommation (€)
+                </StyledTableCell>
+                <StyledTableCell align="center">
+                  Total des abonnements & coûts de consommation (sans taxes, €)
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   % de différence
@@ -178,10 +178,10 @@ export function ComparisonTable() {
                       </Link>
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {row.totalConsumptionCost}
+                      {row.monthlyCost}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {row.monthlyCost}
+                      {row.totalConsumptionCost}
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       {row.total}

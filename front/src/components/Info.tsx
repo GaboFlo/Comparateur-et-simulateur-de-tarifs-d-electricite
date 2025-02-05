@@ -4,7 +4,9 @@ import { Alert, Box, Button, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import Footer from "./Footer";
 
-export default function Info({ handleClose }: { handleClose: () => void }) {
+export default function Info({
+  handleClose,
+}: Readonly<{ handleClose: () => void }>) {
   return (
     <Stack>
       <Typography
