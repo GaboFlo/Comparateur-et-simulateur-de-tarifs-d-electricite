@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "react-scripts build",
+    "build": "REACT_APP_VERSION=$(node -p \"require('./package.json').version\") react-scripts build",
     "deadcode:all": "ts-prune",
     "deadcode:ci": "ts-prune | (! grep -v 'used in module') | (! grep -v 'migration') | (! grep -v 'd.ts')",
     "depcheck": "depcheck --ignores=node-fetch,@types/jest,sort-package-json",

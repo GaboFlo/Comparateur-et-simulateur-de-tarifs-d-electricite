@@ -1,4 +1,5 @@
 import { Box, Link } from "@mui/material";
+import { APP_VERSION } from "../types";
 
 export default function Footer() {
   return (
@@ -21,7 +22,7 @@ export default function Footer() {
           rel="noopener noreferrer"
           sx={{ display: "inline-flex", alignItems: "center", ml: 1, mr: 1 }} // Align link content too
         >
-          GaboFlo{" "}
+          GaboFlo ({APP_VERSION})
         </Link>{" "}
         Tous droits réservés{" "}
         <Link

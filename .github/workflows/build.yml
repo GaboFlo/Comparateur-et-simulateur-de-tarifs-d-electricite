@@ -1,0 +1,51 @@
+name: Build and Deploy Frontend
+
+on: push
+
+jobs:
+  check-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check versions
+        run: |
+          FRONT_VERSION=$(node -p "require('./front/package.json').version")
+          BACK_VERSION=$(node -p "require('./server/package.json').version")
+          if [ "$FRONT_VERSION" != "$BACK_VERSION" ]; then
+            echo "Version mismatch: front ($FRONT_VERSION) and back ($BACK_VERSION)"
+            exit 1
+          fi
+          echo "Versions match: $FRONT_VERSION"
+
+  build-and-deploy-front:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Use package.json version
+        run: echo "VERSION=$(node -p "require('./front/package.json').version")" >> $GITHUB_ENV
+
+      - name: Build frontend
+        run: |
+          cd front
+          npm ci
+          REACT_APP_VERSION=$VERSION npm run build
+          mv build ../frontend_build
+
+      - name: Deploy to SFTP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          source: "frontend_build"
+          target: ${{ secrets.SFTP_TARGET_DIR }}
+          strip_components: 1

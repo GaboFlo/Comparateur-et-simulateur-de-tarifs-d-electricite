@@ -2,6 +2,7 @@ import { LicenseInfo } from "@mui/x-date-pickers-pro";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import MatomoTracker from "./components/MatomoTracker";
 import { FormProvider } from "./context/FormContext";
 import "./index.css";
 
@@ -15,6 +16,7 @@ LicenseInfo.setLicenseKey(
 root.render(
   <BrowserRouter>
     <FormProvider>
+      <MatomoTracker />
       <App />
     </FormProvider>
   </BrowserRouter>

@@ -74,3 +74,5 @@ export interface ComparisonTableInterfaceRow {
   total: number;
   link: string;
 }
+
+export const APP_VERSION = process.env.REACT_APP_VERSION || "dev";
