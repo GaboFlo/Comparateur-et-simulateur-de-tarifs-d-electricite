@@ -12,7 +12,7 @@ jobs:
       - name: Check versions
         run: |
           FRONT_VERSION=$(node -p "require('./front/package.json').version")
-          BACK_VERSION=$(node -p "require('./back/package.json').version")
+          BACK_VERSION=$(node -p "require('./server/package.json').version")
           if [ "$FRONT_VERSION" != "$BACK_VERSION" ]; then
             echo "Version mismatch: front ($FRONT_VERSION) and back ($BACK_VERSION)"
             exit 1
