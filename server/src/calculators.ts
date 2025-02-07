@@ -40,7 +40,7 @@ function findCorrespondingMapping(
   endOfSlotRecorded: Date,
   hpHcMappingData: HpHcFileMapping[],
   item: CalculatedData
-) {
+): Cost {
   for (const singleMapping of option.mappings) {
     if (isDayApplicable(singleMapping, endOfSlotRecorded)) {
       if (singleMapping.hpHcConfig) {
@@ -107,8 +107,8 @@ function calculateHpHcPrices(
 function isHpOrHcTempoSlot(hour: number, minute: number): SlotType {
   if (
     (6 < hour && hour < 22) ||
-    (hour === 22 && minute == 0) ||
-    (hour === 6 && minute == 30)
+    (hour === 22 && minute === 0) ||
+    (hour === 6 && minute === 30)
   ) {
     return "HP";
   } else {
@@ -116,40 +116,37 @@ function isHpOrHcTempoSlot(hour: number, minute: number): SlotType {
   }
 }
 
-function calculateTempoPrices(
-  tempoDates: TempoDates,
+function calculateTempoPricesOptimized(
   item: CalculatedData,
-  tempoMapping: TempoMapping[]
+  tempoDatesMap: Record<string, TempoCodeDay>,
+  tempoMappingMap: Partial<Record<string, TempoMapping>>
 ): Cost {
-  /* Améliorer les perfs */
-
-  // Determine hourType
   const endOfSlotRecorded = new Date(item.recordedAt);
   const hour = endOfSlotRecorded.getHours();
   const minute = endOfSlotRecorded.getMinutes();
 
-  let tempoCodeDay: TempoCodeDay | undefined = undefined;
   const slotType = isHpOrHcTempoSlot(hour, minute);
 
-  // Determine codeJour (handling the day change at midnight)
-  if (0 <= hour && (hour < 6 || (hour === 6 && minute == 0))) {
-    const dayBefore = subDays(endOfSlotRecorded, 1);
-    const yesterdayStr = format(dayBefore, "yyyy-MM-dd");
-    tempoCodeDay = tempoDates.find(
-      (item) => item.dateJour === yesterdayStr
-    )?.codeJour;
+  let dateKey: string;
+  if (hour < 6 || (hour === 6 && minute === 0)) {
+    const yesterday = subDays(endOfSlotRecorded, 1);
+    dateKey = format(yesterday, "yyyy-MM-dd");
   } else {
-    tempoCodeDay = tempoDates.find(
-      (item) => item.dateJour === format(endOfSlotRecorded, "yyyy-MM-dd")
-    )?.codeJour;
+    dateKey = format(endOfSlotRecorded, "yyyy-MM-dd");
   }
 
-  const relevantTempoMapping = tempoMapping.find((elt) => {
-    return elt.tempoCodeDay == tempoCodeDay;
-  });
-  if (!relevantTempoMapping) {
-    throw new Error(`No relevantTempoMapping found ${tempoCodeDay}`);
+  const tempoCodeDay = tempoDatesMap[dateKey];
+  if (tempoCodeDay === undefined || tempoCodeDay === null) {
+    throw new Error(`No tempoCodeDay found for date ${dateKey}`);
   }
+
+  const relevantTempoMapping = tempoMappingMap[String(tempoCodeDay)];
+  if (!relevantTempoMapping) {
+    throw new Error(
+      `No relevantTempoMapping found for codeJour ${tempoCodeDay}`
+    );
+  }
+
   const relevantCost =
     slotType === "HP" ? relevantTempoMapping.HP : relevantTempoMapping.HC;
   return {
@@ -176,6 +173,23 @@ export async function calculatePrices({
   const new_data: CalculatedData[] = [];
   let totalCost = 0;
 
+  let tempoDatesMap: Record<string, TempoCodeDay> = {};
+  let tempoMappingMap: Partial<Record<string, TempoMapping>> = {};
+  if (option.tempoMappings) {
+    const tempoDates = tempo_file as TempoDates;
+    tempoDatesMap = tempoDates.reduce((acc, t) => {
+      acc[t.dateJour] = t.codeJour;
+      return acc;
+    }, {} as Record<string, TempoCodeDay>);
+
+    tempoMappingMap = option.tempoMappings.reduce<
+      Partial<Record<string, TempoMapping>>
+    >((acc, mapping) => {
+      acc[mapping.tempoCodeDay.toString()] = mapping;
+      return acc;
+    }, {});
+  }
+
   for (const item of data) {
     const endOfSlotRecorded = new Date(item.recordedAt);
     const commonThrowError = `${offerType}-${optionKey}-${endOfSlotRecorded.toISOString()}`;
@@ -191,12 +205,15 @@ export async function calculatePrices({
       );
     }
     if (option.tempoMappings) {
-      const tempoDates = tempo_file as TempoDates;
-      new_cost = calculateTempoPrices(tempoDates, item, option.tempoMappings);
+      new_cost = calculateTempoPricesOptimized(
+        item,
+        tempoDatesMap,
+        tempoMappingMap
+      );
     }
 
     if (new_cost) {
-      totalCost = totalCost + new_cost.cost;
+      totalCost += new_cost.cost;
       new_data.push({
         ...item,
         costs: [...(item.costs ?? []), new_cost],
@@ -227,7 +244,7 @@ export async function calculateRowSummary({
   optionName,
   link,
   offerType,
-}: FullCalculatePricesInterface) {
+}: FullCalculatePricesInterface): Promise<ComparisonTableInterfaceRow> {
   const now = new Date();
 
   const calculatedData = await calculatePrices({

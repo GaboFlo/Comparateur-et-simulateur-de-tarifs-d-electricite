@@ -1,9 +1,11 @@
 import { PowerClass, PriceMappingFile } from "../types";
 
 const getBaseURL = () => {
-  const domain = window.location.hostname.split(".")[0];
-  if (domain === "localhost") return "http://localhost:10000";
-  else return `https://${domain}.todo.com`;
+  if (process.env.NODE_ENV === "development") {
+    return "http://localhost:10000";
+  } else {
+    return "https://server.comparateur-electricite.gaboflo.fr";
+  }
 };
 
 export const getAvailableOffers = async (): Promise<PriceMappingFile> => {
