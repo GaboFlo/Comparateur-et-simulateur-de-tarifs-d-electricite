@@ -27,7 +27,10 @@ app.disable("x-powered-by");
 const port = 10000;
 
 const corsOptions = {
-  origin: ["http://localhost:3000"],
+  origin: [
+    "http://localhost:3000",
+    "https://comparateur-electricite.gaboflo.fr",
+  ],
 };
 app.use(cors(corsOptions));
 app.use(express.json());
