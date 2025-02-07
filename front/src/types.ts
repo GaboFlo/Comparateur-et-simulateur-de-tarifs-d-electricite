@@ -70,7 +70,7 @@ export interface ComparisonTableInterfaceRow {
   optionKey: OptionKey;
   optionName: string;
   totalConsumptionCost: number;
-  monthlyCost: number;
+  fullSubscriptionCost: number;
   total: number;
   link: string;
 }

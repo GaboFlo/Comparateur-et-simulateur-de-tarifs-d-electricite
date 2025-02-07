@@ -250,6 +250,10 @@ export async function calculateRowSummary({
     optionKey
   );
 
+  const fullSubscriptionCost = Math.round(
+    (monthlyCost * (differenceInMonths(dateRange[1], dateRange[0]) + 1)) / 100
+  );
+
   return {
     provider: "EDF",
     offerType,
@@ -257,11 +261,9 @@ export async function calculateRowSummary({
     optionName,
     link,
     totalConsumptionCost: Math.round(calculatedData.totalCost / PRICE_COEFF),
-    monthlyCost: monthlyCost / 100,
+    fullSubscriptionCost,
     total: Math.round(
-      calculatedData.totalCost / PRICE_COEFF +
-        (monthlyCost * (differenceInMonths(dateRange[1], dateRange[0]) + 1)) /
-          100
+      calculatedData.totalCost / PRICE_COEFF + fullSubscriptionCost
     ),
     computeTime: Date.now() - startTime,
   } as ComparisonTableInterfaceRow;

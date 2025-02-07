@@ -115,6 +115,6 @@ export interface ComparisonTableInterfaceRow {
   offerType: OfferType;
   optionKey: OptionKey;
   totalConsumptionCost: number;
-  monthlyCost: number;
+  fullSubscriptionCost: number;
   total: number;
 }
