@@ -40,6 +40,7 @@ export default function App() {
     if (!formState.seasonHourlyAnalysis && activeStep === 2) {
       handleBack();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStep, stepParam]);
 
   const handleStepChange = (step: number) => {

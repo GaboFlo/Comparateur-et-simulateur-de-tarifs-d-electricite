@@ -12,7 +12,6 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import { styled } from "@mui/system";
 import { useEffect } from "react";
 import { useFormContext } from "../context/FormContext";
 import { getAvailableOffers } from "../services/httpCalls";
@@ -23,11 +22,6 @@ import {
   PowerClass,
   PriceMappingFile,
 } from "../types";
-
-const FormGrid = styled(Grid)(() => ({
-  display: "flex",
-  flexDirection: "row",
-}));
 
 const powerClasses: PowerClass[] = [6, 9, 12, 15, 18, 24, 30, 36];
 
