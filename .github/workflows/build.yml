@@ -59,12 +59,12 @@ jobs:
           path: frontend_build
 
       - name: Deploy to SFTP
-        uses: hpdeva/sftp-upload-action@v1
+        uses: wearejh/sftp-action@v1.0.0
         with:
-          server: ${{ secrets.SFTP_HOST }}
+          host: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
+          port: 22
           localPath: "frontend_build/*"
           remotePath: ${{ secrets.SFTP_TARGET_DIR }}
-          deleteRemoteFiles: true # Supprime les anciens fichiers avant l’upload
-          sftpArgs: "-o StrictHostKeyChecking=no"
+          args: "-o StrictHostKeyChecking=no"
