@@ -1,0 +1,58 @@
+name: Build Frontend
+
+on:
+  push:
+    tags:
+      - "*"
+  workflow_dispatch:
+
+jobs:
+  deploy-front:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Get tag name
+        id: get_tag
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Get front version
+        id: get_front_version
+        run: echo "FRONT_VERSION=$(node -p 'require(\"./front/package.json\").version')" >> $GITHUB_ENV
+
+      - name: Get server version
+        id: get_server_version
+        run: echo "SERVER_VERSION=$(node -p 'require(\"./server/package.json\").version')" >> $GITHUB_ENV
+
+      - name: Check if tag matches front and server versions
+        run: |
+          if [ "$TAG_NAME" != "$FRONT_VERSION" ]; then
+            echo "Tag name ($TAG_NAME) does not match front version ($FRONT_VERSION)"
+            exit 1
+          fi
+          if [ "$TAG_NAME" != "$SERVER_VERSION" ]; then
+            echo "Tag name ($TAG_NAME) does not match server version ($SERVER_VERSION)"
+            exit 1
+          fi
+          if [ "$FRONT_VERSION" != "$SERVER_VERSION" ]; then
+            echo "Front version ($FRONT_VERSION) does not match server version ($SERVER_VERSION)"
+            exit 1
+          fi
+          echo "Tag name matches front and server versions"
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend_build
+
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOSTNAME }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          local-dir: "frontend_build/"
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
