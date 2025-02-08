@@ -14,15 +14,15 @@ export default function Footer() {
           gap: "1rem",
         }}
       >
-        &copy; 2025
+        &copy; 2025 ({APP_VERSION})
         <Link
-          href="https://gaboflo.fr"
+          href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
           underline="hover"
           target="_blank"
           rel="noopener noreferrer"
           sx={{ display: "inline-flex", alignItems: "center", ml: 1, mr: 1 }} // Align link content too
         >
-          GaboFlo ({APP_VERSION})
+          GaboFlo
         </Link>{" "}
         Tous droits réservés{" "}
         <Link
