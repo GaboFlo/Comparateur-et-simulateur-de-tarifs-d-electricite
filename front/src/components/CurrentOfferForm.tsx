@@ -1,3 +1,4 @@
+import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import {
   CircularProgress,
@@ -43,6 +44,7 @@ export const getAvailableOptionsForOffer = (
 
 export default function CurrentOfferForm() {
   const { formState, setFormState } = useFormContext();
+  const { trackEvent } = useMatomo();
 
   useEffect(() => {
     const fetchOffers = async () => {
@@ -76,6 +78,12 @@ export default function CurrentOfferForm() {
           newState.offerType
         )[0].optionKey;
       }
+      trackEvent({
+        category: "form-change",
+        action: name,
+        name: value.toString(),
+      });
+
       return newState;
     });
   };

@@ -20,7 +20,7 @@ export default function Footer() {
           underline="hover"
           target="_blank"
           rel="noopener noreferrer"
-          sx={{ display: "inline-flex", alignItems: "center", ml: 1, mr: 1 }} // Align link content too
+          sx={{ display: "inline-flex", alignItems: "center", ml: 1, mr: 1 }}
         >
           GaboFlo
         </Link>{" "}
@@ -30,7 +30,7 @@ export default function Footer() {
           underline="hover"
           target="_blank"
           rel="noopener noreferrer"
-          sx={{ display: "inline-flex", alignItems: "center" }} // Align link content too
+          sx={{ display: "inline-flex", alignItems: "center" }}
         >
           🎉 Me soutenir 🎉
         </Link>{" "}
@@ -39,7 +39,7 @@ export default function Footer() {
           underline="hover"
           target="_blank"
           rel="noopener noreferrer"
-          sx={{ display: "inline-flex", alignItems: "center" }} // Align link content too
+          sx={{ display: "inline-flex", alignItems: "center" }}
         >
           <img
             src="./github.svg"

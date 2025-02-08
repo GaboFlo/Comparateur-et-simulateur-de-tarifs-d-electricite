@@ -1,3 +1,4 @@
+import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
 import Box from "@mui/material/Box";
@@ -10,6 +11,7 @@ import Info from "./Info";
 
 export default function InfoMobile() {
   const [open, setOpen] = React.useState(false);
+  const { trackEvent } = useMatomo();
 
   React.useEffect(() => {
     if (!localStorage.getItem("explanation_modal_opened")) {
@@ -20,6 +22,7 @@ export default function InfoMobile() {
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
+    newOpen && trackEvent({ category: "info", action: "open" });
   };
 
   const DrawerList = (

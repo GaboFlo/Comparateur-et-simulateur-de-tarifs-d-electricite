@@ -1,3 +1,4 @@
+import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { CircularProgress, LinearProgress, Link } from "@mui/material";
 import Paper from "@mui/material/Paper";
@@ -8,7 +9,6 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-
 import React from "react";
 import { useFormContext } from "../context/FormContext";
 import { getStreamedData } from "../services/httpCalls";
@@ -36,6 +36,8 @@ const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
 
 export function ComparisonTable() {
   const { formState } = useFormContext();
+  const { trackEvent } = useMatomo();
+
   const [rowSummaries, setRowSummaries] = React.useState<
     ComparisonTableInterfaceRow[]
   >([]);
@@ -120,6 +122,25 @@ export function ComparisonTable() {
       return "green";
     }
   };
+
+  const startTimeRef = React.useRef<number | null>(null);
+
+  React.useEffect(() => {
+    if (loading) {
+      startTimeRef.current = Date.now();
+    } else if (startTimeRef.current) {
+      const loadTime = Date.now() - startTimeRef.current;
+
+      trackEvent({
+        category: "Performance",
+        action: "Query Load Time",
+        name: "ComparisonTable",
+        value: Math.round(loadTime / 1000),
+      });
+
+      startTimeRef.current = null;
+    }
+  }, [loading, trackEvent]);
 
   return (
     <TableContainer component={Paper} sx={{ my: 3 }}>

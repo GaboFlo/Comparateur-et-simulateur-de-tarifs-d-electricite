@@ -1,3 +1,4 @@
+import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
 import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded";
@@ -22,6 +23,7 @@ interface Props {
 }
 export default function DataImport({ handleNext }: Readonly<Props>) {
   const { formState, setFormState } = useFormContext();
+  const { trackEvent } = useMatomo();
 
   React.useEffect(() => {
     const explanationOpened = localStorage.getItem(
@@ -85,6 +87,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
 
   const handleTooltipCsvOpen = () => {
     setOpenToolTipCsv(true);
+    trackEvent({ category: "info-upload-data", action: "open" });
   };
 
   const setRange = (range: [Date, Date]) => {
@@ -109,6 +112,16 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                   onAccept={(newValue) => {
                     const start = startOfDay(newValue[0] ?? new Date());
                     const end = endOfDay(newValue[1] ?? new Date());
+                    trackEvent({
+                      category: "date-range",
+                      action: "set",
+                      name: `${Math.ceil(
+                        Math.abs(
+                          new Date(end).getTime() - new Date(start).getTime()
+                        ) /
+                          (1000 * 60 * 60 * 24)
+                      )}`,
+                    });
                     setRange([start, end]);
                   }}
                   disableFuture

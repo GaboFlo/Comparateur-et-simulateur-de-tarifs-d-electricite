@@ -1,6 +1,7 @@
+import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import { LinearProgress } from "@mui/material";
+import { LinearProgress, useColorScheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -18,17 +19,19 @@ import Footer from "./components/Footer";
 import InfoMobile from "./components/InfoMobile";
 import Simulations from "./components/Simulations";
 import { useFormContext } from "./context/FormContext";
-import AppTheme from "./theme/AppTheme";
 import ColorModeIconDropdown from "./theme/ColorModeIconDropdown";
+import { APP_VERSION } from "./types";
 
 const steps = ["Votre offre actuelle", "Votre consommation", "Simulations"];
 
 export default function App() {
   const { formState } = useFormContext();
+  const { mode, systemMode } = useColorScheme();
   const location = useLocation();
   const navigate = useNavigate();
   const query = new URLSearchParams(location.search);
   const stepParam = query.get("step");
+  const { trackPageView, trackEvent } = useMatomo();
   const [activeStep, setActiveStep] = React.useState(
     stepParam ? parseInt(stepParam) : 0
   );
@@ -54,6 +57,25 @@ export default function App() {
     handleStepChange(activeStep - 1);
   };
 
+  const handleNextAndTrack = () => {
+    handleNext();
+    trackEvent({
+      category: "form-validation",
+      action: "offerType",
+      name: formState.offerType.toString(),
+    });
+    trackEvent({
+      category: "form-validation",
+      action: "optionType",
+      name: formState.optionType.toString(),
+    });
+    trackEvent({
+      category: "form-validation",
+      action: "powerClass",
+      name: formState.powerClass.toString(),
+    });
+  };
+
   function getStepContent(step: number) {
     switch (step) {
       case 0:
@@ -67,8 +89,45 @@ export default function App() {
     }
   }
 
+  React.useEffect(() => {
+    switch (activeStep) {
+      case 0:
+        document.title = "Offre actuelle - Comparateur de tarifs d'électricité";
+        break;
+      case 1:
+        document.title =
+          "Données de consommation - Comparateur de tarifs d'électricité";
+        break;
+      case 2:
+        document.title = "Simulations - Comparateur de tarifs d'électricité";
+        break;
+      default:
+        document.title = "Unknown Step";
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeStep]);
+
+  React.useEffect(() => {
+    mode &&
+      trackPageView({
+        customDimensions: [
+          {
+            id: 1,
+            value: APP_VERSION,
+          },
+          {
+            id: 2,
+            value: systemMode ?? mode,
+          },
+        ],
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeStep, mode]);
+
+  console.log(mode, systemMode);
+
   return (
-    <AppTheme>
+    <>
       {formState.isGlobalLoading ? (
         <LinearProgress sx={{ height: "5px" }} />
       ) : (
@@ -225,7 +284,7 @@ export default function App() {
                 <Button
                   variant="contained"
                   endIcon={<ChevronRightRoundedIcon />}
-                  onClick={handleNext}
+                  onClick={handleNextAndTrack}
                   sx={{ width: { xs: "100%", sm: "fit-content" } }}
                 >
                   Suivant
@@ -236,6 +295,6 @@ export default function App() {
           </Box>
         </Grid>
       </Grid>
-    </AppTheme>
+    </>
   );
 }
