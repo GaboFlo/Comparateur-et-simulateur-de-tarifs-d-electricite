@@ -29,7 +29,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
+          node-version: "20"
 
       - name: Use package.json version
         run: echo "VERSION=$(node -p 'require(\"./front/package.json\").version')" >> $GITHUB_ENV
@@ -46,7 +46,7 @@ jobs:
         with:
           name: frontend-build
           path: frontend_build
-          retention-days: 7
+          retention-days: 1
 
   deploy-front:
     runs-on: ubuntu-latest
@@ -59,12 +59,12 @@ jobs:
           path: frontend_build
 
       - name: Deploy to SFTP
-        uses: appleboy/scp-action@v0.1.7
+        uses: hpdeva/sftp-upload-action@v1
         with:
-          host: ${{ secrets.SFTP_HOST }}
+          server: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
-          source: "frontend_build/*"
-          target: ${{ secrets.SFTP_TARGET_DIR }}
-          strip_components: 1
-          verbose: true
+          localPath: "frontend_build/*"
+          remotePath: ${{ secrets.SFTP_TARGET_DIR }}
+          deleteRemoteFiles: true # Supprime les anciens fichiers avant l’upload
+          sftpArgs: "-o StrictHostKeyChecking=no"
