@@ -2,7 +2,6 @@ import InfoRounded from "@mui/icons-material/InfoRounded";
 import WarningRoundedIcon from "@mui/icons-material/WarningRounded";
 import { Alert, Box, Button, Stack } from "@mui/material";
 import Typography from "@mui/material/Typography";
-import Footer from "./Footer";
 
 export default function Info({
   handleClose,
@@ -90,7 +89,6 @@ export default function Info({
           J'ai compris
         </Button>
       </Box>
-      <Footer />
     </Stack>
   );
 }
