@@ -1,4 +1,5 @@
-import { Divider, Typography } from "@mui/material";
+import { useMatomo } from "@jonkoops/matomo-tracker-react";
+import { Button, Divider, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import { format } from "date-fns";
 import { useFormContext } from "../context/FormContext";
@@ -7,6 +8,11 @@ import HourlySeasonChart from "./HourlySeasonChart";
 
 export default function Simulations() {
   const { formState } = useFormContext();
+  const { trackEvent } = useMatomo();
+  const handlePrint = () => {
+    window.print();
+    trackEvent({ category: "Simulations", action: "Print" });
+  };
   return (
     <Stack textAlign={"center"}>
       <Typography variant="h5" sx={{ mb: 2 }}>
@@ -30,6 +36,14 @@ export default function Simulations() {
         d'importer, sur la même période.
       </Typography>
       <ComparisonTable />
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={handlePrint}
+        sx={{ mb: 2 }}
+      >
+        Télécharger
+      </Button>
     </Stack>
   );
 }
