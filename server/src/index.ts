@@ -1,10 +1,10 @@
 import cors from "cors";
 import { endOfDay, isWithinInterval, startOfDay } from "date-fns";
 import express, { NextFunction, Request, Response } from "express";
-import fs from "fs";
+import fs, { readFileSync } from "fs";
 import multer from "multer";
 import cron from "node-cron";
-import path from "path";
+import path, { join } from "path";
 import unzipper from "unzipper";
 import { v4 as uuidv4 } from "uuid";
 import { default as hpHcFile } from "../statics/hp_hc.json";
@@ -257,6 +257,12 @@ app.get("/availableOffers", (req: Request, res: Response) => {
 });
 app.get("/defaultHpHc", (req: Request, res: Response) => {
   res.json(hpHcFile);
+});
+
+const packageJsonPath = join(__dirname, "..", "package.json");
+const packageJson = JSON.parse(readFileSync(packageJsonPath, "utf-8"));
+app.get("/version", (req: Request, res: Response) => {
+  res.json({ version: packageJson.version });
 });
 
 app.listen(port, () => {
