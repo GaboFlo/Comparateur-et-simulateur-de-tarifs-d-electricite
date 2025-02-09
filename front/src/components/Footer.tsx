@@ -14,17 +14,24 @@ export default function Footer() {
           gap: "1rem",
         }}
       >
-        &copy; 2025 ({APP_VERSION})
-        <Link
-          href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-          underline="hover"
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{ display: "inline-flex", alignItems: "center", ml: 1, mr: 1 }}
-        >
-          GaboFlo
-        </Link>{" "}
-        Tous droits réservés{" "}
+        &copy; 2025 Tous droits réservés
+        <img
+          src="./github.svg"
+          alt="GitHub"
+          style={{
+            marginRight: "0.5rem",
+            height: "1.1rem",
+            backgroundColor: "white",
+            borderRadius: "2px",
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            window.open(
+              "https://github.com/GaboFlo/ComparateurFournisseurElectricity",
+              "_blank"
+            );
+          }}
+        />
         <Link
           href="https://buymeacoffee.com/gaboflo"
           underline="hover"
@@ -34,30 +41,12 @@ export default function Footer() {
         >
           🎉 Me soutenir 🎉
         </Link>{" "}
-        <Link
-          href="https://github.com/GaboFlo/ComparateurFournisseurElectricity"
-          underline="hover"
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{ display: "inline-flex", alignItems: "center" }}
-        >
-          <img
-            src="./github.svg"
-            alt="GitHub"
-            style={{
-              marginRight: "0.5rem",
-              height: "1.1rem",
-              backgroundColor: "white",
-              borderRadius: "2px",
-            }}
-          />
-          GitHub
-        </Link>
         <img
           src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png"
           alt="Licence CC BY-NC-SA"
           style={{ marginLeft: "0.5rem" }}
         />
+        {APP_VERSION}
       </p>
     </Box>
   );
