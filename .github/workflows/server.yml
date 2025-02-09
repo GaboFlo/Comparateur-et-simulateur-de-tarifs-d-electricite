@@ -1,0 +1,43 @@
+name: server
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - "server/**"
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: "Europe/Paris"
+      - name: Run tests
+        run: cd server && npm i && npm run test
+  code_quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: "Europe/Paris"
+      - uses: actions/checkout@v4
+      - name: Install modules
+        run: cd server && npm i --only-dev
+      - name: Run lint
+        run: cd server && npm run lint:ci
+      - name: Removes dead code
+        run: cd server && npm run deadcode:ci
+      - name: Check if package.json is sorted
+        run: |
+          cd server && npm run sort-package:check
+          if [ $? -eq 0 ]; then
+            echo "Package.json is sorted correctly."
+          else
+            exit 1
+          fi
+      - name: Depcheck
+        run: |
+          cd server && npm i -g depcheck && npm run depcheck:ci

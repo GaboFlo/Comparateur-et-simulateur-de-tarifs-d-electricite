@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "forceConsistentCasingInFileNames": true,
+        "lib": [
+            "es2020"
+        ],
+        "target": "ES2020",
+        "module": "commonjs",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "outDir": "./build",
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "strictNullChecks": true,
+        "strictPropertyInitialization": false
+    },
+    // Check that devtools are still transpiling
+    "include": [
+        "./src/**/*.ts",
+        "./src/**/*.js",
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

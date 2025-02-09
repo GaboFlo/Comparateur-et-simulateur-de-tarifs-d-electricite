@@ -1,0 +1,376 @@
+[
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 0,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 0,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 0,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 1,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 1,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 1,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 1,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 2,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 2,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 2,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 2,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 3,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 3,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 3,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 3,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 4,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 4,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 4,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 4,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 5,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 5,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 5,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 5,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 6,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 6,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 6,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 6,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 7,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 7,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 7,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 7,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 8,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 13,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 13,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 13,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 14,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 14,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 14,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 14,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 15,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 15,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 15,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 15,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 16,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 16,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 16,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 16,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 17,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 17,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 17,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 17,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 18,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 20,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 20,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 20,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 21,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 21,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 21,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 21,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 22,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 22,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 22,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 22,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 23,
+            "minute": 0
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 23,
+            "minute": 0
+        },
+        "endSlot": {
+            "hour": 23,
+            "minute": 30
+        }
+    },
+    {
+        "slotType": "HC",
+        "startSlot": {
+            "hour": 23,
+            "minute": 30
+        },
+        "endSlot": {
+            "hour": 0,
+            "minute": 0
+        }
+    }
+]
