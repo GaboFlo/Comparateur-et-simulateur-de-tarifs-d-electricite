@@ -15,23 +15,35 @@ export default function Footer() {
         }}
       >
         &copy; 2025 Tous droits réservés
-        <img
-          src="./github.svg"
-          alt="GitHub"
+        <button
           style={{
-            marginRight: "0.5rem",
-            height: "1.1rem",
-            backgroundColor: "white",
-            borderRadius: "2px",
+            background: "none",
+            border: "none",
+            padding: 0,
             cursor: "pointer",
+            display: "inline-flex",
+            alignItems: "center",
           }}
           onClick={() => {
             window.open(
               "https://github.com/GaboFlo/ComparateurFournisseurElectricity",
-              "_blank"
+              "_blank",
+              "noopener"
             );
           }}
-        />
+        >
+          <img
+            src="./github.svg"
+            alt="GitHub"
+            style={{
+              marginLeft: "0.5rem",
+              marginRight: "0.5rem",
+              height: "1.1rem",
+              backgroundColor: "white",
+              borderRadius: "2px",
+            }}
+          />
+        </button>
         <Link
           href="https://buymeacoffee.com/gaboflo"
           underline="hover"
