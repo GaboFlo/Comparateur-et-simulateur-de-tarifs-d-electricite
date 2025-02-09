@@ -103,7 +103,7 @@ const edfUploadHandler = async (
     const parsedData = parseCsvToConsumptionLoadCurveData(csvContent);
     const fullPath = path.join(
       uploadRelativeDir,
-      requestId.toString(),
+      String(requestId),
       "edf.json"
     );
     fs.writeFile(fullPath, JSON.stringify(parsedData), (err) => {
