@@ -24,6 +24,7 @@ export default function Footer() {
             display: "inline-flex",
             alignItems: "center",
             marginLeft: "0.1rem",
+            marginRight: "0.1rem",
           }}
           onClick={() => {
             window.open(
