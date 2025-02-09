@@ -1,4 +1,5 @@
 import tempo_file from "../assets/tempo.json";
+import { default as hpHcDefault } from "../statics/hp_hc.json";
 import { calculatePrices } from "./calculators";
 import {
   ConsumptionLoadCurveData,
@@ -47,11 +48,13 @@ describe("calculateTempoPrices", () => {
     ];
     const optionKey = OptionKey.TEMPO;
     const offerType = OfferType.BLEU;
+
     const result = await calculatePrices({
       data,
       optionKey,
       offerType,
       tempoDates,
+      hpHcData: hpHcDefault,
     });
 
     const expected: FullCalculatedData = {
@@ -163,6 +166,7 @@ describe("calculateBasePrices", () => {
       data,
       optionKey,
       offerType,
+      hpHcData: hpHcDefault,
     });
 
     const expected: FullCalculatedData = {
@@ -218,6 +222,7 @@ describe("calculateHpHcPrices", () => {
       data,
       optionKey,
       offerType,
+      hpHcData: hpHcDefault,
     });
 
     const expected: FullCalculatedData = {
