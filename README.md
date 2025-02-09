@@ -19,7 +19,7 @@ Me voici à créer ce simulateur, qui reprend les données de consommation réel
 
 ## Prochaines étapes
 
-- [] Inclure d'autres fournisseurs (en entrée et en sortie)
+- [ ] Inclure d'autres fournisseurs (en entrée et en sortie)
 
 ## Soutenir et contribuer
 
