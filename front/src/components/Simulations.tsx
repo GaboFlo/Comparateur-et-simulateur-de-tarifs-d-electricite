@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { useFormContext } from "../context/FormContext";
 import { ComparisonTable } from "./ComparisonTable";
 import HourlySeasonChart from "./HourlySeasonChart";
+import HpHcSlotSelector from "./HpHcSelector";
 
 export default function Simulations() {
   const { formState } = useFormContext();
@@ -36,11 +37,12 @@ export default function Simulations() {
         d'importer, sur la même période.
       </Typography>
       <ComparisonTable />
+      <HpHcSlotSelector readOnly />
       <Button
         variant="contained"
         color="secondary"
         onClick={handlePrint}
-        sx={{ mb: 2 }}
+        sx={{ m: 2 }}
       >
         Télécharger
       </Button>

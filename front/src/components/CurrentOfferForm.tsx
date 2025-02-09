@@ -1,4 +1,5 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import {
@@ -155,6 +156,16 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
                   (option) => (
                     <MenuItem key={option.optionKey} value={option.optionKey}>
                       {option.optionName}
+                      {option.overridingHpHcKey && (
+                        <AccessTimeFilledIcon
+                          sx={{
+                            fontSize: "1rem",
+                            verticalAlign: "middle",
+                            color: "orange",
+                            ml: 1,
+                          }}
+                        />
+                      )}
                     </MenuItem>
                   )
                 )}

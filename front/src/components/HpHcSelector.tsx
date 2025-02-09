@@ -1,3 +1,4 @@
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
@@ -13,11 +14,14 @@ import {
 import { useEffect, useState } from "react";
 import { useFormContext } from "../context/FormContext";
 import { getDefaultHpHcConfig } from "../services/httpCalls";
-import { HpHcSlot, HourTime } from "../types";
+import { HourTime, HpHcSlot } from "../types";
 
-const HpHcSlotSelector = () => {
+interface Props {
+  readOnly?: boolean;
+}
+const HpHcSlotSelector = ({ readOnly = false }: Readonly<Props>) => {
   const theme = useTheme();
-  const { setFormState } = useFormContext();
+  const { formState, setFormState } = useFormContext();
 
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
   const [timeRanges, setTimeRanges] = useState<HpHcSlot[]>([]);
@@ -31,7 +35,7 @@ const HpHcSlotSelector = () => {
         return { ...prevState, hpHcConfig: defaultHpHc };
       });
     }
-    fetchData();
+    readOnly ? setTimeRanges(formState.hpHcConfig ?? []) : fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -81,8 +85,13 @@ const HpHcSlotSelector = () => {
       {timeRanges && (
         <Stack spacing={3}>
           <Typography variant="h5">
-            Ajoutez vos créneaux d'heures creuses
+            {readOnly ? "Selon " : "Ajustez "} vos créneaux d'heures creuses
           </Typography>
+          {!readOnly && (
+            <Typography variant="subtitle2" style={{ fontSize: "0.75rem" }}>
+              Cliquez sur les créneaux pour les ajouter ou les retirer
+            </Typography>
+          )}
 
           {isDesktop && (
             <>
@@ -113,12 +122,17 @@ const HpHcSlotSelector = () => {
                         borderRight:
                           i !== 47 ? "1px solid rgba(0,0,0,0.12)" : "none",
                         minWidth: 15,
-                        cursor: "pointer",
-                        "&:hover": { bgcolor: "primary.light" },
+
+                        ...(readOnly
+                          ? {}
+                          : {
+                              "&:hover": { bgcolor: "primary.light" },
+                              cursor: "pointer",
+                            }),
                       }}
-                      onClick={() => toggleTimeSlot(i)}
-                      onMouseEnter={() => setHoveredSlot(i)}
-                      onMouseLeave={() => setHoveredSlot(null)}
+                      onClick={() => !readOnly && toggleTimeSlot(i)}
+                      onMouseEnter={() => !readOnly && setHoveredSlot(i)}
+                      onMouseLeave={() => !readOnly && setHoveredSlot(null)}
                     >
                       {i % 2 === 0 ? (
                         <Typography variant="caption">
@@ -130,7 +144,7 @@ const HpHcSlotSelector = () => {
                         <Typography variant="caption"></Typography>
                       )}
 
-                      {hoveredSlot === i && (
+                      {hoveredSlot === i && !readOnly && (
                         <Box
                           position="absolute"
                           top="50%"
@@ -169,9 +183,22 @@ const HpHcSlotSelector = () => {
                   }}
                 />
               </Box>
+              <Alert severity="warning" sx={{ m: 1, textAlign: "justify" }}>
+                Certaines options (
+                <AccessTimeFilledIcon
+                  sx={{
+                    fontSize: "1rem",
+                    verticalAlign: "middle",
+                    color: "orange",
+                  }}
+                />
+                ) imposent des heures creuses, votre sélection{" "}
+                {readOnly ? "n'a pas été" : "ne sera pas"} prise en compte sur
+                ces options
+              </Alert>
             </>
           )}
-          {!isDesktop && (
+          {!isDesktop && !readOnly && (
             <Alert severity="warning" sx={{ m: 1, textAlign: "justify" }}>
               Seulement sur ordinateur
             </Alert>

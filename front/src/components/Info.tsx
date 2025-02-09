@@ -24,10 +24,12 @@ export default function Info({
         icon={<InfoRounded />}
         sx={{ m: 1, textAlign: "justify" }}
       >
-        Ce site vous permet de simuler réellement un changement de contrat, sur
-        la base précise de vos consommations, heure par heure sur vos derniers
-        mois, que vous exporterez via EDF. <br /> La simulation est directement
-        accessible à la fin des deux étapes.
+        <b>
+          Ce site vous permet de simuler réellement un changement de contrat,
+          sur la base précise de vos consommations, heure par heure sur vos
+          derniers mois, que vous exporterez via EDF. <br /> La simulation est
+          directement accessible à la fin des deux étapes.
+        </b>
       </Alert>
       <Typography
         variant="body1"
@@ -44,26 +46,25 @@ export default function Info({
       >
         <ul>
           <li>
-            La simulation ne calcule pas les taxes (qui seront les mêmes peu
-            importe votre fournisseur, et proportionnelles à votre consommation)
+            La simulation <b>ne calcule pas les taxes</b> (qui seront les mêmes
+            peu importe votre fournisseur, et proportionnelles à votre
+            consommation)
           </li>
           <li>
-            Les prix affichés ne tiennent pas compte des changements du 01
-            Février 2025
+            Les simulations sont faites avec le <b>prix actuel</b> de
+            l'électricité. Ce qui peut expliquer une variation entre votre
+            facturation réelle et la simulation (si le prix de l'électricité a
+            été modifié dans l'intervalle de la période simulée)
           </li>
           <li>
-            Les simulations sont faites avec le prix actuel de l'électricité. Ce
-            qui peut expliquer une variation entre votre facturation réelle et
-            la simulation (si le prix de l'électricité a été modifié dans
-            l'intervalle de la période simulée)
+            Seules les offres d'EDF sont pour l'instant reprises (pour une
+            première version de ce comparateur, <b>aucunement affiliée à EDF</b>
+            )
           </li>
           <li>
-            Seules les offres d'EDF sont pour l'instant reprises (version bêta
-            de ce comparateur, aucunement affiliée à EDF)
-          </li>
-          <li>
-            Ce simulateur reste en phase de test, pour toutes suggestions,
-            remontées de bugs, ou participations merci de passer uniquement par{" "}
+            <b>Ce simulateur reste en phase de test</b>, pour toutes
+            suggestions, remontées de bugs, ou participations merci de passer
+            uniquement par{" "}
             <a
               href="https://github.com/GaboFlo/ComparateurFournisseurElectricity/issues"
               target="_blank"

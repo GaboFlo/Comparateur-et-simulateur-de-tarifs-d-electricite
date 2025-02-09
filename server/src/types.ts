@@ -87,6 +87,8 @@ export interface Mapping {
 
 export type Season = "Été" | "Hiver" | "Automne" | "Printemps";
 
+export type OverridingHpHcKey = "BLEU_TEMPO" | "ZEN_FLEX";
+
 export interface Option {
   optionKey: OptionKey;
   optionName: string;
@@ -95,6 +97,7 @@ export interface Option {
   subscriptions: Subscription[];
   mappings: Mapping[];
   tempoMappings?: TempoMapping[];
+  overridingHpHcKey?: OverridingHpHcKey;
 }
 
 export interface Subscription {

@@ -2,6 +2,7 @@ import axios from "axios";
 import { addDays, format, getDate, getMonth, subMinutes } from "date-fns";
 import Holidays from "date-holidays";
 import * as fs from "fs/promises";
+import path from "path";
 import allHolidays from "../assets/holidays.json";
 import price_mapping from "../statics/price_mapping.json";
 import { ConsumptionLoadCurveData } from "./csvParser";
@@ -157,4 +158,23 @@ export function isDayApplicable(mapping: Mapping, endOfSlotRecorded: Date) {
     mapping.applicableDays.includes(endOfSlotRecorded.getDay()) ||
     (mapping.include_holidays && isHoliday(endOfSlotRecorded))
   );
+}
+
+export async function getHpHcJson(
+  overridingHpHcKey: string
+): Promise<HpHcSlot[]> {
+  const filePath = path.resolve(
+    __dirname,
+    "..",
+    "statics",
+    `hp_hc-${overridingHpHcKey}.json`
+  );
+
+  try {
+    const fileContents = await fs.readFile(filePath, "utf-8");
+    return JSON.parse(fileContents);
+  } catch (error) {
+    console.error(`Error reading file at ${filePath}:`, error);
+    throw error;
+  }
 }

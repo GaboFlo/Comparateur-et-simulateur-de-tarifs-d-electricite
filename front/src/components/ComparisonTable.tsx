@@ -1,4 +1,5 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
+import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { CircularProgress, LinearProgress, Link } from "@mui/material";
 import Paper from "@mui/material/Paper";
@@ -189,6 +190,15 @@ export function ComparisonTable() {
                     </StyledTableCell>
                     <StyledTableCell align="center">
                       {row.optionName}{" "}
+                      {row.overridingHpHcKey && (
+                        <AccessTimeFilledIcon
+                          sx={{
+                            fontSize: "1rem",
+                            verticalAlign: "middle",
+                            color: "orange",
+                          }}
+                        />
+                      )}
                       <Link
                         href={row.link}
                         target="_blank"

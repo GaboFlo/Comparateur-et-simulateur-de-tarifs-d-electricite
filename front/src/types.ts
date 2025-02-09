@@ -39,11 +39,11 @@ export interface TempoMapping {
   HC: number;
 }
 export type SlotType = "HP" | "HC";
-
 export interface HpHcConfigParent {
   slotType: SlotType;
   price: number;
 }
+
 export interface Mapping {
   applicableDays: number[];
   price?: number;
@@ -58,6 +58,7 @@ export interface Option {
   subscriptions: Subscription[];
   mappings: Mapping[];
   tempoMappings?: TempoMapping[];
+  overridingHpHcKey?: string;
 }
 export interface Subscription {
   powerClass: PowerClass;
@@ -73,6 +74,7 @@ export interface ComparisonTableInterfaceRow {
   fullSubscriptionCost: number;
   total: number;
   link: string;
+  overridingHpHcKey?: string;
 }
 
 export const APP_VERSION = process.env.REACT_APP_VERSION || "dev";

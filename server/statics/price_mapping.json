@@ -7,44 +7,44 @@
         "subscriptions": [
             {
                 "powerClass": 3,
-                "monthlyCost": 969
+                "monthlyCost": 1041
             },
             {
                 "powerClass": 6,
-                "monthlyCost": 1268
+                "monthlyCost": 1372
             },
             {
                 "powerClass": 9,
-                "monthlyCost": 1589
+                "monthlyCost": 1727
             },
             {
                 "powerClass": 12,
-                "monthlyCost": 1916
+                "monthlyCost": 2086
             },
             {
                 "powerClass": 15,
-                "monthlyCost": 2207
+                "monthlyCost": 2420
             },
             {
                 "powerClass": 18,
-                "monthlyCost": 2524
+                "monthlyCost": 2739
             },
             {
                 "powerClass": 24,
-                "monthlyCost": 3196
+                "monthlyCost": 3468
             },
             {
                 "powerClass": 30,
-                "monthlyCost": 3768
+                "monthlyCost": 4199
             },
             {
                 "powerClass": 36,
-                "monthlyCost": 4443
+                "monthlyCost": 4839
             }
         ],
         "mappings": [
             {
-                "price": 2516,
+                "price": 2016,
                 "applicableDays": [
                     0,
                     1,
@@ -65,35 +65,35 @@
         "subscriptions": [
             {
                 "powerClass": 6,
-                "monthlyCost": 1309
+                "monthlyCost": 1404
             },
             {
                 "powerClass": 9,
-                "monthlyCost": 1670
+                "monthlyCost": 1801
             },
             {
                 "powerClass": 12,
-                "monthlyCost": 2028
+                "monthlyCost": 2169
             },
             {
                 "powerClass": 15,
-                "monthlyCost": 2357
+                "monthlyCost": 2516
             },
             {
                 "powerClass": 18,
-                "monthlyCost": 2684
+                "monthlyCost": 2874
             },
             {
                 "powerClass": 24,
-                "monthlyCost": 3370
+                "monthlyCost": 3623
             },
             {
                 "powerClass": 30,
-                "monthlyCost": 3897
+                "monthlyCost": 4196
             },
             {
                 "powerClass": 36,
-                "monthlyCost": 4508
+                "monthlyCost": 4872
             }
         ],
         "mappings": [
@@ -109,11 +109,11 @@
                 ],
                 "hpHcConfig": [
                     {
-                        "price": 2700,
+                        "price": 2146,
                         "slotType": "HP"
                     },
                     {
-                        "price": 2068,
+                        "price": 1696,
                         "slotType": "HC"
                     }
                 ]
@@ -122,50 +122,50 @@
     },
     {
         "optionKey": "WEEK_END",
-        "optionName": "Week-end",
+        "optionName": "Week-end Base",
         "offerType": "ZEN",
         "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end.html",
         "subscriptions": [
             {
                 "powerClass": 3,
-                "monthlyCost": 969
+                "monthlyCost": 977
             },
             {
                 "powerClass": 6,
-                "monthlyCost": 1268
+                "monthlyCost": 1280
             },
             {
                 "powerClass": 9,
-                "monthlyCost": 1589
+                "monthlyCost": 1605
             },
             {
                 "powerClass": 12,
-                "monthlyCost": 1916
+                "monthlyCost": 1979
             },
             {
                 "powerClass": 15,
-                "monthlyCost": 2207
+                "monthlyCost": 2246
             },
             {
                 "powerClass": 18,
-                "monthlyCost": 2524
+                "monthlyCost": 2554
             },
             {
                 "powerClass": 24,
-                "monthlyCost": 3196
+                "monthlyCost": 3317
             },
             {
                 "powerClass": 30,
-                "monthlyCost": 3768
+                "monthlyCost": 3814
             },
             {
                 "powerClass": 36,
-                "monthlyCost": 4443
+                "monthlyCost": 4498
             }
         ],
         "mappings": [
             {
-                "price": 1932,
+                "price": 2084,
                 "applicableDays": [
                     5,
                     6
@@ -173,7 +173,7 @@
                 "include_holidays": true
             },
             {
-                "price": 2652,
+                "price": 2804,
                 "applicableDays": [
                     0,
                     1,
@@ -192,40 +192,40 @@
         "subscriptions": [
             {
                 "powerClass": 6,
-                "monthlyCost": 1309
+                "monthlyCost": 1321
             },
             {
                 "powerClass": 9,
-                "monthlyCost": 1682
+                "monthlyCost": 1701
             },
             {
                 "powerClass": 12,
-                "monthlyCost": 2028
+                "monthlyCost": 2051
             },
             {
                 "powerClass": 15,
-                "monthlyCost": 2357
+                "monthlyCost": 2386
             },
             {
                 "powerClass": 18,
-                "monthlyCost": 2684
+                "monthlyCost": 2717
             },
             {
                 "powerClass": 24,
-                "monthlyCost": 3370
+                "monthlyCost": 3413
             },
             {
                 "powerClass": 30,
-                "monthlyCost": 3994
+                "monthlyCost": 4047
             },
             {
                 "powerClass": 36,
-                "monthlyCost": 4624
+                "monthlyCost": 4687
             }
         ],
         "mappings": [
             {
-                "price": 2041,
+                "price": 2194,
                 "applicableDays": [
                     5,
                     6
@@ -242,11 +242,11 @@
                 ],
                 "hpHcConfig": [
                     {
-                        "price": 2808,
+                        "price": 2960,
                         "slotType": "HP"
                     },
                     {
-                        "price": 2041,
+                        "price": 2194,
                         "slotType": "HC"
                     }
                 ]
@@ -254,42 +254,514 @@
         ]
     },
     {
-        "optionKey": "FLEX_ECO",
-        "optionName": "Flex",
-        "link": "TODO",
+        "optionKey": "WEEK_END_PLUS_LUNDI",
+        "optionName": "Week-end + Lundi",
+        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
         "offerType": "ZEN",
         "subscriptions": [
             {
                 "powerClass": 6,
-                "monthlyCost": 1309
+                "monthlyCost": 1280
             },
             {
                 "powerClass": 9,
-                "monthlyCost": 1682
+                "monthlyCost": 1637
             },
             {
                 "powerClass": 12,
-                "monthlyCost": 2028
+                "monthlyCost": 1979
             },
             {
                 "powerClass": 15,
-                "monthlyCost": 2357
+                "monthlyCost": 2246
             },
             {
                 "powerClass": 18,
-                "monthlyCost": 2684
+                "monthlyCost": 2616
             },
             {
                 "powerClass": 24,
-                "monthlyCost": 3370
+                "monthlyCost": 3317
             },
             {
                 "powerClass": 30,
-                "monthlyCost": 3994
+                "monthlyCost": 3814
             },
             {
                 "powerClass": 36,
-                "monthlyCost": 4624
+                "monthlyCost": 4498
+            }
+        ],
+        "mappings": [
+            {
+                "price": 2173,
+                "applicableDays": [
+                    0,
+                    5,
+                    6
+                ],
+                "include_holidays": true
+            },
+            {
+                "price": 2930,
+                "applicableDays": [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            }
+        ]
+    },
+    {
+        "optionKey": "WEEK_END_PLUS_MERCREDI",
+        "optionName": "Week-end + Mercredi",
+        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
+        "offerType": "ZEN",
+        "subscriptions": [
+            {
+                "powerClass": 6,
+                "monthlyCost": 1280
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1637
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 1979
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2246
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2616
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3317
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 3814
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4498
+            }
+        ],
+        "mappings": [
+            {
+                "price": 2173,
+                "applicableDays": [
+                    2,
+                    5,
+                    6
+                ],
+                "include_holidays": true
+            },
+            {
+                "price": 2930,
+                "applicableDays": [
+                    0,
+                    1,
+                    3,
+                    4
+                ]
+            }
+        ]
+    },
+    {
+        "optionKey": "WEEK_END_PLUS_VENREDI",
+        "optionName": "Week-end + Vendredi",
+        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
+        "offerType": "ZEN",
+        "subscriptions": [
+            {
+                "powerClass": 6,
+                "monthlyCost": 1280
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1637
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 1979
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2246
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2616
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3317
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 3814
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4498
+            }
+        ],
+        "mappings": [
+            {
+                "price": 2173,
+                "applicableDays": [
+                    4,
+                    5,
+                    6
+                ],
+                "include_holidays": true
+            },
+            {
+                "price": 2930,
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3
+                ]
+            }
+        ]
+    },
+    {
+        "optionKey": "WEEK_END_PLUS_HPHC_LUNDI",
+        "optionName": "Week-end + Lundi avec Heures Creuses",
+        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
+        "offerType": "ZEN",
+        "subscriptions": [
+            {
+                "powerClass": 6,
+                "monthlyCost": 1321
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1701
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2051
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2386
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2717
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3413
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 4047
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4687
+            }
+        ],
+        "mappings": [
+            {
+                "applicableDays": [
+                    0,
+                    5,
+                    6
+                ],
+                "include_holidays": true,
+                "hpHcConfig": [
+                    {
+                        "price": 2250,
+                        "slotType": "HP"
+                    },
+                    {
+                        "price": 2250,
+                        "slotType": "HC"
+                    }
+                ]
+            },
+            {
+                "applicableDays": [
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "hpHcConfig": [
+                    {
+                        "price": 3041,
+                        "slotType": "HP"
+                    },
+                    {
+                        "price": 2250,
+                        "slotType": "HC"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "optionKey": "WEEK_END_PLUS_HPHC_MERCREDI",
+        "optionName": "Week-end + Mercredi avec Heures Creuses",
+        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
+        "offerType": "ZEN",
+        "subscriptions": [
+            {
+                "powerClass": 6,
+                "monthlyCost": 1321
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1701
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2051
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2386
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2717
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3413
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 4047
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4687
+            }
+        ],
+        "mappings": [
+            {
+                "applicableDays": [
+                    2,
+                    5,
+                    6
+                ],
+                "include_holidays": true,
+                "hpHcConfig": [
+                    {
+                        "price": 2250,
+                        "slotType": "HP"
+                    },
+                    {
+                        "price": 2250,
+                        "slotType": "HC"
+                    }
+                ]
+            },
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    3,
+                    4
+                ],
+                "hpHcConfig": [
+                    {
+                        "price": 3041,
+                        "slotType": "HP"
+                    },
+                    {
+                        "price": 2250,
+                        "slotType": "HC"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "optionKey": "WEEK_END_PLUS_HPHC_VENDREDI",
+        "optionName": "Week-end + Vendredi avec Heures Creuses",
+        "offerType": "ZEN",
+        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
+        "subscriptions": [
+            {
+                "powerClass": 6,
+                "monthlyCost": 1321
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1701
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2051
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2386
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2717
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3413
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 4047
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4687
+            }
+        ],
+        "mappings": [
+            {
+                "applicableDays": [
+                    4,
+                    5,
+                    6
+                ],
+                "include_holidays": true,
+                "hpHcConfig": [
+                    {
+                        "price": 2250,
+                        "slotType": "HP"
+                    },
+                    {
+                        "price": 2250,
+                        "slotType": "HC"
+                    }
+                ]
+            },
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3
+                ],
+                "hpHcConfig": [
+                    {
+                        "price": 3041,
+                        "slotType": "HP"
+                    },
+                    {
+                        "price": 2250,
+                        "slotType": "HC"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "optionKey": "FIXE_BASE",
+        "optionName": "Fixe Base",
+        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-fixe.html",
+        "offerType": "ZEN",
+        "subscriptions": [
+            {
+                "powerClass": 3,
+                "monthlyCost": 1049
+            },
+            {
+                "powerClass": 6,
+                "monthlyCost": 1407
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1847
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2266
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2622
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 3000
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3871
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 4518
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 5308
+            }
+        ],
+        "mappings": [
+            {
+                "price": 1906,
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ]
+            }
+        ]
+    },
+    {
+        "optionKey": "FIXE_HPHC",
+        "optionName": "Fixe avec heures creuses",
+        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-fixe.html",
+        "offerType": "ZEN",
+        "subscriptions": [
+            {
+                "powerClass": 6,
+                "monthlyCost": 1502
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1997
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2434
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2764
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 3174
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 4048
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 4754
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 5499
             }
         ],
         "mappings": [
@@ -305,11 +777,253 @@
                 ],
                 "hpHcConfig": [
                     {
-                        "price": 2700,
+                        "slotType": "HP",
+                        "price": 2028
+                    },
+                    {
+                        "slotType": "HC",
+                        "price": 1608
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "optionKey": "ONLINE_BASE",
+        "optionName": "Online Base",
+        "offerType": "ZEN",
+        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-online.html",
+        "subscriptions": [
+            {
+                "powerClass": 3,
+                "monthlyCost": 977
+            },
+            {
+                "powerClass": 6,
+                "monthlyCost": 1280
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1637
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 1979
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2298
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2616
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3317
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 3919
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4498
+            }
+        ],
+        "mappings": [
+            {
+                "price": 2455,
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ]
+            }
+        ]
+    },
+    {
+        "optionKey": "ONLINE_HPHC",
+        "optionName": "Online Heures Creuses",
+        "offerType": "ZEN",
+        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-online.html",
+        "subscriptions": [
+            {
+                "powerClass": 6,
+                "monthlyCost": 1321
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1701
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2051
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2386
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2717
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3330
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 3943
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4562
+            }
+        ],
+        "mappings": [
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "hpHcConfig": [
+                    {
+                        "slotType": "HP",
+                        "price": 2622
+                    },
+                    {
+                        "slotType": "HC",
+                        "price": 2048
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "optionKey": "VERT_BASE",
+        "optionName": "Electrique - Base",
+        "offerType": "VERT",
+        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/vert-electrique.html",
+        "subscriptions": [
+            {
+                "powerClass": 3,
+                "monthlyCost": 977
+            },
+            {
+                "powerClass": 6,
+                "monthlyCost": 1280
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1605
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 1937
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2246
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2554
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3234
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 3814
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4498
+            }
+        ],
+        "mappings": [
+            {
+                "price": 2575,
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ]
+            }
+        ]
+    },
+    {
+        "optionKey": "VERT_HPHC",
+        "optionName": "Electrique - Heures Creuses",
+        "offerType": "VERT",
+        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/vert-electrique.html",
+        "subscriptions": [
+            {
+                "powerClass": 6,
+                "monthlyCost": 1321
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1701
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2051
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2334
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2655
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3330
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 3943
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4562
+            }
+        ],
+        "mappings": [
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "hpHcConfig": [
+                    {
+                        "price": 2771,
                         "slotType": "HP"
                     },
                     {
-                        "price": 2068,
+                        "price": 2138,
                         "slotType": "HC"
                     }
                 ]
@@ -317,7 +1031,61 @@
         ]
     },
     {
-        "optionKey": "FLEX_SOBRIETE",
+        "optionKey": "BLEU_TEMPO",
+        "optionName": "Tempo",
+        "offerType": "BLEU",
+        "link": "https://particulier.edf.fr/fr/accueil/gestion-contrat/options/tempo/details.html",
+        "subscriptions": [
+            {
+                "powerClass": 6,
+                "monthlyCost": 1397
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1745
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2096
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2423
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2750
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 4127
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4845
+            }
+        ],
+        "tempoMappings": [
+            {
+                "tempoCodeDay": 1,
+                "HP": 1552,
+                "HC": 1288
+            },
+            {
+                "tempoCodeDay": 2,
+                "HP": 1792,
+                "HC": 1447
+            },
+            {
+                "tempoCodeDay": 3,
+                "HP": 6586,
+                "HC": 1518
+            }
+        ],
+        "overridingHpHcKey": "BLEU_TEMPO"
+    },
+    {
+        "optionKey": "ZEN_FLEX",
         "optionName": "Flex",
         "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-flex.html",
         "offerType": "ZEN",
@@ -355,795 +1123,23 @@
                 "monthlyCost": 4624
             }
         ],
-        "mappings": [
-            {
-                "applicableDays": [
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6
-                ],
-                "hpHcConfig": [
-                    {
-                        "price": 7562,
-                        "slotType": "HP"
-                    },
-                    {
-                        "price": 2700,
-                        "slotType": "HC"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "optionKey": "WEEK_END_PLUS_LUNDI",
-        "optionName": "Week-end + Lundi",
-        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
-        "offerType": "ZEN",
-        "subscriptions": [
-            {
-                "powerClass": 6,
-                "monthlyCost": 1268
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1618
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 1955
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2221
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2524
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3196
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3768
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4443
-            }
-        ],
-        "mappings": [
-            {
-                "price": 2021,
-                "applicableDays": [
-                    0,
-                    5,
-                    6
-                ],
-                "include_holidays": true
-            },
-            {
-                "price": 2778,
-                "applicableDays": [
-                    1,
-                    2,
-                    3,
-                    4
-                ]
-            }
-        ]
-    },
-    {
-        "optionKey": "WEEK_END_PLUS_MERCREDI",
-        "optionName": "Week-end + Mercredi",
-        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
-        "offerType": "ZEN",
-        "subscriptions": [
-            {
-                "powerClass": 6,
-                "monthlyCost": 1268
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1618
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 1955
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2221
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2524
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3196
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3768
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4443
-            }
-        ],
-        "mappings": [
-            {
-                "price": 2021,
-                "applicableDays": [
-                    2,
-                    5,
-                    6
-                ],
-                "include_holidays": true
-            },
-            {
-                "price": 2778,
-                "applicableDays": [
-                    0,
-                    1,
-                    3,
-                    4
-                ]
-            }
-        ]
-    },
-    {
-        "optionKey": "WEEK_END_PLUS_VENREDI",
-        "optionName": "Week-end + Vendredi",
-        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
-        "offerType": "ZEN",
-        "subscriptions": [
-            {
-                "powerClass": 6,
-                "monthlyCost": 1268
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1618
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 1955
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2221
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2524
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3196
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3768
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4443
-            }
-        ],
-        "mappings": [
-            {
-                "price": 2021,
-                "applicableDays": [
-                    4,
-                    5,
-                    6
-                ],
-                "include_holidays": true
-            },
-            {
-                "price": 2778,
-                "applicableDays": [
-                    0,
-                    1,
-                    2,
-                    3
-                ]
-            }
-        ]
-    },
-    {
-        "optionKey": "WEEK_END_PLUS_HPHC_LUNDI",
-        "optionName": "Week-end + Lundi avec Heures Creuses",
-        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
-        "offerType": "ZEN",
-        "subscriptions": [
-            {
-                "powerClass": 6,
-                "monthlyCost": 1309
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1682
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 2028
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2357
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2684
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3370
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3994
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4624
-            }
-        ],
-        "mappings": [
-            {
-                "applicableDays": [
-                    0,
-                    5,
-                    6
-                ],
-                "include_holidays": true,
-                "hpHcConfig": [
-                    {
-                        "price": 2098,
-                        "slotType": "HP"
-                    },
-                    {
-                        "price": 2098,
-                        "slotType": "HC"
-                    }
-                ]
-            },
-            {
-                "applicableDays": [
-                    1,
-                    2,
-                    3,
-                    4
-                ],
-                "hpHcConfig": [
-                    {
-                        "price": 2888,
-                        "slotType": "HP"
-                    },
-                    {
-                        "price": 2098,
-                        "slotType": "HC"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "optionKey": "WEEK_END_PLUS_HPHC_MERCREDI",
-        "optionName": "Week-end + Mercredi avec Heures Creuses",
-        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
-        "offerType": "ZEN",
-        "subscriptions": [
-            {
-                "powerClass": 6,
-                "monthlyCost": 1309
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1682
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 2028
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2357
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2684
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3370
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3994
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4624
-            }
-        ],
-        "mappings": [
-            {
-                "applicableDays": [
-                    2,
-                    5,
-                    6
-                ],
-                "include_holidays": true,
-                "hpHcConfig": [
-                    {
-                        "price": 2098,
-                        "slotType": "HP"
-                    },
-                    {
-                        "price": 2098,
-                        "slotType": "HC"
-                    }
-                ]
-            },
-            {
-                "applicableDays": [
-                    0,
-                    1,
-                    3,
-                    4
-                ],
-                "hpHcConfig": [
-                    {
-                        "price": 2888,
-                        "slotType": "HP"
-                    },
-                    {
-                        "price": 2098,
-                        "slotType": "HC"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "optionKey": "WEEK_END_PLUS_HPHC_VENDREDI",
-        "optionName": "Week-end + Vendredi avec Heures Creuses",
-        "offerType": "ZEN",
-        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
-        "subscriptions": [
-            {
-                "powerClass": 6,
-                "monthlyCost": 1309
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1682
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 2028
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2357
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2684
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3370
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3994
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4624
-            }
-        ],
-        "mappings": [
-            {
-                "applicableDays": [
-                    4,
-                    5,
-                    6
-                ],
-                "include_holidays": true,
-                "hpHcConfig": [
-                    {
-                        "price": 2098,
-                        "slotType": "HP"
-                    },
-                    {
-                        "price": 2098,
-                        "slotType": "HC"
-                    }
-                ]
-            },
-            {
-                "applicableDays": [
-                    0,
-                    1,
-                    2,
-                    3
-                ],
-                "hpHcConfig": [
-                    {
-                        "price": 2888,
-                        "slotType": "HP"
-                    },
-                    {
-                        "price": 2098,
-                        "slotType": "HC"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "optionKey": "FIXE_BASE",
-        "optionName": "Fixe Base",
-        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-fixe.html",
-        "offerType": "ZEN",
-        "subscriptions": [
-            {
-                "powerClass": 3,
-                "monthlyCost": 969
-            },
-            {
-                "powerClass": 6,
-                "monthlyCost": 1267
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1589
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 1916
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2221
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2524
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3196
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3768
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4443
-            }
-        ],
-        "mappings": [
-            {
-                "price": 1753,
-                "applicableDays": [
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6
-                ]
-            }
-        ]
-    },
-    {
-        "optionKey": "FIXE_HPHC",
-        "optionName": "Fixe avec heures creuses",
-        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-fixe.html",
-        "offerType": "ZEN",
-        "subscriptions": [
-            {
-                "powerClass": 6,
-                "monthlyCost": 1309
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1682
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 2028
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2309
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2626
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3292
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3897
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4508
-            }
-        ],
-        "mappings": [
-            {
-                "applicableDays": [
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6
-                ],
-                "hpHcConfig": [
-                    {
-                        "slotType": "HP",
-                        "price": 1876
-                    },
-                    {
-                        "slotType": "HC",
-                        "price": 1456
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "optionKey": "ONLINE_BASE",
-        "optionName": "Online Base",
-        "offerType": "ZEN",
-        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-online.html",
-        "subscriptions": [
-            {
-                "powerClass": 3,
-                "monthlyCost": 969
-            },
-            {
-                "powerClass": 6,
-                "monthlyCost": 1268
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1618
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 1955
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2270
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2583
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3274
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3866
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4443
-            }
-        ],
-        "mappings": [
-            {
-                "price": 2303,
-                "applicableDays": [
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6
-                ]
-            }
-        ]
-    },
-    {
-        "optionKey": "BASE",
-        "optionName": "Electrique - Base",
-        "offerType": "VERT",
-        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/vert-electrique.html",
-        "subscriptions": [
-            {
-                "powerClass": 3,
-                "monthlyCost": 969
-            },
-            {
-                "powerClass": 6,
-                "monthlyCost": 1268
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1589
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 1916
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2221
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2524
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3196
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3768
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4443
-            }
-        ],
-        "mappings": [
-            {
-                "price": 2423,
-                "applicableDays": [
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6
-                ]
-            }
-        ]
-    },
-    {
-        "optionKey": "HPHC",
-        "optionName": "Electrique - Heures Creuses",
-        "offerType": "VERT",
-        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/vert-electrique.html",
-        "subscriptions": [
-            {
-                "powerClass": 6,
-                "monthlyCost": 1309
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1682
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 2028
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2309
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2626
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3292
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3897
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4508
-            }
-        ],
-        "mappings": [
-            {
-                "applicableDays": [
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6
-                ],
-                "hpHcConfig": [
-                    {
-                        "price": 2618,
-                        "slotType": "HP"
-                    },
-                    {
-                        "price": 1986,
-                        "slotType": "HC"
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        "optionKey": "TEMPO",
-        "optionName": "Tempo",
-        "offerType": "BLEU",
-        "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/tarif-bleu.html",
-        "subscriptions": [
-            {
-                "powerClass": 6,
-                "monthlyCost": 1303
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1625
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 1956
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2245
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 2560
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 3853
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 4471
-            }
-        ],
         "tempoMappings": [
             {
                 "tempoCodeDay": 1,
-                "HP": 1609,
-                "HC": 1296
+                "HP": 2852,
+                "HC": 1948
             },
             {
                 "tempoCodeDay": 2,
-                "HP": 1894,
-                "HC": 1486
+                "HP": 2852,
+                "HC": 1948
             },
             {
                 "tempoCodeDay": 3,
-                "HP": 7562,
-                "HC": 1568
+                "HP": 7715,
+                "HC": 2852
             }
-        ]
+        ],
+        "overridingHpHcKey": "ZEN_FLEX"
     }
 ]

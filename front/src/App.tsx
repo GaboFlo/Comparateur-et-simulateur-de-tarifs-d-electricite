@@ -186,13 +186,8 @@ export default function App() {
                   <Step
                     sx={{ ":first-child": { pl: 0 }, ":last-child": { pr: 0 } }}
                     key={label}
-                    onClick={
-                      index !== 2 ? () => handleStepChange(index) : undefined
-                    }
                   >
-                    <StepLabel className={index !== 2 ? "clickable-step" : ""}>
-                      {label}
-                    </StepLabel>
+                    <StepLabel>{label}</StepLabel>
                   </Step>
                 ))}
               </Stepper>
@@ -234,15 +229,11 @@ export default function App() {
                     "& .MuiStepConnector-root": { top: { xs: 6, sm: 12 } },
                   }}
                   key={label}
-                  onClick={
-                    index !== 2 ? () => handleStepChange(index) : undefined
-                  }
                 >
                   <StepLabel
                     sx={{
                       ".MuiStepLabel-labelContainer": { maxWidth: "70px" },
                     }}
-                    className={index !== 2 ? "clickable-step" : ""}
                   >
                     {label}
                   </StepLabel>
@@ -270,11 +261,13 @@ export default function App() {
               {activeStep !== 0 && (
                 <Button
                   startIcon={<ChevronLeftRoundedIcon />}
-                  onClick={handleBack}
+                  onClick={() =>
+                    activeStep === 2 ? handleStepChange(0) : handleBack()
+                  }
                   variant="text"
                   sx={{ display: { xs: "none", sm: "flex" } }}
                 >
-                  Précédent
+                  {activeStep === 2 ? "Recommencer" : "Précédent"}
                 </Button>
               )}
             </Box>

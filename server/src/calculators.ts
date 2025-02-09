@@ -12,6 +12,7 @@ import {
   OfferType,
   Option,
   OptionKey,
+  OverridingHpHcKey,
   PowerClass,
   PriceMappingFile,
   SlotType,
@@ -21,6 +22,7 @@ import {
 } from "./types";
 import {
   findMonthlySubscriptionCost,
+  getHpHcJson,
   isDayApplicable,
   isHpOrHcSlot,
   PRICE_COEFF,
@@ -105,25 +107,13 @@ function calculateHpHcPrices(
   };
 }
 
-function isHpOrHcTempoSlot(hour: number, minute: number): SlotType {
-  if (
-    (hour > 6 && hour < 22) ||
-    (hour === 22 && minute === 0) ||
-    (hour === 6 && minute === 30)
-  ) {
-    return "HP";
-  } else {
-    return "HC";
-  }
-}
-
-function calculateTempoPricesOptimized(
+async function calculateTempoPricesOptimized(
   item: CalculatedData,
   tempoDatesMap: Record<string, TempoCodeDay>,
-  tempoMappingMap: Partial<Record<string, TempoMapping>>
-): Cost {
-  const { hour, minute } = parseTime(item.recordedAt);
-  const slotType = isHpOrHcTempoSlot(hour, minute);
+  tempoMappingMap: Partial<Record<string, TempoMapping>>,
+  customHpHcGrid: HpHcSlot[]
+): Promise<Cost> {
+  const slotType = isHpOrHcSlot(new Date(item.recordedAt), customHpHcGrid);
   const dateKey = getDateKey(item.recordedAt);
 
   const tempoCodeDay = tempoDatesMap[dateKey];
@@ -179,6 +169,9 @@ export async function calculatePrices({
       tempoMappingMap[mapping.tempoCodeDay.toString()] = mapping;
     }
   }
+  const hpHcGrid: HpHcSlot[] = option.overridingHpHcKey
+    ? await getHpHcJson(option.overridingHpHcKey)
+    : hpHcData;
 
   for (const item of data) {
     const endOfSlotRecorded = new Date(item.recordedAt);
@@ -189,15 +182,19 @@ export async function calculatePrices({
       new_cost = findCorrespondingMapping(
         option,
         endOfSlotRecorded,
-        hpHcData,
+        hpHcGrid,
         item
       );
     }
     if (option.tempoMappings) {
-      new_cost = calculateTempoPricesOptimized(
+      if (!option.overridingHpHcKey) {
+        throw new Error(`No overridingHpHcKey found ${commonThrowError}`);
+      }
+      new_cost = await calculateTempoPricesOptimized(
         item,
         tempoDatesMap,
-        tempoMappingMap
+        tempoMappingMap,
+        hpHcGrid
       );
     }
     if (new_cost) {
@@ -223,6 +220,7 @@ interface FullCalculatePricesInterface {
   optionName: string;
   link: string;
   hpHcData: HpHcSlot[];
+  overridingHpHcKey?: OverridingHpHcKey;
 }
 
 export async function calculateRowSummary({
@@ -234,9 +232,8 @@ export async function calculateRowSummary({
   link,
   offerType,
   hpHcData,
+  overridingHpHcKey,
 }: FullCalculatePricesInterface): Promise<ComparisonTableInterfaceRow> {
-  const startTime = Date.now();
-
   const calculatedData = await calculatePrices({
     data,
     offerType,
@@ -265,6 +262,6 @@ export async function calculateRowSummary({
     total: Math.round(
       calculatedData.totalCost / PRICE_COEFF + fullSubscriptionCost
     ),
-    computeTime: Date.now() - startTime,
+    overridingHpHcKey,
   } as ComparisonTableInterfaceRow;
 }

@@ -213,7 +213,7 @@ app.get(
         })
       );
       try {
-        const hpHcData = (await openJsonFile(hphcPath)) as HpHcSlot[];
+        const defaultHpHcData = (await openJsonFile(hphcPath)) as HpHcSlot[];
         const rowSummary = await calculateRowSummary({
           data: filteredData,
           dateRange,
@@ -222,7 +222,8 @@ app.get(
           offerType: option.offerType,
           optionName: option.optionName,
           link: option.link,
-          hpHcData,
+          hpHcData: defaultHpHcData,
+          overridingHpHcKey: option.overridingHpHcKey,
         });
         res.write(`data: ${JSON.stringify({ comparisonRow: rowSummary })}\n\n`);
       } catch (error) {
