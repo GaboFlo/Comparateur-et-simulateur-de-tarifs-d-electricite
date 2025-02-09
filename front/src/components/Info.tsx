@@ -58,8 +58,7 @@ export default function Info({
           </li>
           <li>
             Seules les offres d'EDF sont pour l'instant reprises (pour une
-            première version de ce comparateur, <b>aucunement affiliée à EDF</b>
-            )
+            première version de ce comparateur <b>aucunement affiliée à EDF</b>)
           </li>
           <li>
             <b>Ce simulateur reste en phase de test</b>, pour toutes

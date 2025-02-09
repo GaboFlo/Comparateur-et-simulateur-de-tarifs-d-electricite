@@ -1,4 +1,4 @@
-# Comparateur des fournisseur et offres d'électricités
+# Comparateur des fournisseurs et de leurs offres d'électricité
 
 [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 
