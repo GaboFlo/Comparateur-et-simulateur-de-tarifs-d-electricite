@@ -1,4 +1,4 @@
-import { PowerClass, PriceMappingFile } from "../types";
+import { HpHcSlot, PowerClass, PriceMappingFile } from "../types";
 
 const getBaseURL = () => {
   if (process.env.NODE_ENV === "development") {
@@ -14,20 +14,28 @@ export const getAvailableOffers = async (): Promise<PriceMappingFile> => {
   return data;
 };
 
+export const getDefaultHpHcConfig = async () => {
+  const response = await fetch(`${getBaseURL()}/defaultHpHc`);
+  const data = await response.json();
+  return data as HpHcSlot[];
+};
+
 interface UploadEdfFileProps {
   formData: FormData;
   start: Date;
   end: Date;
+  requestId: string;
 }
 export const uploadEdfFile = async ({
   formData,
   start,
   end,
+  requestId,
 }: UploadEdfFileProps) => {
   const route = `${getBaseURL()}/uploadEdfFile`;
   try {
     const resp = await fetch(
-      `${route}?start=${start.getTime()}&end=${end.getTime()}`,
+      `${route}?start=${start.getTime()}&end=${end.getTime()}&requestId=${requestId}`,
       {
         method: "POST",
         body: formData,
@@ -40,18 +48,35 @@ export const uploadEdfFile = async ({
   }
 };
 
+interface UploadHpHcConfigProps {
+  formData: FormData;
+}
+export const uploadHpHcConfig = async ({ formData }: UploadHpHcConfigProps) => {
+  const route = `${getBaseURL()}/uploadHpHcConfig`;
+  try {
+    const resp = await fetch(route, {
+      method: "POST",
+      body: formData,
+    });
+
+    return resp.json();
+  } catch (error) {
+    throw new Error("An error occurred during upload.");
+  }
+};
+
 interface StreamedDataProps {
-  fileId: string;
+  requestId: string;
   start: Date;
   end: Date;
   powerClass: PowerClass;
 }
 export const getStreamedData = async ({
-  fileId,
+  requestId,
   start,
   end,
   powerClass,
 }: StreamedDataProps) => {
-  const route = `${getBaseURL()}/stream/${fileId}?start=${start.getTime()}&end=${end.getTime()}&powerClass=${powerClass}`;
+  const route = `${getBaseURL()}/stream/${requestId}?start=${start.getTime()}&end=${end.getTime()}&powerClass=${powerClass}`;
   return route;
 };

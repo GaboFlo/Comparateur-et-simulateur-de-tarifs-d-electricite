@@ -76,3 +76,14 @@ export interface ComparisonTableInterfaceRow {
 }
 
 export const APP_VERSION = process.env.REACT_APP_VERSION || "dev";
+
+export interface HourTime {
+  hour: number;
+  minute: number;
+}
+
+export interface HpHcSlot {
+  slotType: SlotType;
+  startSlot: HourTime;
+  endSlot: HourTime;
+}

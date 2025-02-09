@@ -48,7 +48,7 @@ export function ComparisonTable() {
   const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
     const fetchData = async () => {
-      if (!formState.fileId) {
+      if (!formState.requestId) {
         setRowSummaries([]);
         if (eventSource) {
           eventSource.close();
@@ -61,7 +61,7 @@ export function ComparisonTable() {
 
       try {
         const url = await getStreamedData({
-          fileId: formState.fileId,
+          requestId: formState.requestId,
           start: formState.dateRange[0],
           end: formState.dateRange[1],
           powerClass: formState.powerClass,

@@ -1,6 +1,5 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { LinearProgress, useColorScheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -79,7 +78,7 @@ export default function App() {
   function getStepContent(step: number) {
     switch (step) {
       case 0:
-        return <CurrentOfferForm />;
+        return <CurrentOfferForm handleNext={handleNextAndTrack} />;
       case 1:
         return <DataImport handleNext={handleNext} />;
       case 2:
@@ -123,8 +122,6 @@ export default function App() {
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStep, mode]);
-
-  console.log(mode, systemMode);
 
   return (
     <>
@@ -278,16 +275,6 @@ export default function App() {
                   sx={{ display: { xs: "none", sm: "flex" } }}
                 >
                   Précédent
-                </Button>
-              )}
-              {activeStep === 0 && (
-                <Button
-                  variant="contained"
-                  endIcon={<ChevronRightRoundedIcon />}
-                  onClick={handleNextAndTrack}
-                  sx={{ width: { xs: "100%", sm: "fit-content" } }}
-                >
-                  Suivant
                 </Button>
               )}
             </Box>

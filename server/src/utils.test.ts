@@ -1,5 +1,5 @@
 import hphc_mapping from "../statics/hp_hc.json";
-import { HpHcFileMapping, OfferType, OptionKey, PowerClass } from "./types";
+import { HpHcSlot, OfferType, OptionKey, PowerClass } from "./types";
 import {
   findFirstAndLastDate,
   findMonthlySubscriptionCost,
@@ -10,13 +10,7 @@ import {
 } from "./utils";
 
 describe("isHpOrHcSlot", () => {
-  const hphcMapping = hphc_mapping as HpHcFileMapping[];
-  const blueGrids = hphcMapping.find((elt) =>
-    elt.offerType.includes(OfferType.BLEU)
-  );
-  if (!blueGrids) {
-    throw new Error("No blue grids found");
-  }
+  const hphcMapping = hphc_mapping as HpHcSlot[];
 
   const testMapping = [
     { endOfTimeSlot: "00:00", expected: "HP" },
@@ -71,7 +65,7 @@ describe("isHpOrHcSlot", () => {
   testMapping.forEach(({ endOfTimeSlot, expected }) => {
     it(endOfTimeSlot, () => {
       const date = new Date(`2023-10-10T${endOfTimeSlot}:00+02:00`);
-      const slotType = isHpOrHcSlot(date, blueGrids.grids);
+      const slotType = isHpOrHcSlot(date, hphcMapping);
       expect(slotType).toBe(expected);
     });
   });

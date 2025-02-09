@@ -51,13 +51,14 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
           formData,
           start: formState.dateRange[0],
           end: formState.dateRange[1],
+          requestId: formState.requestId ?? "",
         });
         if (response) {
           setFormState((prevState) => ({
             ...prevState,
             seasonHourlyAnalysis: response.seasonData,
             analyzedDateRange: response.analyzedDateRange,
-            fileId: response.fileId,
+            requestId: response.requestId,
             totalConsumption: response.totalConsumption,
             isGlobalLoading: false,
           }));

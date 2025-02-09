@@ -6,6 +6,7 @@ import { FormProvider } from "./context/FormContext";
 import { MatomoContextProvider } from "./context/MatomoContext";
 import "./index.css";
 import AppTheme from "./theme/AppTheme";
+import { SnackbarProvider } from "notistack";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -16,12 +17,14 @@ LicenseInfo.setLicenseKey(
 
 root.render(
   <MatomoContextProvider>
-    <BrowserRouter>
-      <FormProvider>
-        <AppTheme>
-          <App />
-        </AppTheme>
-      </FormProvider>
-    </BrowserRouter>
+    <SnackbarProvider autoHideDuration={2000} preventDuplicate>
+      <BrowserRouter>
+        <FormProvider>
+          <AppTheme>
+            <App />
+          </AppTheme>
+        </FormProvider>
+      </BrowserRouter>
+    </SnackbarProvider>
   </MatomoContextProvider>
 );

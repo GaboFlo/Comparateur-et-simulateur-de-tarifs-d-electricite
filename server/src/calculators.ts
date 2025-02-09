@@ -1,6 +1,5 @@
 import { differenceInMonths } from "date-fns";
 import tempo_file from "../assets/tempo.json";
-import hphc_mapping from "../statics/hp_hc.json";
 import price_mapping from "../statics/price_mapping.json";
 import {
   CalculatedData,
@@ -8,8 +7,7 @@ import {
   ConsumptionLoadCurveData,
   Cost,
   FullCalculatedData,
-  HpHcFile,
-  HpHcFileMapping,
+  HpHcSlot,
   Mapping,
   OfferType,
   Option,
@@ -51,7 +49,7 @@ function getDateKey(isoString: string): string {
 function findCorrespondingMapping(
   option: Option,
   endOfSlotRecorded: Date,
-  hpHcMappingData: HpHcFileMapping[],
+  hpHcMappingData: HpHcSlot[],
   item: CalculatedData
 ): Cost {
   for (const singleMapping of option.mappings) {
@@ -78,7 +76,7 @@ function findCorrespondingMapping(
 }
 
 function calculateHpHcPrices(
-  hphcMapping: HpHcFileMapping[],
+  hphcMapping: HpHcSlot[],
   endOfSlotRecorded: Date,
   mapping: Mapping,
   option: Option,
@@ -87,15 +85,13 @@ function calculateHpHcPrices(
   const commonThrowError = `${option.offerType}-${
     option.optionKey
   }-${endOfSlotRecorded.toISOString()}`;
-  const applicableHpHcGrids = hphcMapping.find((hpItem) =>
-    hpItem.offerType.includes(option.offerType)
-  )?.grids;
-  if (!applicableHpHcGrids || !mapping.hpHcConfig) {
+
+  if (!mapping.hpHcConfig) {
     throw new Error(
       `No applicableHpHcGrids found or hpHcConfig missing ${commonThrowError}`
     );
   }
-  const slotType = isHpOrHcSlot(endOfSlotRecorded, applicableHpHcGrids);
+  const slotType = isHpOrHcSlot(endOfSlotRecorded, hphcMapping);
   const configMap: Record<SlotType, number> = {} as Record<SlotType, number>;
   for (const config of mapping.hpHcConfig) {
     configMap[config.slotType] = config.price;
@@ -141,7 +137,7 @@ function calculateTempoPricesOptimized(
     );
   }
   const relevantCost =
-    slotType === "HP" ? relevantTempoMapping.HP : relevantTempoMapping.HC;
+    slotType === "HC" ? relevantTempoMapping.HC : relevantTempoMapping.HP;
   return {
     cost: (item.value * relevantCost) / 2,
     hourType: slotType,
@@ -153,14 +149,15 @@ export async function calculatePrices({
   data,
   optionKey,
   offerType,
+  hpHcData,
 }: {
   data: CalculatedData[];
   optionKey: OptionKey;
   offerType: OfferType;
   tempoDates?: TempoDates;
+  hpHcData: HpHcSlot[];
 }): Promise<FullCalculatedData> {
   const priceMappingData = price_mapping as PriceMappingFile;
-  const hpHcMappingData = hphc_mapping as HpHcFile;
   const option = priceMappingData.find(
     (item) => item.optionKey === optionKey && item.offerType === offerType
   );
@@ -192,7 +189,7 @@ export async function calculatePrices({
       new_cost = findCorrespondingMapping(
         option,
         endOfSlotRecorded,
-        hpHcMappingData,
+        hpHcData,
         item
       );
     }
@@ -225,6 +222,7 @@ interface FullCalculatePricesInterface {
   offerType: OfferType;
   optionName: string;
   link: string;
+  hpHcData: HpHcSlot[];
 }
 
 export async function calculateRowSummary({
@@ -235,6 +233,7 @@ export async function calculateRowSummary({
   optionName,
   link,
   offerType,
+  hpHcData,
 }: FullCalculatePricesInterface): Promise<ComparisonTableInterfaceRow> {
   const startTime = Date.now();
 
@@ -242,6 +241,7 @@ export async function calculateRowSummary({
     data,
     offerType,
     optionKey,
+    hpHcData,
   });
 
   const monthlyCost = findMonthlySubscriptionCost(

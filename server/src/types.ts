@@ -65,17 +65,11 @@ export interface Cost {
   tempoCodeDay?: TempoCodeDay;
 }
 
-export interface GridMapping {
+export interface HpHcSlot {
   slotType: string;
+  startSlot: HourTime;
   endSlot: HourTime;
 }
-
-export interface HpHcFileMapping {
-  offerType: OfferType[];
-  grids: GridMapping[];
-}
-
-export type HpHcFile = HpHcFileMapping[];
 
 export type SlotType = "HP" | "HC";
 

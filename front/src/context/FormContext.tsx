@@ -7,17 +7,16 @@ import React, {
   useState,
 } from "react";
 import {
+  HpHcSlot,
   OfferType,
   OptionKey,
   PowerClass,
-  PriceMappingFile,
   SeasonHourlyAnalysis,
 } from "../types";
 
 type AvailableSuppliers = "EDF";
 
 interface FormState {
-  allOffers?: PriceMappingFile;
   supplier: AvailableSuppliers;
   offerType: OfferType;
   optionType: OptionKey | "";
@@ -26,9 +25,10 @@ interface FormState {
   seasonHourlyAnalysis?: SeasonHourlyAnalysis[];
   dateRange: [Date, Date];
   analyzedDateRange?: [number, number];
-  fileId?: string;
+  requestId?: string;
   optionLink?: string;
   totalConsumption: number;
+  hpHcConfig?: HpHcSlot[];
 }
 
 interface FormContextProps {

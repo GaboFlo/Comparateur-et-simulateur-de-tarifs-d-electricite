@@ -6,7 +6,7 @@ import allHolidays from "../assets/holidays.json";
 import price_mapping from "../statics/price_mapping.json";
 import { ConsumptionLoadCurveData } from "./csvParser";
 import {
-  GridMapping,
+  HpHcSlot,
   Mapping,
   OfferType,
   OptionKey,
@@ -39,18 +39,22 @@ function isFrenchHoliday(date: Date): boolean {
   return Boolean(hd.isHoliday(date));
 }
 
-export const isHpOrHcSlot = (
-  endOfRecordedPeriod: Date,
-  grids: GridMapping[]
-) => {
+export const isHpOrHcSlot = (endOfRecordedPeriod: Date, grids: HpHcSlot[]) => {
+  const slotHourTime = {
+    hour: endOfRecordedPeriod.getHours(),
+    minute: endOfRecordedPeriod.getMinutes(),
+  };
+  if (!grids || grids.length === 0) {
+    throw new Error("No grids found");
+  }
   const potentialGrid = grids.find((elt) => {
     return (
-      elt.endSlot.hour === endOfRecordedPeriod.getHours() &&
-      elt.endSlot.minute === endOfRecordedPeriod.getMinutes()
+      elt.endSlot.hour === slotHourTime.hour &&
+      elt.endSlot.minute === slotHourTime.minute
     );
   });
   if (!potentialGrid) {
-    throw new Error(`No grid found for ${endOfRecordedPeriod}`);
+    return "HP";
   }
   return potentialGrid.slotType as SlotType;
 };
@@ -121,6 +125,12 @@ export async function readFileAsString(filePath: string): Promise<string> {
     throw new Error("File not found");
   }
 }
+
+export const openJsonFile = async (filePath: string) => {
+  const fileContents = await fs.readFile(filePath, "utf-8");
+  const jsonData = JSON.parse(fileContents);
+  return JSON.parse(jsonData);
+};
 
 export async function fetchTempoData() {
   try {

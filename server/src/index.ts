@@ -7,6 +7,7 @@ import cron from "node-cron";
 import path from "path";
 import unzipper from "unzipper";
 import { v4 as uuidv4 } from "uuid";
+import { default as hpHcFile } from "../statics/hp_hc.json";
 import { default as priceMappingFile } from "../statics/price_mapping.json";
 import { calculateRowSummary } from "./calculators";
 import {
@@ -14,11 +15,12 @@ import {
   parseCsvToConsumptionLoadCurveData,
 } from "./csvParser";
 import { analyseHourByHourBySeason } from "./statistics";
-import { Option, PowerClass, PriceMappingFile } from "./types";
+import { HpHcSlot, Option, PowerClass, PriceMappingFile } from "./types";
 import {
   fetchTempoData,
   findFirstAndLastDate,
   getHolidaysBetweenDates,
+  openJsonFile,
   readFileAsString,
 } from "./utils";
 
@@ -38,7 +40,23 @@ app.use(express.json());
 const uploadRelativeDir = "./uploads";
 export const assetsRelativeDir = "./assets";
 
-const uploadHandler = async (
+const deleteFolderRecursive = (folderPath: string) => {
+  if (fs.existsSync(folderPath)) {
+    fs.readdirSync(folderPath).forEach((file) => {
+      const currentPath = path.join(folderPath, file);
+      if (fs.lstatSync(currentPath).isDirectory()) {
+        // Recursively delete subdirectory
+        deleteFolderRecursive(currentPath);
+      } else {
+        // Delete file
+        fs.unlinkSync(currentPath);
+      }
+    });
+    fs.rmdirSync(folderPath);
+  }
+};
+
+const edfUploadHandler = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -47,8 +65,8 @@ const uploadHandler = async (
     res.status(400).send("Aucun fichier n'a été chargé.");
     return;
   }
-  const { start, end } = req.query;
-  if (!start || !end) {
+  const { start, end, requestId } = req.query;
+  if (!start || !end || !requestId) {
     res.status(400).send("Paramètres de requête manquants");
     return;
   }
@@ -83,8 +101,11 @@ const uploadHandler = async (
         .on("error", reject);
     });
     const parsedData = parseCsvToConsumptionLoadCurveData(csvContent);
-    const fileId = uuidv4();
-    const fullPath = path.join(uploadRelativeDir, `${fileId}.json`);
+    const fullPath = path.join(
+      uploadRelativeDir,
+      requestId.toString(),
+      "edf.json"
+    );
     fs.writeFile(fullPath, JSON.stringify(parsedData), (err) => {
       if (err) {
         console.error("Erreur lors de l'écriture du fichier JSON :", err);
@@ -106,7 +127,7 @@ const uploadHandler = async (
       );
       res.send({
         seasonData,
-        fileId,
+        requestId,
         analyzedDateRange,
         totalConsumption,
       });
@@ -125,16 +146,25 @@ const uploadHandler = async (
 
 const upload = multer({
   dest: uploadRelativeDir,
-  limits: { fileSize: 2 * 1024 * 1024 },
+  limits: { fileSize: 1 * 1024 * 1024 },
 });
-app.post("/uploadEdfFile", upload.single("file"), uploadHandler);
+app.post("/uploadEdfFile", upload.single("file"), edfUploadHandler);
+
+app.post("/uploadHpHcConfig", upload.single("file"), (req, res) => {
+  const requestId = uuidv4();
+  const uploadDir = path.join(uploadRelativeDir, requestId);
+  fs.mkdirSync(uploadDir, { recursive: true });
+  const hphcFilePath = path.join(uploadDir, "hphc.json");
+  fs.writeFileSync(hphcFilePath, JSON.stringify(req.body.file));
+  res.status(200).send({ requestId });
+});
 
 app.get(
-  "/stream/:fileId",
+  "/stream/:requestId",
   async (req: Request, res: Response, next: NextFunction) => {
-    const fileId = req.params.fileId;
+    const requestId = req.params.requestId;
     const { start, end, powerClass } = req.query;
-    if (!fileId || !start || !end || !powerClass) {
+    if (!requestId || !start || !end || !powerClass) {
       res.status(400).send("Champs manquants");
       return;
     }
@@ -144,18 +174,27 @@ app.get(
     ];
     const typedPowerClass = Number(powerClass) as PowerClass;
     const typedPriceMappingFile = priceMappingFile as PriceMappingFile;
-    const filePath = path.join(uploadRelativeDir, `${fileId}.json`);
-    let data: string;
+    const edfPath = path.join(
+      uploadRelativeDir,
+      requestId.toString(),
+      "edf.json"
+    );
+    const hphcPath = path.join(
+      uploadRelativeDir,
+      requestId.toString(),
+      "hphc.json"
+    );
+    let edfData: string;
     try {
-      data = await readFileAsString(filePath);
+      edfData = await readFileAsString(edfPath);
     } catch (error) {
       console.error("Erreur lors de la lecture du fichier JSON :", error);
       res.status(500).send("Erreur lors de la lecture du fichier JSON");
       return;
     }
-    let jsonData: ConsumptionLoadCurveData[];
+    let jsonEdfData: ConsumptionLoadCurveData[];
     try {
-      jsonData = JSON.parse(data);
+      jsonEdfData = JSON.parse(edfData);
     } catch (error) {
       console.error("Erreur lors de l'analyse du JSON :", error);
       res.status(500).send("Erreur lors de l'analyse du JSON");
@@ -167,13 +206,14 @@ app.get(
       Connection: "keep-alive",
     });
     const sendData = async (option: Option) => {
-      let filteredData = jsonData.filter((elt) =>
+      let filteredData = jsonEdfData.filter((elt) =>
         isWithinInterval(elt.recordedAt, {
           start: startOfDay(dateRange[0]),
           end: endOfDay(dateRange[1]),
         })
       );
       try {
+        const hpHcData = (await openJsonFile(hphcPath)) as HpHcSlot[];
         const rowSummary = await calculateRowSummary({
           data: filteredData,
           dateRange,
@@ -182,6 +222,7 @@ app.get(
           offerType: option.offerType,
           optionName: option.optionName,
           link: option.link,
+          hpHcData,
         });
         res.write(`data: ${JSON.stringify({ comparisonRow: rowSummary })}\n\n`);
       } catch (error) {
@@ -205,17 +246,16 @@ app.get(
         );
       }
       res.end();
-      fs.unlink(filePath, (err) => {
-        if (err) {
-          console.error("Erreur lors de la suppression du fichier JSON :", err);
-        }
-      });
+      deleteFolderRecursive(path.join(uploadRelativeDir, requestId));
     })();
   }
 );
 
 app.get("/availableOffers", (req: Request, res: Response) => {
   res.json(priceMappingFile);
+});
+app.get("/defaultHpHc", (req: Request, res: Response) => {
+  res.json(hpHcFile);
 });
 
 app.listen(port, () => {
