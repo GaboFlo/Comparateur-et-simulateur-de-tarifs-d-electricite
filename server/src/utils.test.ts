@@ -105,7 +105,7 @@ describe("findMonthlySubscriptionCost", () => {
       OfferType.BLEU,
       OptionKey.BASE
     );
-    expect(monthly).toBe(1589);
+    expect(monthly).toBe(1727);
   });
 });
 

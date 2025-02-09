@@ -9,10 +9,9 @@ export interface FullCalculatedData {
 export enum OptionKey {
   BASE = "BASE",
   HPHC = "HPHC",
-  TEMPO = "TEMPO",
+  BLEU_TEMPO = "BLEU_TEMPO",
   WEEK_END_HPHC = "WEEK_END_HPHC",
-  FLEX_ECO = "FLEX_ECO",
-  FLEX_SOBRIETE = "FLEX_SOBRIETE",
+  ZEN_FLEX = "ZEN_FLEX",
   WEEK_END_PLUS_LUNDI = "WEEK_END_PLUS_LUNDI",
   WEEK_END_PLUS_MERCREDI = "WEEK_END_PLUS_MERCREDI",
   WEEK_END_PLUS_VENDREDI = "WEEK_END_PLUS_VENDREDI",
@@ -22,6 +21,7 @@ export enum OptionKey {
   FIXE_BASE = "FIXE_BASE",
   FIXE_HPHC = "FIXE_HPHC",
   ONLINE_BASE = "ONLINE_BASE",
+  ONLINE_HPHC = "ONLINE_HPHC",
 }
 
 export enum OfferType {

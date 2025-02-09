@@ -1,8 +1,34 @@
 # Comparateur des fournisseur et offres d'électricités
 
-Shield: [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
+[![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 
-This work is licensed under a
+## Objectif
+
+Ce projet est né d'une interrogation toute personnelle : comment je sais si mon offre d'électricité actuelle m'est adaptée ?
+Je suis donc parti tester des simulateurs, qui se basent sur nos déclarations (combien de réfrigirateurs avez-vous ? quelle est votre méthode de chauffage ...). Sauf que le srésultats sont en réalité assez approximatifs, alors même que je connais mes habitudes de consommation via EDF !
+
+Eurêka !
+
+Me voici à créer ce simulateur, qui reprend les données de consommation réelles de mon foyer, et simule les coûts de plusieurs autres offres si je les avais utilisées sur cette période
+
+## Points de vigilance
+
+- Ce simulateur n'est affilié à aucun fournisseur d'énergie, EDF étant le premier car je suis moi-même chez EDF
+- Les simulations sont purement indicatives. Des tests existent, mais l'erreur est humaine !
+- Je ne suis pas développeur de base, le code mériterait un petit ménage et des optimisations.
+
+## Prochaines étapes
+
+- [] Inclure d'autres fournisseurs (en entrée et en sortie)
+
+## Soutenir et contribuer
+
+Vous pouvez contribuer à ce projet en créant des issues ou en faisant de vous mêmes des Pull Requests.
+Et pour aider à payer les frais d'infrastructure : [https://buymeacoffee.com/gaboflo](https://buymeacoffee.com/gaboflo)
+
+## Licence
+
+Ce travail est sous licence
 [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
 
 [![CC BY-NC-SA 4.0][cc-by-nc-sa-image]][cc-by-nc-sa]
