@@ -1,3 +1,4 @@
+import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -21,6 +22,7 @@ interface Props {
 }
 const HpHcSlotSelector = ({ readOnly = false }: Readonly<Props>) => {
   const theme = useTheme();
+  const { trackEvent } = useMatomo();
   const { formState, setFormState } = useFormContext();
 
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
@@ -60,6 +62,12 @@ const HpHcSlotSelector = ({ readOnly = false }: Readonly<Props>) => {
           return !(blockMid >= start && blockMid < end);
         })
       );
+      trackEvent({
+        category: "HPHC",
+        action: "Slot action",
+        name: "Remove",
+        value: blockMid,
+      });
     } else {
       const newSlot: HpHcSlot = {
         startSlot: {
@@ -73,6 +81,12 @@ const HpHcSlotSelector = ({ readOnly = false }: Readonly<Props>) => {
         slotType: "HC",
       };
       setTimeRanges((prev) => [...prev, newSlot]);
+      trackEvent({
+        category: "HPHC",
+        action: "Slot action",
+        name: "Add",
+        value: blockMid,
+      });
     }
 
     setFormState((prevState) => {
