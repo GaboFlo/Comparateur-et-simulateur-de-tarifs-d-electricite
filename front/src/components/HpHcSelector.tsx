@@ -132,11 +132,10 @@ const HpHcSlotSelector = ({ readOnly = false }: Readonly<Props>) => {
                       py={1}
                       position="relative"
                       sx={{
-                        bgcolor: isHC ? "success.light" : "grey.100",
+                        bgcolor: isHC ? "success.light" : "grey.light",
                         borderRight:
                           i !== 47 ? "1px solid rgba(0,0,0,0.12)" : "none",
                         minWidth: 15,
-
                         ...(readOnly
                           ? {}
                           : {
