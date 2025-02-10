@@ -8,8 +8,9 @@ on:
 concurrency: production
 
 jobs:
-  deploy-front:
+  deploy-production:
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,7 +35,7 @@ jobs:
           name: frontend-build
           path: frontend_build
 
-      - name: FTP Deploy
+      - name: Deploy Frontend to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_HOSTNAME }}
@@ -44,13 +45,7 @@ jobs:
           local-dir: "frontend_build/"
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
 
-  deploy-server:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Deploy
+      - name: Deploy server webhook
         env:
           deploy_url: ${{ secrets.SERVER_DEPLOY_HOOK_URL }}
         run: |
