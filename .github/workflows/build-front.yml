@@ -1,6 +1,9 @@
 name: Build Frontend
 
-on: push
+on:
+  push:
+    branches-ignore:
+      - main
 
 jobs:
   check-versions:
@@ -46,4 +49,4 @@ jobs:
         with:
           name: frontend-build
           path: frontend_build
-          retention-days: 1
+          retention-days: 0

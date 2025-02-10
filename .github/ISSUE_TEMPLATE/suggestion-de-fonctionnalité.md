@@ -1,10 +1,9 @@
 ---
-name: Suggestion de fonctionnalité
+name: Suggestion de fonctionnalite
 about: Suggérer une idée
-title: ''
+title: ""
 labels: enhancement
-assignees: ''
-
+assignees: ""
 ---
 
 **Votre demande de fonctionnalité est-elle liée à un problème ? Veuillez le décrire**.
@@ -16,5 +15,5 @@ Une description claire et concise de ce que vous voulez qu'il se passe.
 **Décrivez les alternatives que vous avez envisagées**
 Une description claire et concise de toutes les solutions ou caractéristiques alternatives que vous avez envisagées.
 
-**Contexte supplémentaire
+**Contexte supplémentaire**
 Ajoutez ici tout autre contexte ou capture d'écran concernant la demande de fonctionnalité.
