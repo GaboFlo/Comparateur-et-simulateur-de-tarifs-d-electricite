@@ -55,7 +55,7 @@ export const DEFAULT_FORM_STATE: FormState = {
   optionType: OptionKey.BASE,
   powerClass: 6,
   isGlobalLoading: false,
-  dateRange: [startOfDay(subYears(new Date(), 1)), endOfDay(new Date())],
+  dateRange: [startOfDay(subYears(new Date(), 2)), endOfDay(new Date())],
   totalConsumption: 1,
 };
 
