@@ -1401,5 +1401,128 @@
                 ]
             }
         ]
+    },
+    {
+        "provider": "Engie",
+        "optionKey": "Base",
+        "optionName": "Base",
+        "offerType": "Elec Référence 2 ans",
+        "link": "https://particuliers.engie.fr/electricite.html",
+        "subscriptions": [
+            {
+                "powerClass": 3,
+                "monthlyCost": 1056
+            },
+            {
+                "powerClass": 6,
+                "monthlyCost": 1400
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1769
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2143
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2492
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2825
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3582
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 4342
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 5010
+            }
+        ],
+        "mappings": [
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "price": 2599
+            }
+        ]
+    },
+    {
+        "provider": "Engie",
+        "optionKey": "HP_HC",
+        "optionName": "Heures Creuses",
+        "offerType": "Elec Référence 2 ans",
+        "link": "https://particuliers.engie.fr/electricite.html",
+        "subscriptions": [
+            {
+                "powerClass": 6,
+                "monthlyCost": 1594
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 2056
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2508
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2940
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 3383
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 4302
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 5149
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 6015
+            }
+        ],
+        "mappings": [
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "hpHcConfig": [
+                    {
+                        "price": 2735,
+                        "slotType": "HP"
+                    },
+                    {
+                        "price": 2088,
+                        "slotType": "HC"
+                    }
+                ]
+            }
+        ]
     }
 ]
