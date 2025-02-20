@@ -216,7 +216,7 @@ app.get(
         const defaultHpHcData = (await openJsonFile(hphcPath)) as HpHcSlot[];
         const rowSummary = await calculateRowSummary({
           data: filteredData,
-          dateRange,
+          dateRange: findFirstAndLastDate(jsonEdfData),
           powerClass: typedPowerClass,
           optionKey: option.optionKey,
           offerType: option.offerType,

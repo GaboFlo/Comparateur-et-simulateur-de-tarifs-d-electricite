@@ -112,7 +112,9 @@ export function findMonthlySubscriptionCost(
   );
 }
 
-export const findFirstAndLastDate = (data: ConsumptionLoadCurveData[]) => {
+export const findFirstAndLastDate = (
+  data: ConsumptionLoadCurveData[]
+): [number, number] => {
   const dates = data.map((item) => new Date(item.recordedAt)?.getTime());
   const firstDate = Math.min(...dates);
   const lastDate = Math.max(...dates);
