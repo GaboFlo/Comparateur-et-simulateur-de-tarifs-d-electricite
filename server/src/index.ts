@@ -18,7 +18,7 @@ import { analyseHourByHourBySeason } from "./statistics";
 import { HpHcSlot, Option, PowerClass, PriceMappingFile } from "./types";
 import {
   fetchTempoData,
-  findFirstAndLastDate,
+  getAnalyzedDateRange,
   getHolidaysBetweenDates,
   openJsonFile,
   readFileAsString,
@@ -112,11 +112,10 @@ const edfUploadHandler = async (
         res.status(500).send("Impossible de sauvegarder le JSON");
         return;
       }
-      const dateRangeOfFile = findFirstAndLastDate(parsedData);
-      const analyzedDateRange: [number, number] = [
-        Math.max(dateRangeOfFile[0], askedDateRange[0].getTime()),
-        Math.min(dateRangeOfFile[1], askedDateRange[1].getTime()),
-      ];
+      const analyzedDateRange = getAnalyzedDateRange(
+        parsedData,
+        askedDateRange
+      );
       const seasonData = analyseHourByHourBySeason({
         data: parsedData,
         dateRange: analyzedDateRange,
@@ -168,7 +167,7 @@ app.get(
       res.status(400).send("Champs manquants");
       return;
     }
-    const dateRange: [Date, Date] = [
+    const askedDateRange: [Date, Date] = [
       new Date(Number(start)),
       new Date(Number(end)),
     ];
@@ -208,15 +207,15 @@ app.get(
     const sendData = async (option: Option) => {
       let filteredData = jsonEdfData.filter((elt) =>
         isWithinInterval(elt.recordedAt, {
-          start: startOfDay(dateRange[0]),
-          end: endOfDay(dateRange[1]),
+          start: startOfDay(askedDateRange[0]),
+          end: endOfDay(askedDateRange[1]),
         })
       );
       try {
         const defaultHpHcData = (await openJsonFile(hphcPath)) as HpHcSlot[];
         const rowSummary = await calculateRowSummary({
           data: filteredData,
-          dateRange: findFirstAndLastDate(jsonEdfData),
+          dateRange: getAnalyzedDateRange(jsonEdfData, askedDateRange),
           powerClass: typedPowerClass,
           optionKey: option.optionKey,
           offerType: option.offerType,

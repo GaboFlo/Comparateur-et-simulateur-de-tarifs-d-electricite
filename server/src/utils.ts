@@ -186,3 +186,14 @@ export async function getHpHcJson(
     throw error;
   }
 }
+
+export const getAnalyzedDateRange = (
+  data: ConsumptionLoadCurveData[],
+  askedDateRange: [Date, Date]
+): [number, number] => {
+  const dateRangeOfFile = findFirstAndLastDate(data);
+  return [
+    Math.max(dateRangeOfFile[0], askedDateRange[0].getTime()),
+    Math.min(dateRangeOfFile[1], askedDateRange[1].getTime()),
+  ];
+};
