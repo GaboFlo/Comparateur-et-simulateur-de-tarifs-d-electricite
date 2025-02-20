@@ -26,6 +26,9 @@ export default function Simulations() {
           ? format(formState.analyzedDateRange[1], "dd/MM/yyyy")
           : format(formState.dateRange[1], "dd/MM/yyyy")}
       </Typography>
+      <Typography variant="body2" sx={{ mb: 1 }}>
+        {new Intl.NumberFormat("fr-FR").format(formState.totalConsumption)} kWh{" "}
+      </Typography>
       <HourlySeasonChart />
       <Divider sx={{ marginX: 2, mt: 2 }} />
       <Typography variant="h5" sx={{ mt: 2 }}>

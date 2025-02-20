@@ -215,13 +215,17 @@ export function ComparisonTable() {
                       </Link>
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {row.fullSubscriptionCost}
+                      {new Intl.NumberFormat("fr-FR").format(
+                        row.fullSubscriptionCost
+                      )}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {row.totalConsumptionCost}
+                      {new Intl.NumberFormat("fr-FR").format(
+                        row.totalConsumptionCost
+                      )}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {row.total}
+                      {new Intl.NumberFormat("fr-FR").format(row.total)}
                     </StyledTableCell>
                     <StyledTableCell
                       align="center"
