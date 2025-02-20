@@ -174,6 +174,7 @@ export function ComparisonTable() {
                 .sort((a, b) => {
                   return a.total - b.total;
                 })
+                .filter((row) => row?.total > 0)
                 .map((row) => (
                   <StyledTableRow
                     key={`${row.provider}-${row.offerType}-${row.optionKey}`}
