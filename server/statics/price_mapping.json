@@ -1164,7 +1164,7 @@
         "provider": "TotalEnergies",
         "optionKey": "ECO_BASE",
         "optionName": "Base",
-        "offerType": "Heures Eco",
+        "offerType": "HEURES ÉCO",
         "link": "https://www.totalenergies.fr/particuliers/electricite-et-gaz/grilles-tarifaires#c115104",
         "subscriptions": [
             {
@@ -1219,7 +1219,7 @@
         "provider": "TotalEnergies",
         "optionKey": "ECO_HPHC",
         "optionName": "Heures Creuses",
-        "offerType": "Heures Eco",
+        "offerType": "HEURES ÉCO",
         "link": "https://www.totalenergies.fr/particuliers/electricite-et-gaz/grilles-tarifaires#c115104",
         "subscriptions": [
             {
@@ -1283,7 +1283,7 @@
         "provider": "TotalEnergies",
         "optionKey": "VERT_BASE",
         "optionName": "Base",
-        "offerType": "Heures Vertes",
+        "offerType": "HEURES VERTES",
         "link": "https://www.totalenergies.fr/particuliers/electricite-et-gaz/grilles-tarifaires#c115352",
         "subscriptions": [
             {
@@ -1342,7 +1342,7 @@
         "provider": "TotalEnergies",
         "optionKey": "VERT_HPHC",
         "optionName": "Heures Creuses",
-        "offerType": "Heures Vertes",
+        "offerType": "HEURES VERTES",
         "link": "https://www.totalenergies.fr/particuliers/electricite-et-gaz/grilles-tarifaires#c115352",
         "subscriptions": [
             {
@@ -1406,7 +1406,7 @@
         "provider": "Engie",
         "optionKey": "Base",
         "optionName": "Base",
-        "offerType": "Elec Référence 2 ans",
+        "offerType": "ÉLEC RÉFÉRENCE 2 ANS",
         "link": "https://particuliers.engie.fr/electricite.html",
         "subscriptions": [
             {
@@ -1465,7 +1465,7 @@
         "provider": "Engie",
         "optionKey": "HP_HC",
         "optionName": "Heures Creuses",
-        "offerType": "Elec Référence 2 ans",
+        "offerType": "ÉLEC RÉFÉRENCE 2 ANS",
         "link": "https://particuliers.engie.fr/electricite.html",
         "subscriptions": [
             {

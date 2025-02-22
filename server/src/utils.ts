@@ -46,19 +46,28 @@ export const isHpOrHcSlot = (endOfRecordedPeriod: Date, grids: HpHcSlot[]) => {
     hour: endOfRecordedPeriod.getHours(),
     minute: endOfRecordedPeriod.getMinutes(),
   };
+
   if (!grids || grids.length === 0) {
     throw new Error("No grids found");
   }
-  const potentialGrid = grids.find((elt) => {
-    return (
-      elt.endSlot.hour === slotHourTime.hour &&
-      elt.endSlot.minute === slotHourTime.minute
+
+  try {
+    const potentialGrid = grids.find((elt) => {
+      return (
+        elt.endSlot.hour === slotHourTime.hour &&
+        elt.endSlot.minute === slotHourTime.minute
+      );
+    });
+    if (!potentialGrid) {
+      return "HP";
+    }
+    return potentialGrid.slotType as SlotType;
+  } catch (e: any) {
+    console.log(slotHourTime, grids, e);
+    throw new Error(
+      `Error while finding slot type ${slotHourTime} ${e.message}`
     );
-  });
-  if (!potentialGrid) {
-    return "HP";
   }
-  return potentialGrid.slotType as SlotType;
 };
 
 export function getSeason(date: Date) {

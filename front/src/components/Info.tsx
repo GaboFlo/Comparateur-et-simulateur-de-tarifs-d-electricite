@@ -16,8 +16,9 @@ export default function Info({
         simulations sur la base de vos déclarations approximatives et qui ne
         prennent pas en compte votre consommation réelle. Ces sites vous
         demandent votre adresse mail pour recevoir vos données simulées (et vous
-        envoyer des mails par la suite). <br /> L'objectif de ce simulateur est
-        de s'affranchir de ces défaut, avec un code open-source.
+        envoyer des mails par la suite). <br />
+        <br /> L'objectif de ce simulateur est de s'affranchir de ces défaut,
+        avec un code open-source.
       </Typography>
       <Alert
         severity="info"
@@ -27,8 +28,8 @@ export default function Info({
         <b>
           Ce site vous permet de simuler réellement un changement de contrat,
           sur la base précise de vos consommations, heure par heure sur vos
-          derniers mois, que vous exporterez via EDF. <br /> La simulation est
-          directement accessible à la fin des deux étapes.
+          derniers mois, que vous exporterez via EDF (pour l'instant). <br /> La
+          simulation est directement accessible à la fin des deux étapes.
         </b>
       </Alert>
       <Typography
@@ -44,23 +45,19 @@ export default function Info({
         icon={<WarningRoundedIcon />}
         sx={{ m: 1, textAlign: "justify" }}
       >
-        <ul>
-          <li>
+        <ol>
+          <li style={{ marginBottom: "1em" }}>
             La simulation <b>ne calcule pas les taxes</b> (qui seront les mêmes
             peu importe votre fournisseur, et proportionnelles à votre
             consommation)
           </li>
-          <li>
+          <li style={{ marginBottom: "1em" }}>
             Les simulations sont faites avec le <b>prix actuel</b> de
             l'électricité. Ce qui peut expliquer une variation entre votre
             facturation réelle et la simulation (si le prix de l'électricité a
             été modifié dans l'intervalle de la période simulée)
           </li>
-          <li>
-            Seules les offres d'EDF sont pour l'instant reprises (pour une
-            première version de ce comparateur <b>aucunement affiliée à EDF</b>)
-          </li>
-          <li>
+          <li style={{ marginBottom: "1em" }}>
             <b>Ce simulateur reste en phase de test</b>, pour toutes
             suggestions, remontées de bugs, ou participations merci de passer
             uniquement par{" "}
@@ -72,7 +69,7 @@ export default function Info({
               GitHub
             </a>
           </li>
-        </ul>
+        </ol>
       </Alert>{" "}
       <Typography
         variant="body1"

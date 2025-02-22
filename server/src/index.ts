@@ -15,7 +15,7 @@ import {
   parseCsvToConsumptionLoadCurveData,
 } from "./csvParser";
 import { analyseHourByHourBySeason } from "./statistics";
-import { HpHcSlot, Option, PowerClass, PriceMappingFile } from "./types";
+import { Option, PowerClass, PriceMappingFile } from "./types";
 import {
   fetchTempoData,
   getAnalyzedDateRange,
@@ -154,7 +154,7 @@ app.post("/uploadHpHcConfig", upload.single("file"), (req, res) => {
   const uploadDir = path.join(uploadRelativeDir, requestId);
   fs.mkdirSync(uploadDir, { recursive: true });
   const hphcFilePath = path.join(uploadDir, "hphc.json");
-  fs.writeFileSync(hphcFilePath, JSON.stringify(req.body.file));
+  fs.writeFileSync(hphcFilePath, req.body.file);
   res.status(200).send({ requestId });
 });
 
@@ -212,7 +212,7 @@ app.get(
         })
       );
       try {
-        const defaultHpHcData = (await openJsonFile(hphcPath)) as HpHcSlot[];
+        const defaultHpHcData = await openJsonFile(hphcPath);
         const rowSummary = await calculateRowSummary({
           data: filteredData,
           dateRange: getAnalyzedDateRange(jsonEdfData, askedDateRange),
@@ -227,7 +227,7 @@ app.get(
         });
         res.write(`data: ${JSON.stringify({ comparisonRow: rowSummary })}\n\n`);
       } catch (error) {
-        console.error("Erreur lors du calcul du résumé :", error);
+        console.error("Erreur lors du calcul du résumé :", error, option);
         res.write(
           `data: ${JSON.stringify({ error: "Erreur lors du calcul" })}\n\n`
         );
