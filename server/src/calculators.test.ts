@@ -1,4 +1,3 @@
-import tempo_file from "../assets/tempo.json";
 import { default as hpHcDefault } from "../statics/hp_hc.json";
 import { calculatePrices, getTempoDateKey, parseTime } from "./calculators";
 import {
@@ -8,10 +7,11 @@ import {
   OptionKey,
   TempoDates,
 } from "./types";
+import { getTempoData } from "./utils";
 
 describe("calculateTempoPrices", () => {
   it("RED days 2025-01-10 (previous is white)", async () => {
-    const tempoDates = tempo_file as TempoDates;
+    const tempoDates = await getTempoData();
 
     const hpRedPrice = 6586;
     const hcRedPrice = 1518;

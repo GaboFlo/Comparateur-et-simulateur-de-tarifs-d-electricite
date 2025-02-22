@@ -19,7 +19,6 @@ import { Option, PowerClass, PriceMappingFile } from "./types";
 import {
   fetchTempoData,
   getAnalyzedDateRange,
-  getHolidaysBetweenDates,
   openJsonFile,
   readFileAsString,
 } from "./utils";
@@ -270,19 +269,8 @@ app.listen(port, () => {
 });
 
 cron.schedule("1 * * * *", () => {
+  console.info("Tâche cron : récupération des données tempo");
   (async () => {
-    const firstDate = new Date("2020-01-01");
-    const now = new Date();
-    const holidays = getHolidaysBetweenDates([firstDate, now]);
-    const holidayPath = path.join(assetsRelativeDir, "holidays.json");
-    fs.writeFile(holidayPath, JSON.stringify(holidays), (err) => {
-      if (err) {
-        console.error(
-          "Erreur lors de l'écriture du fichier holidays.json :",
-          err
-        );
-      }
-    });
     try {
       const tempoDates = await fetchTempoData();
       const tempoFilePath = path.join(assetsRelativeDir, "tempo.json");
