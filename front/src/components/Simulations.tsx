@@ -39,7 +39,7 @@ export default function Simulations() {
               maximumFractionDigits: 1,
             }).format(formState.totalConsumption / diffDays)}{" "}
             kWh par jour
-          </b>
+          </b>{" "}
           .
         </Alert>
       </Typography>
