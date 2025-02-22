@@ -1,6 +1,6 @@
 import tempo_file from "../assets/tempo.json";
 import { default as hpHcDefault } from "../statics/hp_hc.json";
-import { calculatePrices } from "./calculators";
+import { calculatePrices, getTempoDateKey, parseTime } from "./calculators";
 import {
   ConsumptionLoadCurveData,
   FullCalculatedData,
@@ -53,6 +53,7 @@ describe("calculateTempoPrices", () => {
       data,
       optionKey,
       offerType,
+      provider: "EDF",
       tempoDates,
       hpHcData: hpHcDefault,
     });
@@ -164,6 +165,7 @@ describe("calculateBasePrices", () => {
   it(OfferType.BLEU, async () => {
     const result = await calculatePrices({
       data,
+      provider: "EDF",
       optionKey,
       offerType,
       hpHcData: hpHcDefault,
@@ -221,6 +223,7 @@ describe("calculateHpHcPrices", () => {
     const result = await calculatePrices({
       data,
       optionKey,
+      provider: "EDF",
       offerType,
       hpHcData: hpHcDefault,
     });
@@ -263,5 +266,31 @@ describe("calculateHpHcPrices", () => {
       ],
     };
     expect(result).toEqual(expected);
+  });
+});
+
+describe("parseTime", () => {
+  test("parses a valid ISO string with time", () => {
+    expect(parseTime("2023-10-10T14:30:00Z")).toEqual({ hour: 14, minute: 30 });
+    expect(parseTime("2023-10-10T00:00:00Z")).toEqual({ hour: 0, minute: 0 });
+    expect(parseTime("2023-10-10T23:59:59Z")).toEqual({ hour: 23, minute: 59 });
+  });
+
+  test("parses edge cases like midnight and noon", () => {
+    expect(parseTime("2023-10-10T00:00:00Z")).toEqual({ hour: 0, minute: 0 });
+    expect(parseTime("2023-10-10T12:00:00Z")).toEqual({ hour: 12, minute: 0 });
+  });
+});
+
+describe("getTempoDateKey", () => {
+  test("generates a key for a valid date string", () => {
+    expect(getTempoDateKey("2023-10-10T05:00:00+01:00")).toBe("2023-10-09");
+    expect(getTempoDateKey("2020-02-29T06:00:00+01:00")).toBe("2020-02-28");
+    expect(getTempoDateKey("2021-12-31T15:00:00+01:00")).toBe("2021-12-31");
+  });
+
+  test("handles edge cases like leap years and different months", () => {
+    expect(getTempoDateKey("2020-03-01")).toBe("2020-02-29"); // Leap year
+    expect(getTempoDateKey("2019-02-28T15:00:00+01:00")).toBe("2019-02-28"); // Non-leap year
   });
 });

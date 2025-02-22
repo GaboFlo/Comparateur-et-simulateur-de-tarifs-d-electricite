@@ -135,11 +135,16 @@ export async function readFileAsString(filePath: string): Promise<string> {
   }
 }
 
-export const openJsonFile = async (filePath: string) => {
-  const fileContents = await fs.readFile(filePath, "utf-8");
-  const jsonData = JSON.parse(fileContents);
-  return JSON.parse(jsonData);
-};
+export async function openJsonFile(filePath: string): Promise<any> {
+  try {
+    const fileContent = await fs.readFile(filePath, "utf-8");
+    return JSON.parse(fileContent);
+  } catch (error: any) {
+    throw new Error(
+      `Failed to parse JSON from file ${filePath}: ${error.message}`
+    );
+  }
+}
 
 export async function fetchTempoData() {
   try {
