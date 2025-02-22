@@ -15,10 +15,10 @@ import {
   parseCsvToConsumptionLoadCurveData,
 } from "./csvParser";
 import { analyseHourByHourBySeason } from "./statistics";
-import { HpHcSlot, Option, PowerClass, PriceMappingFile } from "./types";
+import { Option, PowerClass, PriceMappingFile } from "./types";
 import {
   fetchTempoData,
-  findFirstAndLastDate,
+  getAnalyzedDateRange,
   getHolidaysBetweenDates,
   openJsonFile,
   readFileAsString,
@@ -112,11 +112,10 @@ const edfUploadHandler = async (
         res.status(500).send("Impossible de sauvegarder le JSON");
         return;
       }
-      const dateRangeOfFile = findFirstAndLastDate(parsedData);
-      const analyzedDateRange: [number, number] = [
-        Math.max(dateRangeOfFile[0], askedDateRange[0].getTime()),
-        Math.min(dateRangeOfFile[1], askedDateRange[1].getTime()),
-      ];
+      const analyzedDateRange = getAnalyzedDateRange(
+        parsedData,
+        askedDateRange
+      );
       const seasonData = analyseHourByHourBySeason({
         data: parsedData,
         dateRange: analyzedDateRange,
@@ -155,7 +154,7 @@ app.post("/uploadHpHcConfig", upload.single("file"), (req, res) => {
   const uploadDir = path.join(uploadRelativeDir, requestId);
   fs.mkdirSync(uploadDir, { recursive: true });
   const hphcFilePath = path.join(uploadDir, "hphc.json");
-  fs.writeFileSync(hphcFilePath, JSON.stringify(req.body.file));
+  fs.writeFileSync(hphcFilePath, req.body.file);
   res.status(200).send({ requestId });
 });
 
@@ -168,7 +167,7 @@ app.get(
       res.status(400).send("Champs manquants");
       return;
     }
-    const dateRange: [Date, Date] = [
+    const askedDateRange: [Date, Date] = [
       new Date(Number(start)),
       new Date(Number(end)),
     ];
@@ -208,26 +207,27 @@ app.get(
     const sendData = async (option: Option) => {
       let filteredData = jsonEdfData.filter((elt) =>
         isWithinInterval(elt.recordedAt, {
-          start: startOfDay(dateRange[0]),
-          end: endOfDay(dateRange[1]),
+          start: startOfDay(askedDateRange[0]),
+          end: endOfDay(askedDateRange[1]),
         })
       );
       try {
-        const defaultHpHcData = (await openJsonFile(hphcPath)) as HpHcSlot[];
+        const defaultHpHcData = await openJsonFile(hphcPath);
         const rowSummary = await calculateRowSummary({
           data: filteredData,
-          dateRange,
+          dateRange: getAnalyzedDateRange(jsonEdfData, askedDateRange),
           powerClass: typedPowerClass,
           optionKey: option.optionKey,
           offerType: option.offerType,
           optionName: option.optionName,
+          provider: option.provider,
           link: option.link,
           hpHcData: defaultHpHcData,
           overridingHpHcKey: option.overridingHpHcKey,
         });
         res.write(`data: ${JSON.stringify({ comparisonRow: rowSummary })}\n\n`);
       } catch (error) {
-        console.error("Erreur lors du calcul du résumé :", error);
+        console.error("Erreur lors du calcul du résumé :", error, option);
         res.write(
           `data: ${JSON.stringify({ error: "Erreur lors du calcul" })}\n\n`
         );
@@ -269,7 +269,7 @@ app.listen(port, () => {
   console.info(`Le serveur fonctionne sur http://localhost:${port}`);
 });
 
-cron.schedule("10 */3 * * *", () => {
+cron.schedule("1 * * * *", () => {
   (async () => {
     const firstDate = new Date("2020-01-01");
     const now = new Date();

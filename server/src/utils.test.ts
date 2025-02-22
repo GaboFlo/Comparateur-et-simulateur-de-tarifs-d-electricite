@@ -1,12 +1,17 @@
+import * as fs from "fs/promises";
+import * as path from "path";
 import hphc_mapping from "../statics/hp_hc.json";
 import { HpHcSlot, OfferType, OptionKey, PowerClass } from "./types";
 import {
   findFirstAndLastDate,
   findMonthlySubscriptionCost,
+  getAnalyzedDateRange,
   getHolidaysBetweenDates,
   getSeason,
   isHoliday,
   isHpOrHcSlot,
+  openJsonFile,
+  readFileAsString,
 } from "./utils";
 
 describe("isHpOrHcSlot", () => {
@@ -103,7 +108,8 @@ describe("findMonthlySubscriptionCost", () => {
     const monthly = findMonthlySubscriptionCost(
       9 as PowerClass,
       OfferType.BLEU,
-      OptionKey.BASE
+      OptionKey.BASE,
+      "EDF"
     );
     expect(monthly).toBe(1727);
   });
@@ -129,21 +135,29 @@ describe("findFirstAndLastDate", () => {
         value: 200,
       },
       {
-        recordedAt: "2025-01-10 22:00:00",
+        recordedAt: "2025-01-14 22:00:00",
         value: 300,
       },
       {
-        recordedAt: "2025-01-10 22:30:00",
+        recordedAt: "2025-01-20 22:30:00",
         value: 400,
       },
       {
-        recordedAt: "2025-01-11 01:00:00",
+        recordedAt: "2025-02-11 01:00:00",
         value: 270,
       },
     ];
     expect(findFirstAndLastDate(data)).toStrictEqual([
       new Date("2025-01-10T01:00:00.000Z").getTime(),
-      new Date("2025-01-11").getTime(),
+      new Date("2025-02-11").getTime(),
+    ]);
+    const dateRangeToAnalyse = getAnalyzedDateRange(data, [
+      new Date("2024-01-05T01:00:00.000Z"),
+      new Date("2025-01-16T01:00:00.000Z"),
+    ]);
+    expect(dateRangeToAnalyse).toStrictEqual([
+      new Date("2025-01-10T01:00:00.000Z").getTime(),
+      new Date("2025-01-16T01:00:00.000Z").getTime(),
     ]);
   });
 });
@@ -168,5 +182,49 @@ describe("Holidays", () => {
     expect(isHoliday(new Date("2025-01-01 02:30:00"))).toBe(true);
     expect(isHoliday(new Date("2025-01-01 23:30:00"))).toBe(true);
     expect(isHoliday(new Date("2025-01-02 00:00:00"))).toBe(true);
+  });
+});
+
+describe("readFileAsString", () => {
+  const testFilePath = path.join(__dirname, "utils.test.txt");
+
+  beforeAll(async () => {
+    await fs.writeFile(
+      testFilePath,
+      `[{\"recordedAt\":\"2024-09-30T00:00:00+02:00\",\"value\":212},{\"recordedAt\":\"2024-09-30T23:30:00+02:00\",\"value\":212},{\"recordedAt\":\"2024-09-30T23:00:00+02:00\",\"value\":934}]`
+    );
+  });
+
+  afterAll(async () => {
+    // Clean up the temporary file after tests
+    await fs.unlink(testFilePath);
+  });
+
+  test("reads a file successfully", async () => {
+    const content = await readFileAsString(testFilePath);
+    expect(content).toBe(
+      `[{\"recordedAt\":\"2024-09-30T00:00:00+02:00\",\"value\":212},{\"recordedAt\":\"2024-09-30T23:30:00+02:00\",\"value\":212},{\"recordedAt\":\"2024-09-30T23:00:00+02:00\",\"value\":934}]`
+    );
+    const jsonContent = await openJsonFile(testFilePath);
+    expect(jsonContent).toEqual([
+      {
+        recordedAt: "2024-09-30T00:00:00+02:00",
+        value: 212,
+      },
+      {
+        recordedAt: "2024-09-30T23:30:00+02:00",
+        value: 212,
+      },
+      {
+        recordedAt: "2024-09-30T23:00:00+02:00",
+        value: 934,
+      },
+    ]);
+  });
+
+  test("throws an error for a non-existent file", async () => {
+    await expect(readFileAsString("nonExistentFile.txt")).rejects.toThrow(
+      "File not found"
+    );
   });
 });

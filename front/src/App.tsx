@@ -17,14 +17,14 @@ import DataImport from "./components/DataImport";
 import Footer from "./components/Footer";
 import InfoMobile from "./components/InfoMobile";
 import Simulations from "./components/Simulations";
-import { useFormContext } from "./context/FormContext";
+import { DEFAULT_FORM_STATE, useFormContext } from "./context/FormContext";
 import ColorModeIconDropdown from "./theme/ColorModeIconDropdown";
 import { APP_VERSION } from "./types";
 
 const steps = ["Votre offre actuelle", "Votre consommation", "Simulations"];
 
 export default function App() {
-  const { formState } = useFormContext();
+  const { formState, setFormState } = useFormContext();
   const { mode, systemMode } = useColorScheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ export default function App() {
       setActiveStep(parseInt(stepParam));
     }
     if (!formState.seasonHourlyAnalysis && activeStep === 2) {
-      handleBack();
+      handleStepChange(0);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStep, stepParam]);
@@ -51,9 +51,6 @@ export default function App() {
 
   const handleNext = () => {
     handleStepChange(activeStep + 1);
-  };
-  const handleBack = () => {
-    handleStepChange(activeStep - 1);
   };
 
   const handleNextAndTrack = () => {
@@ -261,13 +258,14 @@ export default function App() {
               {activeStep !== 0 && (
                 <Button
                   startIcon={<ChevronLeftRoundedIcon />}
-                  onClick={() =>
-                    activeStep === 2 ? handleStepChange(0) : handleBack()
-                  }
+                  onClick={() => {
+                    setFormState(DEFAULT_FORM_STATE);
+                    handleStepChange(0);
+                  }}
                   variant="text"
                   sx={{ display: { xs: "none", sm: "flex" } }}
                 >
-                  {activeStep === 2 ? "Recommencer" : "Précédent"}
+                  Recommencer
                 </Button>
               )}
             </Box>

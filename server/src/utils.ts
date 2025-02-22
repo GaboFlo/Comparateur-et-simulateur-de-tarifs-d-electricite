@@ -13,6 +13,7 @@ import {
   OptionKey,
   PowerClass,
   PriceMappingFile,
+  Provider,
   Season,
   SlotType,
   TempoDates,
@@ -45,19 +46,30 @@ export const isHpOrHcSlot = (endOfRecordedPeriod: Date, grids: HpHcSlot[]) => {
     hour: endOfRecordedPeriod.getHours(),
     minute: endOfRecordedPeriod.getMinutes(),
   };
+
   if (!grids || grids.length === 0) {
     throw new Error("No grids found");
   }
-  const potentialGrid = grids.find((elt) => {
-    return (
-      elt.endSlot.hour === slotHourTime.hour &&
-      elt.endSlot.minute === slotHourTime.minute
+
+  try {
+    const potentialGrid = grids.find((elt) => {
+      return (
+        elt.endSlot.hour === slotHourTime.hour &&
+        elt.endSlot.minute === slotHourTime.minute
+      );
+    });
+    if (!potentialGrid) {
+      return "HP";
+    }
+    return potentialGrid.slotType as SlotType;
+  } catch (e: any) {
+    console.log(slotHourTime, grids, e);
+    throw new Error(
+      `Error while finding slot type ${JSON.stringify(slotHourTime)} ${
+        e.message
+      }`
     );
-  });
-  if (!potentialGrid) {
-    return "HP";
   }
-  return potentialGrid.slotType as SlotType;
 };
 
 export function getSeason(date: Date) {
@@ -89,11 +101,16 @@ export function getSeason(date: Date) {
 export function findMonthlySubscriptionCost(
   powerClass: PowerClass,
   offerType: OfferType,
-  optionKey: OptionKey
+  optionKey: OptionKey,
+  provider: Provider
 ) {
   const priceMappingData = price_mapping as PriceMappingFile;
   for (const elt of priceMappingData) {
-    if (elt.offerType === offerType && elt.optionKey === optionKey) {
+    if (
+      elt.offerType === offerType &&
+      elt.optionKey === optionKey &&
+      elt.provider === provider
+    ) {
       for (const sub of elt.subscriptions) {
         if (sub.powerClass === powerClass) {
           return sub.monthlyCost;
@@ -106,7 +123,9 @@ export function findMonthlySubscriptionCost(
   );
 }
 
-export const findFirstAndLastDate = (data: ConsumptionLoadCurveData[]) => {
+export const findFirstAndLastDate = (
+  data: ConsumptionLoadCurveData[]
+): [number, number] => {
   const dates = data.map((item) => new Date(item.recordedAt)?.getTime());
   const firstDate = Math.min(...dates);
   const lastDate = Math.max(...dates);
@@ -127,11 +146,16 @@ export async function readFileAsString(filePath: string): Promise<string> {
   }
 }
 
-export const openJsonFile = async (filePath: string) => {
-  const fileContents = await fs.readFile(filePath, "utf-8");
-  const jsonData = JSON.parse(fileContents);
-  return JSON.parse(jsonData);
-};
+export async function openJsonFile(filePath: string): Promise<any> {
+  try {
+    const fileContent = await fs.readFile(filePath, "utf-8");
+    return JSON.parse(fileContent);
+  } catch (error: any) {
+    throw new Error(
+      `Failed to parse JSON from file ${filePath}: ${error.message}`
+    );
+  }
+}
 
 export async function fetchTempoData() {
   try {
@@ -178,3 +202,14 @@ export async function getHpHcJson(
     throw error;
   }
 }
+
+export const getAnalyzedDateRange = (
+  data: ConsumptionLoadCurveData[],
+  askedDateRange: [Date, Date]
+): [number, number] => {
+  const dateRangeOfFile = findFirstAndLastDate(data);
+  return [
+    Math.max(dateRangeOfFile[0], askedDateRange[0].getTime()),
+    Math.min(dateRangeOfFile[1], askedDateRange[1].getTime()),
+  ];
+};

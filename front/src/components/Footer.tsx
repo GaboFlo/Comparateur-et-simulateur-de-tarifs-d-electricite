@@ -45,6 +45,7 @@ export default function Footer() {
               borderRadius: "2px",
             }}
           />
+          {APP_VERSION}
         </button>
         <Link
           href="https://buymeacoffee.com/gaboflo"
@@ -59,8 +60,8 @@ export default function Footer() {
           src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png"
           alt="Licence CC BY-NC-SA"
           style={{ marginLeft: "0.5rem" }}
-        />
-        {APP_VERSION}
+        />{" "}
+        Tarifications Février 2025
       </p>
     </Box>
   );

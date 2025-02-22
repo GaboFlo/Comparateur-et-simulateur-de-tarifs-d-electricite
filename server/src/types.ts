@@ -89,7 +89,10 @@ export type Season = "Été" | "Hiver" | "Automne" | "Printemps";
 
 export type OverridingHpHcKey = "BLEU_TEMPO" | "ZEN_FLEX";
 
+export type Provider = "EDF" | "TotalEnergies" | "Engie" | "OctopusEnergy";
+
 export interface Option {
+  provider: Provider;
   optionKey: OptionKey;
   optionName: string;
   link: string;

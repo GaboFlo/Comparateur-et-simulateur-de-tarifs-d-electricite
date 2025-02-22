@@ -9,9 +9,12 @@ export default function HourlySeasonChart() {
   const { formState } = useFormContext();
 
   const valueFormatter = (value: number | null) => {
-    return value ? `${Math.round(value).toFixed(0)} kWh` : "N/A";
+    return value
+      ? `${new Intl.NumberFormat("fr-FR").format(Math.round(value))} kWh`
+      : "N/A";
   };
-  const pieValueFormatter = (item: { value: number }) => `${item.value} kWh`;
+  const pieValueFormatter = (item: { value: number }) =>
+    `${new Intl.NumberFormat("fr-FR").format(Math.round(item.value))} kWh`;
 
   const colorPalette: Record<Season, string> = {
     Été: "#FFD700",

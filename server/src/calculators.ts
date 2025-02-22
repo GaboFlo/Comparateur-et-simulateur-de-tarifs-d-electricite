@@ -15,6 +15,7 @@ import {
   OverridingHpHcKey,
   PowerClass,
   PriceMappingFile,
+  Provider,
   SlotType,
   TempoCodeDay,
   TempoDates,
@@ -28,13 +29,13 @@ import {
   PRICE_COEFF,
 } from "./utils";
 
-function parseTime(isoString: string): { hour: number; minute: number } {
+export function parseTime(isoString: string): { hour: number; minute: number } {
   const hour = +isoString.slice(11, 13);
   const minute = +isoString.slice(14, 16);
   return { hour, minute };
 }
 
-function getDateKey(isoString: string): string {
+export function getTempoDateKey(isoString: string): string {
   const baseDate = isoString.slice(0, 10); // "YYYY-MM-DD"
   const { hour, minute } = parseTime(isoString);
   if (hour < 6 || (hour === 6 && minute === 0)) {
@@ -114,7 +115,7 @@ async function calculateTempoPricesOptimized(
   customHpHcGrid: HpHcSlot[]
 ): Promise<Cost> {
   const slotType = isHpOrHcSlot(new Date(item.recordedAt), customHpHcGrid);
-  const dateKey = getDateKey(item.recordedAt);
+  const dateKey = getTempoDateKey(item.recordedAt);
 
   const tempoCodeDay = tempoDatesMap[dateKey];
   if (tempoCodeDay === undefined || tempoCodeDay === null) {
@@ -140,16 +141,21 @@ export async function calculatePrices({
   optionKey,
   offerType,
   hpHcData,
+  provider,
 }: {
   data: CalculatedData[];
   optionKey: OptionKey;
   offerType: OfferType;
   tempoDates?: TempoDates;
   hpHcData: HpHcSlot[];
+  provider: Provider;
 }): Promise<FullCalculatedData> {
   const priceMappingData = price_mapping as PriceMappingFile;
   const option = priceMappingData.find(
-    (item) => item.optionKey === optionKey && item.offerType === offerType
+    (item) =>
+      item.optionKey === optionKey &&
+      item.offerType === offerType &&
+      item.provider === provider
   );
   if (!option) {
     throw new Error(`No option found ${offerType}-${optionKey}`);
@@ -214,13 +220,14 @@ export async function calculatePrices({
 interface FullCalculatePricesInterface {
   data: ConsumptionLoadCurveData[];
   powerClass: PowerClass;
-  dateRange: [Date, Date];
+  dateRange: [number, number];
   optionKey: OptionKey;
   offerType: OfferType;
   optionName: string;
   link: string;
   hpHcData: HpHcSlot[];
   overridingHpHcKey?: OverridingHpHcKey;
+  provider: Provider;
 }
 
 export async function calculateRowSummary({
@@ -232,6 +239,7 @@ export async function calculateRowSummary({
   link,
   offerType,
   hpHcData,
+  provider,
   overridingHpHcKey,
 }: FullCalculatePricesInterface): Promise<ComparisonTableInterfaceRow> {
   const calculatedData = await calculatePrices({
@@ -239,12 +247,14 @@ export async function calculateRowSummary({
     offerType,
     optionKey,
     hpHcData,
+    provider,
   });
 
   const monthlyCost = findMonthlySubscriptionCost(
     powerClass,
     offerType,
-    optionKey
+    optionKey,
+    provider
   );
 
   const fullSubscriptionCost = Math.round(
@@ -252,7 +262,7 @@ export async function calculateRowSummary({
   );
 
   return {
-    provider: "EDF",
+    provider,
     offerType,
     optionKey,
     optionName,

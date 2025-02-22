@@ -1,7 +1,12 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { CircularProgress, LinearProgress, Link } from "@mui/material";
+import {
+  CircularProgress,
+  LinearProgress,
+  Link,
+  Typography,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -152,9 +157,10 @@ export function ComparisonTable() {
           <Table sx={{ minWidth: 700 }} aria-label="customized table">
             <TableHead>
               <TableRow>
-                <StyledTableCell align="center">Fournisseur</StyledTableCell>
-                <StyledTableCell align="center">Offre</StyledTableCell>
-                <StyledTableCell align="center">Option</StyledTableCell>
+                <StyledTableCell align="center">Fournisseur </StyledTableCell>
+                <StyledTableCell align="center">
+                  Offre - Option{" "}
+                </StyledTableCell>
                 <StyledTableCell align="center">
                   Abonnements (€)
                 </StyledTableCell>
@@ -174,6 +180,7 @@ export function ComparisonTable() {
                 .sort((a, b) => {
                   return a.total - b.total;
                 })
+                .filter((row) => row?.total > 0)
                 .map((row) => (
                   <StyledTableRow
                     key={`${row.provider}-${row.offerType}-${row.optionKey}`}
@@ -182,40 +189,67 @@ export function ComparisonTable() {
                       row.optionKey === formState.optionType
                     }
                   >
-                    <StyledTableCell align="center">
-                      {row.provider}
+                    <StyledTableCell
+                      align="center"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <img
+                        src={`/${row.provider}.png`}
+                        alt={row.provider}
+                        width="24"
+                        height="24"
+                      />{" "}
+                      <Typography variant="body1" m={1}>
+                        {row.provider}
+                      </Typography>
+                    </StyledTableCell>
+                    <StyledTableCell
+                      align="center"
+                      style={{
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography variant="body1" m={1}>
+                        {row.offerType && `${row.offerType} - `}
+                        {row.optionName}{" "}
+                        {row.overridingHpHcKey && (
+                          <AccessTimeFilledIcon
+                            sx={{
+                              fontSize: "1rem",
+                              verticalAlign: "middle",
+                              color: "orange",
+                            }}
+                          />
+                        )}{" "}
+                        <Link
+                          href={row.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          underline="none"
+                        >
+                          <OpenInNewIcon
+                            sx={{ fontSize: "1rem", verticalAlign: "text-top" }}
+                          />
+                        </Link>
+                      </Typography>
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {row.offerType}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.optionName}{" "}
-                      {row.overridingHpHcKey && (
-                        <AccessTimeFilledIcon
-                          sx={{
-                            fontSize: "1rem",
-                            verticalAlign: "middle",
-                            color: "orange",
-                          }}
-                        />
+                      {new Intl.NumberFormat("fr-FR").format(
+                        row.fullSubscriptionCost
                       )}
-                      <Link
-                        href={row.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        underline="none"
-                      >
-                        <OpenInNewIcon sx={{ fontSize: "1rem" }} />
-                      </Link>
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {row.fullSubscriptionCost}
+                      {new Intl.NumberFormat("fr-FR").format(
+                        row.totalConsumptionCost
+                      )}
                     </StyledTableCell>
                     <StyledTableCell align="center">
-                      {row.totalConsumptionCost}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {row.total}
+                      {new Intl.NumberFormat("fr-FR").format(row.total)}
                     </StyledTableCell>
                     <StyledTableCell
                       align="center"

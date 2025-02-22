@@ -11,13 +11,12 @@ import {
   OfferType,
   OptionKey,
   PowerClass,
+  Provider,
   SeasonHourlyAnalysis,
 } from "../types";
 
-type AvailableSuppliers = "EDF";
-
 interface FormState {
-  supplier: AvailableSuppliers;
+  provider: Provider;
   offerType: OfferType;
   optionType: OptionKey | "";
   powerClass: PowerClass;
@@ -50,18 +49,18 @@ export const useFormContext = () => {
   return context;
 };
 
+export const DEFAULT_FORM_STATE: FormState = {
+  provider: "EDF",
+  offerType: OfferType.BLEU,
+  optionType: OptionKey.BASE,
+  powerClass: 6,
+  isGlobalLoading: false,
+  dateRange: [startOfDay(subYears(new Date(), 2)), endOfDay(new Date())],
+  totalConsumption: 1,
+};
+
 export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
-  const lastYearStart = startOfDay(subYears(new Date(), 1));
-  const lastYearEnd = endOfDay(new Date());
-  const [formState, setFormState] = useState<FormState>({
-    supplier: "EDF",
-    offerType: OfferType.BLEU,
-    optionType: OptionKey.BASE,
-    powerClass: 6,
-    isGlobalLoading: false,
-    dateRange: [lastYearStart, lastYearEnd],
-    totalConsumption: 1,
-  });
+  const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
 
   const contextValue = useMemo(
     () => ({ formState, setFormState }),
