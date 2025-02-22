@@ -19,6 +19,11 @@ import {
   TempoDates,
 } from "./types";
 
+export async function getTempoData(): Promise<TempoDates> {
+  const filePath = path.join(__dirname, "../assets/tempo.json");
+  const fileContent = await fs.readFile(filePath, "utf8");
+  return JSON.parse(fileContent);
+}
 export const PRICE_COEFF = 100 * 100000;
 
 const hd = new Holidays("FR");

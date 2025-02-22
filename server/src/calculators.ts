@@ -1,5 +1,4 @@
 import { differenceInMonths } from "date-fns";
-import tempo_file from "../assets/tempo.json";
 import price_mapping from "../statics/price_mapping.json";
 import {
   CalculatedData,
@@ -24,6 +23,7 @@ import {
 import {
   findMonthlySubscriptionCost,
   getHpHcJson,
+  getTempoData,
   isDayApplicable,
   isHpOrHcSlot,
   PRICE_COEFF,
@@ -167,7 +167,7 @@ export async function calculatePrices({
   const tempoDatesMap: Record<string, TempoCodeDay> = {};
   const tempoMappingMap: Partial<Record<string, TempoMapping>> = {};
   if (option.tempoMappings) {
-    const tempoDates = tempo_file as TempoDates;
+    const tempoDates = await getTempoData();
     for (const t of tempoDates) {
       tempoDatesMap[t.dateJour] = t.codeJour;
     }
