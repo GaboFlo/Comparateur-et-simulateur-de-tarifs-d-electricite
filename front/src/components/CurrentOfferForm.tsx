@@ -3,6 +3,7 @@ import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import {
+  Alert,
   Box,
   Button,
   CircularProgress,
@@ -196,7 +197,8 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
                   </MenuItem>
                 ))}
             </Select>
-          </FormControl>{" "}
+          </FormControl>
+
           <FormControl fullWidth sx={{ marginY: 1 }}>
             <FormLabel required>Option actuelle</FormLabel>
             <Select
@@ -306,6 +308,17 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
             </Typography>
           </FormControl>
         </Grid>
+        {formState.provider !== "EDF" && (
+          <Alert
+            severity="warning"
+            sx={{ m: 1, textAlign: "justify", width: "100%" }}
+          >
+            Pour l'instant, il est uniquement possible, en étape 2, d'intéger
+            des données venant des fichiers EDF. Si vous n'êtes pas client EDF,
+            revenez plus tard, le temps qu'Enedis mette à disposition les
+            données nécessaires.
+          </Alert>
+        )}
         <Divider sx={{ width: "100%", m: 2 }} />
         {hpHc && <HpHcSlotSelector />}
         <Box

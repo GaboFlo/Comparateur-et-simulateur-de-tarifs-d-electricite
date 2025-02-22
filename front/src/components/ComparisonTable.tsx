@@ -215,8 +215,7 @@ export function ComparisonTable() {
                       }}
                     >
                       <Typography variant="body1" m={1}>
-                        {row.offerType}
-                        {" - "}
+                        {row.offerType && `${row.offerType} - `}
                         {row.optionName}{" "}
                         {row.overridingHpHcKey && (
                           <AccessTimeFilledIcon

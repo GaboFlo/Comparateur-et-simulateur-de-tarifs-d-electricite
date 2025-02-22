@@ -1524,5 +1524,128 @@
                 ]
             }
         ]
+    },
+    {
+        "provider": "OctopusEnergy",
+        "optionKey": "Base",
+        "optionName": "Base",
+        "offerType": "",
+        "link": "https://www.octopusenergy.fr/offre-electricite-tarifs#:~:text=leur%20budget.-,Nos%20offres,-Premi%C3%A8re%20option%20%3A%20le",
+        "subscriptions": [
+            {
+                "powerClass": 3,
+                "monthlyCost": 1041
+            },
+            {
+                "powerClass": 6,
+                "monthlyCost": 1372
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1727
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2086
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2420
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2739
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3468
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 4199
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4923
+            }
+        ],
+        "mappings": [
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "price": 1968
+            }
+        ]
+    },
+    {
+        "provider": "OctopusEnergy",
+        "optionKey": "HPHC",
+        "optionName": "Heures Creuses",
+        "offerType": "",
+        "link": "https://www.octopusenergy.fr/offre-electricite-tarifs#:~:text=leur%20budget.-,Nos%20offres,-Premi%C3%A8re%20option%20%3A%20le",
+        "subscriptions": [
+            {
+                "powerClass": 6,
+                "monthlyCost": 1404
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1801
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2169
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2516
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 2874
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3623
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 4300
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 4872
+            }
+        ],
+        "mappings": [
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "hpHcConfig": [
+                    {
+                        "price": 2093,
+                        "slotType": "HP"
+                    },
+                    {
+                        "price": 1657,
+                        "slotType": "HC"
+                    }
+                ]
+            }
+        ]
     }
 ]
