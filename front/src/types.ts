@@ -51,7 +51,7 @@ export interface Mapping {
   include_holidays?: boolean;
 }
 
-export type Provider = "EDF" | "TotalEnergies" | "Engie";
+export type Provider = "EDF" | "TotalEnergies" | "Engie" |"OctopusEnergy"
 
 export interface Option {
   optionKey: OptionKey;
