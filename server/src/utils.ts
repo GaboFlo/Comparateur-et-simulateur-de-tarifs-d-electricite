@@ -65,7 +65,9 @@ export const isHpOrHcSlot = (endOfRecordedPeriod: Date, grids: HpHcSlot[]) => {
   } catch (e: any) {
     console.log(slotHourTime, grids, e);
     throw new Error(
-      `Error while finding slot type ${slotHourTime} ${e.message}`
+      `Error while finding slot type ${JSON.stringify(slotHourTime)} ${
+        e.message
+      }`
     );
   }
 };
