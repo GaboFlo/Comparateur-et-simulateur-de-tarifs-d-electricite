@@ -40,7 +40,7 @@
     "@mui/icons-material": "^6.4.0",
     "@mui/material": "^6.4.0",
     "@mui/system": "^6.4.0",
-    "@mui/x-charts": "^7.24.1",
+    "@mui/x-charts": "^7.27.0",
     "@mui/x-date-pickers": "^7.24.1",
     "@mui/x-date-pickers-pro": "^7.27.0",
     "date-fns": "^4.1.0",
