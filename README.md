@@ -17,10 +17,6 @@ Me voici à créer ce simulateur, qui reprend les données de consommation réel
 - Les simulations sont purement indicatives. Des tests existent, mais l'erreur est humaine !
 - Je ne suis pas développeur de base, le code mériterait un petit ménage et des optimisations.
 
-## Prochaines étapes
-
-- [ ] Inclure d'autres fournisseurs (en entrée et en sortie)
-
 ## Soutenir et contribuer
 
 Vous pouvez contribuer à ce projet en créant des issues ou en faisant de vous mêmes des Pull Requests.
