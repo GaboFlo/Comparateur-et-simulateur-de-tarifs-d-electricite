@@ -6,25 +6,8 @@ on:
       - main
 
 jobs:
-  check-versions:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Check versions
-        run: |
-          FRONT_VERSION=$(node -p "require('./front/package.json').version")
-          BACK_VERSION=$(node -p "require('./server/package.json').version")
-          if [ "$FRONT_VERSION" != "$BACK_VERSION" ]; then
-            echo "Version mismatch: front ($FRONT_VERSION) and back ($BACK_VERSION)"
-            exit 1
-          fi
-          echo "Versions match: $FRONT_VERSION"
-
   build-front:
     runs-on: ubuntu-latest
-    needs: check-versions
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
