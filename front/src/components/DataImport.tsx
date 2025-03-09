@@ -7,11 +7,8 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
-import { LocalizationProvider } from "@mui/x-date-pickers";
 import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { endOfDay, startOfDay } from "date-fns";
-import { fr } from "date-fns/locale/fr";
 import * as React from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "../context/FormContext";
@@ -104,36 +101,31 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
         {!formState.isGlobalLoading && (
           <>
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <LocalizationProvider
-                dateAdapter={AdapterDateFns}
-                adapterLocale={fr}
-              >
-                <MobileDateRangePicker
-                  value={formState.dateRange}
-                  onAccept={(newValue) => {
-                    const start = startOfDay(newValue[0] ?? new Date());
-                    const end = endOfDay(newValue[1] ?? new Date());
-                    trackEvent({
-                      category: "date-range",
-                      action: "set",
-                      name: `${Math.ceil(
-                        Math.abs(
-                          new Date(end).getTime() - new Date(start).getTime()
-                        ) /
-                          (1000 * 60 * 60 * 24)
-                      )}`,
-                    });
-                    setRange([start, end]);
-                  }}
-                  disableFuture
-                  localeText={{
-                    start: "Début de simulation",
-                    end: "Fin de simulation",
-                    cancelButtonLabel: "Annuler",
-                    toolbarTitle: "",
-                  }}
-                />
-              </LocalizationProvider>
+              <MobileDateRangePicker
+                value={formState.dateRange}
+                onAccept={(newValue) => {
+                  const start = startOfDay(newValue[0] ?? new Date());
+                  const end = endOfDay(newValue[1] ?? new Date());
+                  trackEvent({
+                    category: "date-range",
+                    action: "set",
+                    name: `${Math.ceil(
+                      Math.abs(
+                        new Date(end).getTime() - new Date(start).getTime()
+                      ) /
+                        (1000 * 60 * 60 * 24)
+                    )}`,
+                  });
+                  setRange([start, end]);
+                }}
+                disableFuture
+                localeText={{
+                  start: "Début de simulation",
+                  end: "Fin de simulation",
+                  cancelButtonLabel: "Annuler",
+                  toolbarTitle: "",
+                }}
+              />
             </Box>
             <Alert
               severity="info"

@@ -1,4 +1,8 @@
 import { LicenseInfo } from "@mui/x-date-pickers-pro";
+import { AdapterDateFns } from "@mui/x-date-pickers-pro/AdapterDateFnsV3";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { fr } from "date-fns/locale/fr";
+import { SnackbarProvider } from "notistack";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
@@ -6,7 +10,6 @@ import { FormProvider } from "./context/FormContext";
 import { MatomoContextProvider } from "./context/MatomoContext";
 import "./index.css";
 import AppTheme from "./theme/AppTheme";
-import { SnackbarProvider } from "notistack";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -21,7 +24,12 @@ root.render(
       <BrowserRouter>
         <FormProvider>
           <AppTheme>
-            <App />
+            <LocalizationProvider
+              dateAdapter={AdapterDateFns}
+              adapterLocale={fr}
+            >
+              <App />
+            </LocalizationProvider>
           </AppTheme>
         </FormProvider>
       </BrowserRouter>
