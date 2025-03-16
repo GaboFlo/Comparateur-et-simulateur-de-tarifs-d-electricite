@@ -2,7 +2,7 @@ name: Fetch Tempo Data
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "* * * * *"
 
 jobs:
   fetch-tempo-data:
