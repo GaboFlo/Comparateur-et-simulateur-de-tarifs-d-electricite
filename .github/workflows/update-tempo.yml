@@ -3,7 +3,7 @@ name: Fetch Tempo Data
 on:
   workflow_dispatch:
   schedule:
-    - cron: "*/5 * * * *" # Runs every 5 minutes for testing
+    - cron: "36 * * * *"
 
 jobs:
   fetch-tempo-data:
@@ -33,3 +33,4 @@ jobs:
           port: 21
           local-dir: src/assets/
           server-dir: ${{secrets.FTP_SERVER_DIR}}assets/
+          dangerous-clean-slate: true
