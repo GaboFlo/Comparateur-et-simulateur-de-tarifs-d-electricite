@@ -1,9 +1,8 @@
 name: Code quality
 on:
   push:
-    branches:
+    branches-ignore:
       - main
-  pull_request:
 
 jobs:
   code_quality:
