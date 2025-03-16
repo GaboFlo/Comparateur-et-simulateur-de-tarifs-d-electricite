@@ -13,7 +13,7 @@
     "sort-package:check": "sort-package-json --check",
     "sort-package:sort": "sort-package-json",
     "start": "react-scripts start",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --testMatch '**/*.test.ts' --coverage"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
   },
   "browserslist": {
     "production": [

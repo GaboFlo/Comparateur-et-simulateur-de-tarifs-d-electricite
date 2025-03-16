@@ -19,8 +19,7 @@ jobs:
           npm install
       - name: Test and coverage
         continue-on-error: true
-        run: |
-          npm run test
+        run: npm run test
       - uses: sonarsource/sonarqube-scan-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
