@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useFormContext } from "../context/FormContext";
-import { getDefaultHpHcConfig } from "../services/httpCalls";
+import hphc_data from "../statics/hp_hc.json";
 import { HourTime, HpHcSlot } from "../types";
 
 interface Props {
@@ -31,7 +31,7 @@ const HpHcSlotSelector = ({ readOnly = false }: Readonly<Props>) => {
 
   useEffect(() => {
     async function fetchData() {
-      const defaultHpHc = await getDefaultHpHcConfig();
+      const defaultHpHc = hphc_data as HpHcSlot[];
       setTimeRanges(defaultHpHc);
       setFormState((prevState) => {
         return { ...prevState, hpHcConfig: defaultHpHc };

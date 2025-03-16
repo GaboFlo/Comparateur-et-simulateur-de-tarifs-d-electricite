@@ -51,18 +51,18 @@ export interface Mapping {
   include_holidays?: boolean;
 }
 
-export type Provider = "EDF" | "TotalEnergies" | "Engie" |"OctopusEnergy"
+export type ProviderType = "EDF" | "TotalEnergies" | "Engie" | "OctopusEnergy";
 
 export interface Option {
   optionKey: OptionKey;
-  provider: Provider;
+  provider: ProviderType;
   optionName: string;
   link: string;
   offerType: OfferType;
   subscriptions: Subscription[];
   mappings: Mapping[];
   tempoMappings?: TempoMapping[];
-  overridingHpHcKey?: string;
+  overridingHpHcKey?: OverridingHpHcKey;
 }
 export interface Subscription {
   powerClass: PowerClass;
@@ -70,7 +70,7 @@ export interface Subscription {
 }
 
 export interface ComparisonTableInterfaceRow {
-  provider: Provider;
+  provider: ProviderType;
   offerType: OfferType;
   optionKey: OptionKey;
   optionName: string;
@@ -78,7 +78,7 @@ export interface ComparisonTableInterfaceRow {
   fullSubscriptionCost: number;
   total: number;
   link: string;
-  overridingHpHcKey?: string;
+  overridingHpHcKey?: OverridingHpHcKey;
 }
 
 export const APP_VERSION = process.env.REACT_APP_VERSION || "dev";
@@ -93,3 +93,37 @@ export interface HpHcSlot {
   startSlot: HourTime;
   endSlot: HourTime;
 }
+
+export type TempoDates = TempoDate[];
+
+export interface TempoDate {
+  dateJour: string;
+  codeJour: TempoCodeDay;
+  periode: string;
+}
+
+export type TempoCodeDay = 1 | 2 | 3;
+
+export interface Cost {
+  cost: number;
+  hourType?: SlotType;
+  tempoCodeDay?: TempoCodeDay;
+}
+
+export interface CalculatedData extends ConsumptionLoadCurveData {
+  costs?: Cost[];
+}
+
+export interface ConsumptionLoadCurveData {
+  recordedAt: string;
+  value: number;
+}
+
+export interface FullCalculatedData {
+  detailedData: CalculatedData[];
+  totalCost: number;
+  optionKey: OptionKey;
+  offerType: OfferType;
+}
+
+export type OverridingHpHcKey = "BLEU_TEMPO" | "ZEN_FLEX";

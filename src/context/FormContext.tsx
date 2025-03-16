@@ -7,16 +7,18 @@ import React, {
   useState,
 } from "react";
 import {
+  ComparisonTableInterfaceRow,
+  ConsumptionLoadCurveData,
   HpHcSlot,
   OfferType,
   OptionKey,
   PowerClass,
-  Provider,
+  ProviderType,
   SeasonHourlyAnalysis,
 } from "../types";
 
 interface FormState {
-  provider: Provider;
+  provider: ProviderType;
   offerType: OfferType;
   optionType: OptionKey | "";
   powerClass: PowerClass;
@@ -28,6 +30,8 @@ interface FormState {
   optionLink?: string;
   totalConsumption: number;
   hpHcConfig?: HpHcSlot[];
+  parsedData?: ConsumptionLoadCurveData[];
+  rowSummaries: ComparisonTableInterfaceRow[];
 }
 
 interface FormContextProps {
@@ -57,6 +61,7 @@ export const DEFAULT_FORM_STATE: FormState = {
   isGlobalLoading: false,
   dateRange: [startOfDay(subYears(new Date(), 2)), endOfDay(new Date())],
   totalConsumption: 1,
+  rowSummaries: [],
 };
 
 export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {

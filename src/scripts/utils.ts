@@ -1,11 +1,8 @@
 import axios from "axios";
 import { addDays, format, getDate, getMonth, subMinutes } from "date-fns";
 import Holidays from "date-holidays";
-import * as fs from "fs/promises";
-import path from "path";
 import allHolidays from "../assets/holidays.json";
 import price_mapping from "../statics/price_mapping.json";
-import { ConsumptionLoadCurveData } from "./csvParser";
 import {
   HpHcSlot,
   Mapping,
@@ -13,17 +10,13 @@ import {
   OptionKey,
   PowerClass,
   PriceMappingFile,
-  Provider,
+  ProviderType,
   Season,
   SlotType,
   TempoDates,
-} from "./types";
+} from "../types";
+import { ConsumptionLoadCurveData } from "./csvParser";
 
-export async function getTempoData(): Promise<TempoDates> {
-  const filePath = path.join(__dirname, "../assets/tempo.json");
-  const fileContent = await fs.readFile(filePath, "utf8");
-  return JSON.parse(fileContent);
-}
 export const PRICE_COEFF = 100 * 100000;
 
 const hd = new Holidays("FR");
@@ -107,7 +100,7 @@ export function findMonthlySubscriptionCost(
   powerClass: PowerClass,
   offerType: OfferType,
   optionKey: OptionKey,
-  provider: Provider
+  provider: ProviderType
 ) {
   const priceMappingData = price_mapping as PriceMappingFile;
   for (const elt of priceMappingData) {
@@ -137,31 +130,6 @@ export const findFirstAndLastDate = (
   return [firstDate, lastDate];
 };
 
-export async function readFileAsString(filePath: string): Promise<string> {
-  try {
-    const buffer = await fs.readFile(filePath);
-    if (buffer instanceof Buffer) {
-      const fileContent: string = buffer.toString("utf8");
-      return fileContent;
-    } else {
-      throw new Error("Could not read file as string.");
-    }
-  } catch {
-    throw new Error("File not found");
-  }
-}
-
-export async function openJsonFile(filePath: string): Promise<any> {
-  try {
-    const fileContent = await fs.readFile(filePath, "utf-8");
-    return JSON.parse(fileContent);
-  } catch (error: any) {
-    throw new Error(
-      `Failed to parse JSON from file ${filePath}: ${error.message}`
-    );
-  }
-}
-
 export async function fetchTempoData() {
   try {
     const response = await axios
@@ -189,25 +157,6 @@ export function isDayApplicable(mapping: Mapping, endOfSlotRecorded: Date) {
   );
 }
 
-export async function getHpHcJson(
-  overridingHpHcKey: string
-): Promise<HpHcSlot[]> {
-  const filePath = path.resolve(
-    __dirname,
-    "..",
-    "statics",
-    `hp_hc-${overridingHpHcKey}.json`
-  );
-
-  try {
-    const fileContents = await fs.readFile(filePath, "utf-8");
-    return JSON.parse(fileContents);
-  } catch (error) {
-    console.error(`Error reading file at ${filePath}:`, error);
-    throw error;
-  }
-}
-
 export const getAnalyzedDateRange = (
   data: ConsumptionLoadCurveData[],
   askedDateRange: [Date, Date]
@@ -217,4 +166,9 @@ export const getAnalyzedDateRange = (
     Math.max(dateRangeOfFile[0], askedDateRange[0].getTime()),
     Math.min(dateRangeOfFile[1], askedDateRange[1].getTime()),
   ];
+};
+
+export const getHpHcJson = (overridingHpHcKey: string) => {
+  // TODO
+  return [];
 };

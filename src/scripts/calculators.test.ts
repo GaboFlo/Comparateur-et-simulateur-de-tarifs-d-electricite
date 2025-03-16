@@ -1,17 +1,18 @@
-import { default as hpHcDefault } from "../statics/hp_hc.json";
-import { calculatePrices, getTempoDateKey, parseTime } from "./calculators";
+import tempo_data from "../assets/tempo.json";
+import hphc_data from "../statics/hp_hc.json";
 import {
   ConsumptionLoadCurveData,
   FullCalculatedData,
+  HpHcSlot,
   OfferType,
   OptionKey,
   TempoDates,
-} from "./types";
-import { getTempoData } from "./utils";
+} from "../types";
+import { calculatePrices, getTempoDateKey, parseTime } from "./calculators";
 
 describe("calculateTempoPrices", () => {
   it("RED days 2025-01-10 (previous is white)", async () => {
-    const tempoDates = await getTempoData();
+    const tempoDates = tempo_data as TempoDates;
 
     const hpRedPrice = 6586;
     const hcRedPrice = 1518;
@@ -46,8 +47,9 @@ describe("calculateTempoPrices", () => {
         value: 270,
       },
     ];
-    const optionKey = OptionKey.BLEU_TEMPO;
+    const optionKey = OptionKey.TEMPO;
     const offerType = OfferType.BLEU;
+    const hpHcData = (await hphc_data) as HpHcSlot[];
 
     const result = await calculatePrices({
       data,
@@ -55,7 +57,7 @@ describe("calculateTempoPrices", () => {
       offerType,
       provider: "EDF",
       tempoDates,
-      hpHcData: hpHcDefault,
+      hpHcData,
     });
 
     const expected: FullCalculatedData = {
@@ -161,14 +163,15 @@ describe("calculateBasePrices", () => {
   const basePrice = 2016;
   const optionKey = OptionKey.BASE;
   const offerType = OfferType.BLEU;
+  const hpHcData = hphc_data as HpHcSlot[];
 
-  it(OfferType.BLEU, async () => {
+  it(`${OfferType.BLEU}`, async () => {
     const result = await calculatePrices({
       data,
       provider: "EDF",
       optionKey,
       offerType,
-      hpHcData: hpHcDefault,
+      hpHcData,
     });
 
     const expected: FullCalculatedData = {
@@ -220,12 +223,14 @@ describe("calculateHpHcPrices", () => {
     const hcPrice = 1696;
     const optionKey = OptionKey.HPHC;
     const offerType = OfferType.BLEU;
+    const hpHcData = hphc_data as HpHcSlot[];
+
     const result = await calculatePrices({
       data,
       optionKey,
       provider: "EDF",
       offerType,
-      hpHcData: hpHcDefault,
+      hpHcData,
     });
 
     const expected: FullCalculatedData = {

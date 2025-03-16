@@ -1,9 +1,9 @@
 import { differenceInMonths } from "date-fns";
+import tempo_data from "../assets/tempo.json";
 import price_mapping from "../statics/price_mapping.json";
 import {
   CalculatedData,
   ComparisonTableInterfaceRow,
-  ConsumptionLoadCurveData,
   Cost,
   FullCalculatedData,
   HpHcSlot,
@@ -14,16 +14,16 @@ import {
   OverridingHpHcKey,
   PowerClass,
   PriceMappingFile,
-  Provider,
+  ProviderType,
   SlotType,
   TempoCodeDay,
   TempoDates,
   TempoMapping,
-} from "./types";
+} from "../types";
+import { ConsumptionLoadCurveData } from "./csvParser";
 import {
   findMonthlySubscriptionCost,
   getHpHcJson,
-  getTempoData,
   isDayApplicable,
   isHpOrHcSlot,
   PRICE_COEFF,
@@ -148,7 +148,7 @@ export async function calculatePrices({
   offerType: OfferType;
   tempoDates?: TempoDates;
   hpHcData: HpHcSlot[];
-  provider: Provider;
+  provider: ProviderType;
 }): Promise<FullCalculatedData> {
   const priceMappingData = price_mapping as PriceMappingFile;
   const option = priceMappingData.find(
@@ -167,7 +167,7 @@ export async function calculatePrices({
   const tempoDatesMap: Record<string, TempoCodeDay> = {};
   const tempoMappingMap: Partial<Record<string, TempoMapping>> = {};
   if (option.tempoMappings) {
-    const tempoDates = await getTempoData();
+    const tempoDates = tempo_data as TempoDates;
     for (const t of tempoDates) {
       tempoDatesMap[t.dateJour] = t.codeJour;
     }
@@ -176,7 +176,7 @@ export async function calculatePrices({
     }
   }
   const hpHcGrid: HpHcSlot[] = option.overridingHpHcKey
-    ? await getHpHcJson(option.overridingHpHcKey)
+    ? getHpHcJson(option.overridingHpHcKey)
     : hpHcData;
 
   for (const item of data) {
@@ -227,7 +227,7 @@ interface FullCalculatePricesInterface {
   link: string;
   hpHcData: HpHcSlot[];
   overridingHpHcKey?: OverridingHpHcKey;
-  provider: Provider;
+  provider: ProviderType;
 }
 
 export async function calculateRowSummary({

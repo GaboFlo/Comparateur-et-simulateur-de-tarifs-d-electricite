@@ -1,7 +1,7 @@
 import * as fs from "fs/promises";
 import * as path from "path";
 import hphc_mapping from "../statics/hp_hc.json";
-import { HpHcSlot, OfferType, OptionKey, PowerClass } from "./types";
+import { HpHcSlot, OfferType, OptionKey, PowerClass } from "../types";
 import {
   findFirstAndLastDate,
   findMonthlySubscriptionCost,
@@ -10,8 +10,6 @@ import {
   getSeason,
   isHoliday,
   isHpOrHcSlot,
-  openJsonFile,
-  readFileAsString,
 } from "./utils";
 
 describe("isHpOrHcSlot", () => {
@@ -198,33 +196,5 @@ describe("readFileAsString", () => {
   afterAll(async () => {
     // Clean up the temporary file after tests
     await fs.unlink(testFilePath);
-  });
-
-  test("reads a file successfully", async () => {
-    const content = await readFileAsString(testFilePath);
-    expect(content).toBe(
-      `[{\"recordedAt\":\"2024-09-30T00:00:00+02:00\",\"value\":212},{\"recordedAt\":\"2024-09-30T23:30:00+02:00\",\"value\":212},{\"recordedAt\":\"2024-09-30T23:00:00+02:00\",\"value\":934}]`
-    );
-    const jsonContent = await openJsonFile(testFilePath);
-    expect(jsonContent).toEqual([
-      {
-        recordedAt: "2024-09-30T00:00:00+02:00",
-        value: 212,
-      },
-      {
-        recordedAt: "2024-09-30T23:30:00+02:00",
-        value: 212,
-      },
-      {
-        recordedAt: "2024-09-30T23:00:00+02:00",
-        value: 934,
-      },
-    ]);
-  });
-
-  test("throws an error for a non-existent file", async () => {
-    await expect(readFileAsString("nonExistentFile.txt")).rejects.toThrow(
-      "File not found"
-    );
   });
 });

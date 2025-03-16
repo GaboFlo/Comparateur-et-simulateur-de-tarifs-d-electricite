@@ -17,8 +17,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import React from "react";
 import { useFormContext } from "../context/FormContext";
-import { getStreamedData } from "../services/httpCalls";
-import { ComparisonTableInterfaceRow } from "../types";
+import { calculateRowSummary } from "../scripts/calculators";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -44,75 +43,41 @@ export function ComparisonTable() {
   const { formState } = useFormContext();
   const { trackEvent } = useMatomo();
 
-  const [rowSummaries, setRowSummaries] = React.useState<
-    ComparisonTableInterfaceRow[]
-  >([]);
-  const [eventSource, setEventSource] = React.useState<EventSource | null>(
-    null
-  );
-
   const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
     const fetchData = async () => {
-      if (!formState.requestId) {
-        setRowSummaries([]);
-        if (eventSource) {
-          eventSource.close();
-          setEventSource(null);
-        }
+      const dateRange = formState.analyzedDateRange; //TODO : check if this is the right date range
+      if (
+        !dateRange ||
+        !formState.parsedData ||
+        !formState.hpHcConfig ||
+        !formState.rowSummaries
+      ) {
+        alert("Missing data to calculate prices");
         return;
       }
-
-      setLoading(true);
-
-      try {
-        const url = await getStreamedData({
-          requestId: formState.requestId,
-          start: formState.dateRange[0],
-          end: formState.dateRange[1],
+      for (const option of options) {
+        const costForOption = await calculateRowSummary({
+          data: formState.parsedData,
+          dateRange,
           powerClass: formState.powerClass,
+          optionKey: option.optionKey,
+          offerType: option.offerType,
+          optionName: option.optionName,
+          provider: option.provider,
+          link: option.link,
+          hpHcData: formState.hpHcConfig,
+          overridingHpHcKey: option.overridingHpHcKey,
         });
-
-        if (eventSource) {
-          eventSource.close();
-        }
-
-        const newEventSource = new EventSource(url);
-        setEventSource(newEventSource);
-
-        newEventSource.onmessage = (event) => {
-          try {
-            const jsonData = JSON.parse(event.data);
-            setRowSummaries((prevSummaries) => [
-              ...prevSummaries,
-              jsonData.comparisonRow,
-            ]);
-          } catch (jsonError) {
-            // eslint-disable-next-line no-console
-            console.error("Error parsing JSON:", jsonError, event.data);
-            alert("Error parsing JSON"); // Set error state
-            newEventSource.close();
-            setEventSource(null);
-          }
-        };
-
-        newEventSource.onerror = () => {
-          newEventSource.close();
-          setEventSource(null);
-          setLoading(false);
-        };
-      } catch (error) {
-        alert("Error fetching data"); // Set error state
-        setLoading(false); // Stop loading on fetch error
+        formState.rowSummaries.push(costForOption);
       }
     };
 
     fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const currentOfferTotal =
-    rowSummaries.find(
+    formState.rowSummaries.find(
       (row) =>
         row.offerType === formState.offerType &&
         row.optionKey === formState.optionType
@@ -150,7 +115,7 @@ export function ComparisonTable() {
 
   return (
     <TableContainer component={Paper} sx={{ my: 3 }}>
-      {formState.isGlobalLoading || !rowSummaries ? (
+      {formState.isGlobalLoading || !formState.rowSummaries ? (
         <CircularProgress />
       ) : (
         <>
@@ -176,7 +141,7 @@ export function ComparisonTable() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rowSummaries
+              {formState.rowSummaries
                 .sort((a, b) => {
                   return a.total - b.total;
                 })

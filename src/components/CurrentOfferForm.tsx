@@ -19,13 +19,9 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import React, { useEffect } from "react";
 import { useFormContext } from "../context/FormContext";
-import {
-  getAvailableOffers,
-  getDefaultHpHcConfig,
-  uploadHpHcConfig,
-} from "../services/httpCalls";
+import hpHcFile from "../statics/hp_hc.json";
+import allOffersFile from "../statics/price_mapping.json";
 import {
   HpHcSlot,
   OfferType,
@@ -33,7 +29,7 @@ import {
   OptionKey,
   PowerClass,
   PriceMappingFile,
-  Provider,
+  ProviderType,
 } from "../types";
 import HpHcSlotSelector from "./HpHcSelector";
 
@@ -41,7 +37,7 @@ const powerClasses: PowerClass[] = [6, 9, 12, 15, 18, 24, 30, 36];
 
 const getDistinctOfferTypes = (
   mapping: PriceMappingFile,
-  provider: Provider
+  provider: ProviderType
 ) => {
   const offerTypes = new Set(
     mapping.filter((o) => o.provider === provider).map((item) => item.offerType)
@@ -56,7 +52,7 @@ const getDisctinctProviders = (mapping: PriceMappingFile) => {
 
 export const getAvailableOfferForProvider = (
   mapping: PriceMappingFile,
-  provider: Provider
+  provider: ProviderType
 ): OfferType[] => {
   if (!provider) return [];
   const availableOffers = mapping
@@ -67,7 +63,7 @@ export const getAvailableOfferForProvider = (
 
 export const getAvailableOptionsForOffer = (
   mapping: PriceMappingFile,
-  provider: Provider,
+  provider: ProviderType,
   offerType: OfferType
 ): Option[] => {
   if (!offerType || !provider) return [];
@@ -83,25 +79,10 @@ interface Props {
 export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
   const { formState, setFormState } = useFormContext();
   const { trackEvent } = useMatomo();
-  const [allOffers, setAllOffers] = React.useState<PriceMappingFile | null>(
-    null
-  );
-  const [hpHc, setHpHc] = React.useState<HpHcSlot[] | null>(null);
-  useEffect(() => {
-    const fetchOffers = async () => {
-      formState.isGlobalLoading = true;
-      setAllOffers(await getAvailableOffers());
-      setHpHc(await getDefaultHpHcConfig());
-      setFormState((prevState) => {
-        return { ...prevState, isGlobalLoading: false };
-      });
-    };
-    fetchOffers();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+  const allOffers = allOffersFile as PriceMappingFile;
+  const hpHc = hpHcFile as HpHcSlot[];
   const getLinkForOffer = (
-    provider: Provider,
+    provider: ProviderType,
     offerType: OfferType,
     optionKey: OptionKey | ""
   ) => {
@@ -122,12 +103,12 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
       if (name === "provider" && value !== prevState.provider && allOffers) {
         const offerType = getAvailableOfferForProvider(
           allOffers,
-          valueString as Provider
+          valueString as ProviderType
         )[0];
         newState.offerType = offerType;
         newState.optionType = getAvailableOptionsForOffer(
           allOffers,
-          valueString as Provider,
+          valueString as ProviderType,
           offerType
         )[0].optionKey;
       }
@@ -150,18 +131,6 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
 
       return newState;
     });
-  };
-
-  const handleUploadAndNext = async () => {
-    if (formState.hpHcConfig) {
-      const formData = new FormData();
-      formData.append("file", JSON.stringify(formState.hpHcConfig));
-      const res = await uploadHpHcConfig({ formData });
-      setFormState((prevState) => {
-        return { ...prevState, requestId: res["requestId"] };
-      });
-    }
-    handleNext();
   };
 
   return (
@@ -338,7 +307,7 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
           <Button
             variant="contained"
             endIcon={<ChevronRightRoundedIcon />}
-            onClick={handleUploadAndNext}
+            onClick={handleNext}
             sx={{ width: { xs: "100%", sm: "fit-content" } }}
           >
             Suivant

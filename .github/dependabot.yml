@@ -21,14 +21,3 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
-
-  # Maintain dependencies for npm
-  - package-ecosystem: "npm"
-    directory: "/server"
-    schedule:
-      interval: "weekly"
-    assignees:
-      - "GaboFlo"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]

@@ -9,10 +9,13 @@ import Grid from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
 import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
 import { endOfDay, startOfDay } from "date-fns";
+import JSZip from "jszip";
 import * as React from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "../context/FormContext";
-import { uploadEdfFile } from "../services/httpCalls";
+import { parseCsvToConsumptionLoadCurveData } from "../scripts/csvParser";
+import { analyseHourByHourBySeason } from "../scripts/statistics";
+import { getAnalyzedDateRange } from "../scripts/utils";
 import TooltipModal from "./TooltipModal";
 
 interface Props {
@@ -40,29 +43,51 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
 
   const onDrop = async (acceptedFiles: File[]) => {
     formState.isGlobalLoading = true;
+
     for (const file of acceptedFiles) {
-      const formData = new FormData();
-      formData.append("file", file);
       try {
-        const response = await uploadEdfFile({
-          formData,
-          start: formState.dateRange[0],
-          end: formState.dateRange[1],
-          requestId: formState.requestId ?? "",
+        const zip = await JSZip.loadAsync(file);
+        const csvFiles: Promise<Blob>[] = [];
+        zip.forEach((relativePath, zipEntry) => {
+          if (
+            zipEntry.name.startsWith("mes-puissances-atteintes-30min") &&
+            zipEntry.name.endsWith(".csv")
+          ) {
+            csvFiles.push(zipEntry.async("blob"));
+          }
         });
-        if (response) {
-          setFormState((prevState) => ({
-            ...prevState,
-            seasonHourlyAnalysis: response.seasonData,
-            analyzedDateRange: response.analyzedDateRange,
-            requestId: response.requestId,
-            totalConsumption: response.totalConsumption,
-            isGlobalLoading: false,
-          }));
-          handleNext();
-        } else {
-          alert("Error uploading file.");
+        const csvBlobs = await Promise.all(csvFiles);
+
+        // Process the CSV blobs as needed
+        console.log(csvBlobs);
+        if (csvBlobs.length !== 1) {
+          alert("No CSV file found in the ZIP.");
+          return;
         }
+        const csvText = await csvBlobs[0].text();
+        const parsedData = parseCsvToConsumptionLoadCurveData(csvText);
+        const analyzedDateRange = getAnalyzedDateRange(
+          parsedData,
+          formState.dateRange
+        );
+        const seasonData = analyseHourByHourBySeason({
+          data: parsedData,
+          dateRange: analyzedDateRange,
+        });
+        const totalConsumption = seasonData.reduce(
+          (acc, cur) => acc + cur.seasonTotalSum,
+          0
+        );
+
+        setFormState((prevState) => ({
+          ...prevState,
+          seasonHourlyAnalysis: seasonData,
+          analyzedDateRange: analyzedDateRange,
+          totalConsumption: totalConsumption,
+          isGlobalLoading: false,
+          parsedData: parsedData,
+        }));
+        handleNext();
       } catch (error) {
         alert("An error occurred during upload.");
       }
