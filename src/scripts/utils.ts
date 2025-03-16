@@ -1,7 +1,6 @@
 import axios from "axios";
 import { addDays, format, getDate, getMonth, subMinutes } from "date-fns";
 import Holidays from "date-holidays";
-import fs from "fs";
 import allHolidays from "../assets/holidays.json";
 import tempoFile from "../statics/hp_hc-BLEU_TEMPO.json";
 import flexFile from "../statics/hp_hc-ZEN_FLEX.json";
@@ -133,7 +132,7 @@ export const findFirstAndLastDate = (
   return [firstDate, lastDate];
 };
 
-async function fetchTempoData() {
+export async function fetchTempoData() {
   try {
     const response = await axios
       .get(
@@ -144,21 +143,6 @@ async function fetchTempoData() {
     return response as TempoDates;
   } catch {
     throw new Error("Error fetching tempo data");
-  }
-}
-
-export async function updateTempoData() {
-  try {
-    const tempoDates = await fetchTempoData();
-    const tempoFilePath = "../assets/tempo.json";
-
-    fs.writeFile(tempoFilePath, JSON.stringify(tempoDates), (err) => {
-      if (err) {
-        console.error("Erreur lors de l'écriture du fichier tempo.json :", err);
-      }
-    });
-  } catch (error) {
-    console.error("Erreur lors de la récupération des données tempo :", error);
   }
 }
 
