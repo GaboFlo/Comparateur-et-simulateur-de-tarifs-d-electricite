@@ -81,7 +81,7 @@ export interface ComparisonTableInterfaceRow {
   overridingHpHcKey?: OverridingHpHcKey;
 }
 
-export const APP_VERSION = process.env.REACT_APP_VERSION || "dev";
+export const APP_VERSION = process.env.REACT_APP_VERSION ?? "dev";
 
 export interface HourTime {
   hour: number;

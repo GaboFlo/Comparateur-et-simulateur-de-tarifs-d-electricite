@@ -30,7 +30,6 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   React.useEffect(() => {
     if (!formState.hpHcConfig) {
       navigate("?step=0");
-      return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -45,56 +44,58 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
     }
   }, []);
 
-  const onDrop = async (acceptedFiles: File[]) => {
-    setFormState((prevState) => ({
-      ...prevState,
-      isGlobalLoading: true,
-    }));
-    for (const file of acceptedFiles) {
-      try {
-        const zip = await JSZip.loadAsync(file);
-        const csvFiles: Promise<Blob>[] = [];
-        zip.forEach((relativePath, zipEntry) => {
-          if (
-            zipEntry.name.startsWith("mes-puissances-atteintes-30min") &&
-            zipEntry.name.endsWith(".csv")
-          ) {
-            csvFiles.push(zipEntry.async("blob"));
+  const onDrop = (acceptedFiles: File[]) => {
+    (async () => {
+      setFormState((prevState) => ({
+        ...prevState,
+        isGlobalLoading: true,
+      }));
+      for (const file of acceptedFiles) {
+        try {
+          const zip = await JSZip.loadAsync(file);
+          const csvFiles: Promise<Blob>[] = [];
+          zip.forEach((relativePath, zipEntry) => {
+            if (
+              zipEntry.name.startsWith("mes-puissances-atteintes-30min") &&
+              zipEntry.name.endsWith(".csv")
+            ) {
+              csvFiles.push(zipEntry.async("blob"));
+            }
+          });
+          const csvBlobs = await Promise.all(csvFiles);
+
+          if (csvBlobs.length !== 1) {
+            alert("No CSV file found in the ZIP.");
+            return;
           }
-        });
-        const csvBlobs = await Promise.all(csvFiles);
+          const csvText = await csvBlobs[0].text();
+          const parsedData = parseCsvToConsumptionLoadCurveData(csvText);
+          const analyzedDateRange = getAnalyzedDateRange(
+            parsedData,
+            formState.dateRange
+          );
+          const seasonData = analyseHourByHourBySeason({
+            data: parsedData,
+            dateRange: analyzedDateRange,
+          });
+          const totalConsumption = seasonData.reduce(
+            (acc, cur) => acc + cur.seasonTotalSum,
+            0
+          );
 
-        if (csvBlobs.length !== 1) {
-          alert("No CSV file found in the ZIP.");
-          return;
+          setFormState((prevState) => ({
+            ...prevState,
+            seasonHourlyAnalysis: seasonData,
+            analyzedDateRange: analyzedDateRange,
+            totalConsumption: totalConsumption,
+            parsedData: parsedData,
+          }));
+          handleNext();
+        } catch (error) {
+          alert("An error occurred during upload.");
         }
-        const csvText = await csvBlobs[0].text();
-        const parsedData = parseCsvToConsumptionLoadCurveData(csvText);
-        const analyzedDateRange = getAnalyzedDateRange(
-          parsedData,
-          formState.dateRange
-        );
-        const seasonData = analyseHourByHourBySeason({
-          data: parsedData,
-          dateRange: analyzedDateRange,
-        });
-        const totalConsumption = seasonData.reduce(
-          (acc, cur) => acc + cur.seasonTotalSum,
-          0
-        );
-
-        setFormState((prevState) => ({
-          ...prevState,
-          seasonHourlyAnalysis: seasonData,
-          analyzedDateRange: analyzedDateRange,
-          totalConsumption: totalConsumption,
-          parsedData: parsedData,
-        }));
-        handleNext();
-      } catch (error) {
-        alert("An error occurred during upload.");
       }
-    }
+    })();
   };
 
   const { getRootProps, getInputProps } = useDropzone({

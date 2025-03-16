@@ -10,7 +10,6 @@ import {
   Divider,
   FormControl,
   FormLabel,
-  Grid,
   Link,
   ListItemIcon,
   ListItemText,
@@ -19,6 +18,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import { useFormContext } from "../context/FormContext";
 import hpHcFile from "../statics/hp_hc.json";
 import allOffersFile from "../statics/price_mapping.json";
@@ -139,7 +139,7 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
         Votre offre actuelle
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth sx={{ marginY: 1 }}>
             <FormLabel required>Fournisseur actuel</FormLabel>
             <Select
@@ -221,7 +221,7 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
             </Typography>
           </FormControl>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth sx={{ marginY: 1 }}>
             <FormLabel required>Offre actuelle</FormLabel>
             <Select

@@ -1,6 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
 import {
-  Backdrop,
   Box,
   Button,
   Fade,
@@ -52,10 +51,6 @@ export default function TooltipModal({
         closeAfterTransition
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 1000,
-        }}
       >
         <Fade in={open}>
           <Box sx={style}>
