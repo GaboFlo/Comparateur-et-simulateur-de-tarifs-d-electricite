@@ -13,7 +13,7 @@ updates:
 
   # Maintain dependencies for npm
   - package-ecosystem: "npm"
-    directory: "/front"
+    directory: "/"
     schedule:
       interval: "weekly"
     assignees:
