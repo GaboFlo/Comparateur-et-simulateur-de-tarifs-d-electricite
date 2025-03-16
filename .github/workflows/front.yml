@@ -14,14 +14,14 @@ jobs:
           timezoneLinux: "Europe/Paris"
       - uses: actions/checkout@v4
       - name: Install modules
-        run: cd front && npm i --only-dev
+        run: npm i --only-dev
       - name: Run lint
-        run: cd front && npm run lint:ci
+        run: npm run lint:ci
       - name: Removes dead code
-        run: cd front && npm run deadcode:ci
+        run: npm run deadcode:ci
       - name: Check if package.json is sorted
         run: |
-          cd front && npm run sort-package:check
+          npm run sort-package:check
           if [ $? -eq 0 ]; then
             echo "Package.json is sorted correctly."
           else
@@ -29,4 +29,4 @@ jobs:
           fi
       - name: Depcheck
         run: |
-          cd front && npm i -g depcheck && npm run depcheck:ci
+          npm i -g depcheck && npm run depcheck:ci
