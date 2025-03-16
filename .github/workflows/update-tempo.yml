@@ -1,8 +1,9 @@
 name: Fetch Tempo Data
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: "* * * * *"
+    - cron: "* * * * *" # Runs every minute for testing
 
 jobs:
   fetch-tempo-data:
