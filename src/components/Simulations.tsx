@@ -1,6 +1,6 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import { Alert, Button, Divider, Typography } from "@mui/material";
-import { Stack } from "@mui/system";
+import { Stack, useMediaQuery, useTheme } from "@mui/system";
 import { format } from "date-fns";
 import { useFormContext } from "../context/FormContext";
 import { ComparisonTable } from "./ComparisonTable";
@@ -10,6 +10,9 @@ import HpHcSlotSelector from "./HpHcSelector";
 export default function Simulations() {
   const { formState } = useFormContext();
   const { trackEvent } = useMatomo();
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+
   const handlePrint = () => {
     window.print();
     trackEvent({ category: "Simulations", action: "Print" });
@@ -53,7 +56,7 @@ export default function Simulations() {
         venez d'importer, sur la même période.
       </Typography>
       <ComparisonTable />
-      <HpHcSlotSelector readOnly />
+      {isDesktop && <HpHcSlotSelector readOnly />}
       <Button
         variant="contained"
         color="secondary"

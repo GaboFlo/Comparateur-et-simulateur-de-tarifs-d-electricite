@@ -42,7 +42,7 @@ export function ComparisonTable() {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const dateRange = formState.analyzedDateRange; //TODO : check if this is the right date range
+    const dateRange = formState.analyzedDateRange;
 
     if (
       !dateRange ||
