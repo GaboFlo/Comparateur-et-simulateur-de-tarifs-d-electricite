@@ -31,5 +31,5 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
-          local-dir: ../src/assets/
+          local-dir: src/assets/
           server-dir: ${{secrets.FTP_SERVER_DIR}}
