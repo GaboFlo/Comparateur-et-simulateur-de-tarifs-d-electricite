@@ -60,8 +60,7 @@ export default function Footer() {
           src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png"
           alt="Licence CC BY-NC-SA"
           style={{ marginLeft: "0.5rem" }}
-        />{" "}
-        Tarifications Février 2025
+        />
       </p>
     </Box>
   );

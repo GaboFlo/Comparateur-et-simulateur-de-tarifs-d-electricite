@@ -221,6 +221,7 @@ app.get(
           optionName: option.optionName,
           provider: option.provider,
           link: option.link,
+          lastUpdate: option.lastUpdate,
           hpHcData: defaultHpHcData,
           overridingHpHcKey: option.overridingHpHcKey,
         });

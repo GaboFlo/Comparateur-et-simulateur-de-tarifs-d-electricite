@@ -225,6 +225,7 @@ interface FullCalculatePricesInterface {
   offerType: OfferType;
   optionName: string;
   link: string;
+  lastUpdate: string;
   hpHcData: HpHcSlot[];
   overridingHpHcKey?: OverridingHpHcKey;
   provider: Provider;
@@ -237,6 +238,7 @@ export async function calculateRowSummary({
   optionKey,
   optionName,
   link,
+  lastUpdate,
   offerType,
   hpHcData,
   provider,
@@ -267,6 +269,7 @@ export async function calculateRowSummary({
     optionKey,
     optionName,
     link,
+    lastUpdate,
     totalConsumptionCost: Math.round(calculatedData.totalCost / PRICE_COEFF),
     fullSubscriptionCost,
     total: Math.round(

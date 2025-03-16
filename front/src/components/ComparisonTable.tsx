@@ -1,10 +1,12 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import UpdateIcon from "@mui/icons-material/Update";
 import {
   CircularProgress,
   LinearProgress,
   Link,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
@@ -15,6 +17,7 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { format } from "date-fns";
 import React from "react";
 import { useFormContext } from "../context/FormContext";
 import { getStreamedData } from "../services/httpCalls";
@@ -168,7 +171,7 @@ export function ComparisonTable() {
                   Coût de votre consommation (€)
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  Total simulé (sans taxes, €)
+                  Total simulé (€)
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   % de différence
@@ -204,7 +207,21 @@ export function ComparisonTable() {
                         height="24"
                       />{" "}
                       <Typography variant="body1" m={1}>
-                        {row.provider}
+                        {row.provider}{" "}
+                        <Tooltip
+                          title={`Tarification mise à jour le ${format(
+                            row.lastUpdate,
+                            "dd/MM/yyyy"
+                          )}`}
+                          arrow
+                        >
+                          <UpdateIcon
+                            sx={{
+                              fontSize: "1rem",
+                              verticalAlign: "middle",
+                            }}
+                          />
+                        </Tooltip>
                       </Typography>
                     </StyledTableCell>
                     <StyledTableCell

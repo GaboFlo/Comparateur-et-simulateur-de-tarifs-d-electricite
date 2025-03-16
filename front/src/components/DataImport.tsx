@@ -18,9 +18,13 @@ import TooltipModal from "./TooltipModal";
 interface Props {
   handleNext: () => void;
 }
+
 export default function DataImport({ handleNext }: Readonly<Props>) {
   const { formState, setFormState } = useFormContext();
   const { trackEvent } = useMatomo();
+  const acceptedFormats = [".zip"]; // Formats acceptés
+  const [openTooltipCsv, setOpenToolTipCsv] = React.useState(false);
+  const [fileError, setFileError] = React.useState<string | null>(null); // Etat pour le message d'erreur
 
   React.useEffect(() => {
     const explanationOpened = localStorage.getItem(
@@ -39,6 +43,17 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   }, [setFormState]);
 
   const onDrop = async (acceptedFiles: File[]) => {
+    setFileError(null); // Réinitialiser l'erreur
+
+    const invalidFile = acceptedFiles.find(
+      (file) => !acceptedFormats.some((format) => file.name.endsWith(format))
+    );
+
+    if (invalidFile) {
+      setFileError(`Le fichier "${invalidFile.name}" n'est pas au format ZIP.`);
+      return;
+    }
+
     formState.isGlobalLoading = true;
     for (const file of acceptedFiles) {
       const formData = new FormData();
@@ -67,17 +82,16 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
         alert("An error occurred during upload.");
       }
     }
+    formState.isGlobalLoading = false;
   };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
-      "application/zip": [".zip"],
+      "application/zip": acceptedFormats,
     },
     maxFiles: 1,
   });
-
-  const [openTooltipCsv, setOpenToolTipCsv] = React.useState(false);
 
   const handleTooltipCsvClose = () => {
     setOpenToolTipCsv(false);
@@ -157,6 +171,11 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                 imgDescription="Page de téléchargement de la consommation"
               />
             </Alert>
+            {fileError && (
+              <Alert severity="error" sx={{ width: "100%" }}>
+                {fileError}
+              </Alert>
+            )}
             <Box
               {...getRootProps()}
               sx={{
@@ -179,8 +198,9 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                 </Grid>
                 <Grid size={10}>
                   <p>
-                    Déposez votre fichier ZIP ici, ou cliquez pour ouvrir la
-                    fenêtre d'import
+                    Déposez votre fichier <b>ZIP</b> ici, ou cliquez pour ouvrir
+                    la fenêtre d'import. <br />
+                    <b>Seul ce format est accepté.</b>
                   </p>
                 </Grid>
               </Grid>
