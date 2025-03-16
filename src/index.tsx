@@ -19,9 +19,9 @@ LicenseInfo.setLicenseKey(
 );
 
 root.render(
-  <MatomoContextProvider>
-    <SnackbarProvider autoHideDuration={2000} preventDuplicate>
-      <BrowserRouter>
+  <BrowserRouter>
+    <MatomoContextProvider>
+      <SnackbarProvider autoHideDuration={2000} preventDuplicate>
         <FormProvider>
           <AppTheme>
             <LocalizationProvider
@@ -32,7 +32,7 @@ root.render(
             </LocalizationProvider>
           </AppTheme>
         </FormProvider>
-      </BrowserRouter>
-    </SnackbarProvider>
-  </MatomoContextProvider>
+      </SnackbarProvider>
+    </MatomoContextProvider>
+  </BrowserRouter>
 );

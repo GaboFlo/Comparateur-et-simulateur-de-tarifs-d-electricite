@@ -1,6 +1,6 @@
 {
   "name": "comparateur_fournisseur_electricite",
-  "version": "0.2.4",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "REACT_APP_VERSION=$(node -p \"require('./package.json').version\") react-scripts build",
@@ -40,7 +40,7 @@
     "@jonkoops/matomo-tracker": "^0.7.0",
     "@jonkoops/matomo-tracker-react": "^0.7.0",
     "@mui/icons-material": "^6.4.0",
-    "@mui/material": "^6.4.0",
+    "@mui/material": "^6.4.7",
     "@mui/system": "^6.4.0",
     "@mui/x-charts": "^7.27.0",
     "@mui/x-date-pickers": "^7.24.1",

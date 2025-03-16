@@ -12,7 +12,7 @@ import { endOfDay, startOfDay } from "date-fns";
 import JSZip from "jszip";
 import * as React from "react";
 import { useDropzone } from "react-dropzone";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
 import { parseCsvToConsumptionLoadCurveData } from "../scripts/csvParser";
 import { analyseHourByHourBySeason } from "../scripts/statistics";

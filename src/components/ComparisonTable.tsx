@@ -10,7 +10,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
 import { calculateRowSummary } from "../scripts/calculators";
 import allOffersFile from "../statics/price_mapping.json";
