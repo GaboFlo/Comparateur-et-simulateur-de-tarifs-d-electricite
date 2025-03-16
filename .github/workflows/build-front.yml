@@ -1,4 +1,4 @@
-name: Build Frontend
+name: Build
 
 on:
   push:
@@ -18,11 +18,10 @@ jobs:
           node-version: "20"
 
       - name: Use package.json version
-        run: echo "VERSION=$(node -p 'require(\"./front/package.json\").version')" >> $GITHUB_ENV
+        run: echo "VERSION=$(node -p 'require(\"./package.json\").version')" >> $GITHUB_ENV
 
       - name: Build frontend
         run: |
-          cd front
           npm ci
           REACT_APP_VERSION=$VERSION npm run build
           mv build ../frontend_build

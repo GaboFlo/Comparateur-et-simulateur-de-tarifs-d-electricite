@@ -13,18 +13,7 @@ updates:
 
   # Maintain dependencies for npm
   - package-ecosystem: "npm"
-    directory: "/front"
-    schedule:
-      interval: "weekly"
-    assignees:
-      - "GaboFlo"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
-
-  # Maintain dependencies for npm
-  - package-ecosystem: "npm"
-    directory: "/server"
+    directory: "/"
     schedule:
       interval: "weekly"
     assignees:

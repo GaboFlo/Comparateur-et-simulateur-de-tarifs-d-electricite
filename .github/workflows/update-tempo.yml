@@ -1,0 +1,34 @@
+name: Fetch Tempo Data
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+
+jobs:
+  fetch-tempo-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run fetchTempoData
+        run: npm run fetch-and-update-tempo-data
+
+      - name: Deploy JSON to SFTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOSTNAME }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          local-dir: ../src/assets/tempo.json
+          server-dir: ${{secrets.FTP_SERVER_DIR}}

@@ -17,7 +17,6 @@ jobs:
 
       - name: Build frontend
         run: |
-          cd front
           npm ci
           REACT_APP_VERSION=$VERSION npm run build
           mv build ../frontend_build
@@ -44,9 +43,3 @@ jobs:
           port: 21
           local-dir: "frontend_build/"
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
-
-      - name: Deploy server webhook
-        env:
-          deploy_url: ${{ secrets.SERVER_DEPLOY_HOOK_URL }}
-        run: |
-          curl "$deploy_url"
