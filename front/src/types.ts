@@ -51,7 +51,7 @@ export interface Mapping {
   include_holidays?: boolean;
 }
 
-export type Provider = "EDF" | "TotalEnergies" | "Engie" |"OctopusEnergy"
+export type Provider = "EDF" | "TotalEnergies" | "Engie" | "OctopusEnergy";
 
 export interface Option {
   optionKey: OptionKey;
@@ -78,6 +78,7 @@ export interface ComparisonTableInterfaceRow {
   fullSubscriptionCost: number;
   total: number;
   link: string;
+  lastUpdate: string;
   overridingHpHcKey?: string;
 }
 

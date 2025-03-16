@@ -101,6 +101,7 @@ export interface Option {
   mappings: Mapping[];
   tempoMappings?: TempoMapping[];
   overridingHpHcKey?: OverridingHpHcKey;
+  lastUpdate: string;
 }
 
 export interface Subscription {
