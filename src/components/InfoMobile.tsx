@@ -46,18 +46,7 @@ export default function InfoMobile() {
       >
         Comment ça marche ?
       </Button>
-      <Drawer
-        open={open}
-        anchor="top"
-        onClose={toggleDrawer(false)}
-        PaperProps={{
-          sx: {
-            top: "var(--template-frame-height, 0px)",
-            backgroundImage: "none",
-            backgroundColor: "background.paper",
-          },
-        }}
-      >
+      <Drawer open={open} anchor="top" onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>
     </Stack>

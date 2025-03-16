@@ -130,4 +130,4 @@ export interface ComparisonTableInterfaceRow {
   overridingHpHcKey?: string;
 }
 
-export const APP_VERSION = process.env.REACT_APP_VERSION || "dev";
+export const APP_VERSION = process.env.REACT_APP_VERSION ?? "dev";
