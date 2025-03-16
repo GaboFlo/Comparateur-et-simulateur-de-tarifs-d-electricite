@@ -1,5 +1,21 @@
+import axios from "axios";
 import fs from "fs";
-import { fetchTempoData } from "../src/scripts/utils";
+import { TempoDates } from "../src/types";
+
+async function fetchTempoData() {
+  try {
+    const response = await axios
+      .get(
+        "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023"
+      )
+      .then((res) => res.data);
+
+    return response as TempoDates;
+  } catch {
+    throw new Error("Error fetching tempo data");
+  }
+}
+
 export async function updateTempoData() {
   try {
     const tempoDates = await fetchTempoData();

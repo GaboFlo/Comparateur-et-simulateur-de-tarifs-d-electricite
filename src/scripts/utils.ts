@@ -1,4 +1,3 @@
-import axios from "axios";
 import { addDays, format, getDate, getMonth, subMinutes } from "date-fns";
 import Holidays from "date-holidays";
 import allHolidays from "../assets/holidays.json";
@@ -15,7 +14,6 @@ import {
   ProviderType,
   Season,
   SlotType,
-  TempoDates,
 } from "../types";
 import { ConsumptionLoadCurveData } from "./csvParser";
 
@@ -131,20 +129,6 @@ export const findFirstAndLastDate = (
   const lastDate = Math.max(...dates);
   return [firstDate, lastDate];
 };
-
-export async function fetchTempoData() {
-  try {
-    const response = await axios
-      .get(
-        "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023"
-      )
-      .then((res) => res.data);
-
-    return response as TempoDates;
-  } catch {
-    throw new Error("Error fetching tempo data");
-  }
-}
 
 export function isHoliday(endOfSlotRecorded: Date) {
   const holidays = allHolidays;
