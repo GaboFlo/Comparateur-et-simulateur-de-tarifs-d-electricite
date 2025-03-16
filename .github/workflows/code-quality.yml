@@ -29,3 +29,14 @@ jobs:
       - name: Depcheck
         run: |
           npm i -g depcheck && npm run depcheck:ci
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: szenius/set-timezone@v2.0
+        with:
+          timezoneLinux: "Europe/Paris"
+      - uses: actions/checkout@v4
+      - name: Install modules
+        run: npm i --only-dev
+      - name: Run tests
+        run: npm run test
