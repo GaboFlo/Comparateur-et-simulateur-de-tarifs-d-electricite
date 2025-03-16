@@ -52,8 +52,10 @@ export default function Simulations() {
         Combien auriez-vous gagné en changeant d'offre ?
       </Typography>
       <Typography variant="body2" sx={{ mb: 1 }}>
-        Les prix sont <b>simulés</b> en fonction de votre consommation que vous
-        venez d'importer, sur la même période.
+        Les prix (TTC) sont <b>simulés</b> en fonction de votre consommation que
+        vous venez d'importer, sur la même période. <br />
+        Ils peuvent différer de vos factures car la simulation est réalisée sur
+        la base des tarifs actuels des fournisseurs.
       </Typography>
       <ComparisonTable />
       {isDesktop && <HpHcSlotSelector readOnly />}

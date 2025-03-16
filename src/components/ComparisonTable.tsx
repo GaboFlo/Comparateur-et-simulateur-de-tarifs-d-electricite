@@ -1,6 +1,7 @@
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { CircularProgress, Link, Typography } from "@mui/material";
+import UpdateIcon from "@mui/icons-material/Update";
+import { CircularProgress, Link, Tooltip, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -9,6 +10,7 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { format } from "date-fns";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
@@ -68,6 +70,7 @@ export function ComparisonTable() {
         offerType: option.offerType,
         optionName: option.optionName,
         provider: option.provider,
+        lastUpdate: option.lastUpdate,
         link: option.link,
         hpHcData: formState.hpHcConfig,
         overridingHpHcKey: option.overridingHpHcKey,
@@ -122,9 +125,7 @@ export function ComparisonTable() {
               <StyledTableCell align="center">
                 Coût de votre consommation (€)
               </StyledTableCell>
-              <StyledTableCell align="center">
-                Total simulé (sans taxes, €)
-              </StyledTableCell>
+              <StyledTableCell align="center">Total simulé (€)</StyledTableCell>
               <StyledTableCell align="center">% de différence</StyledTableCell>
             </TableRow>
           </TableHead>
@@ -168,6 +169,20 @@ export function ComparisonTable() {
                     }}
                   >
                     <Typography variant="body1" m={1}>
+                      <Tooltip
+                        title={`Tarification mise à jour le ${format(
+                          row.lastUpdate,
+                          "dd/MM/yyyy"
+                        )}`}
+                        arrow
+                      >
+                        <UpdateIcon
+                          sx={{
+                            fontSize: "1rem",
+                            verticalAlign: "middle",
+                          }}
+                        />
+                      </Tooltip>{" "}
                       {row.offerType && `${row.offerType} - `}
                       {row.optionName}{" "}
                       {row.overridingHpHcKey && (

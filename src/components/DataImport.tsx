@@ -25,6 +25,10 @@ interface Props {
 export default function DataImport({ handleNext }: Readonly<Props>) {
   const { formState, setFormState } = useFormContext();
   const { trackEvent } = useMatomo();
+  const acceptedFormats = [".zip"];
+  const [openTooltipCsv, setOpenToolTipCsv] = React.useState(false);
+  const [fileError, setFileError] = React.useState<string | null>(null);
+
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -45,6 +49,18 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   }, []);
 
   const onDrop = (acceptedFiles: File[]) => {
+    setFileError(null);
+    const invalidFile = acceptedFiles.find(
+      (file) => !acceptedFormats.some((format) => file.name.endsWith(format))
+    );
+
+    if (invalidFile || acceptedFiles.length !== 1) {
+      setFileError(
+        `Le fichier ${invalidFile?.name ?? ""} n'est pas au format ZIP.`
+      );
+      return;
+    }
+
     (async () => {
       setFormState((prevState) => ({
         ...prevState,
@@ -96,17 +112,16 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
         }
       }
     })();
+    formState.isGlobalLoading = false;
   };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
-      "application/zip": [".zip"],
+      "application/zip": acceptedFormats,
     },
     maxFiles: 1,
   });
-
-  const [openTooltipCsv, setOpenToolTipCsv] = React.useState(false);
 
   const handleTooltipCsvClose = () => {
     setOpenToolTipCsv(false);
@@ -183,6 +198,11 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
             imgDescription="Page de téléchargement de la consommation"
           />
         </Alert>
+        {fileError && (
+          <Alert severity="error" sx={{ width: "100%" }}>
+            {fileError}
+          </Alert>
+        )}
         <Box
           {...getRootProps()}
           sx={{
@@ -208,8 +228,9 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                 </Grid>
                 <Grid size={10}>
                   <p>
-                    Déposez votre fichier ZIP ici, ou cliquez pour ouvrir la
-                    fenêtre d'import
+                    Déposez votre fichier <b>ZIP</b> ici, ou cliquez pour ouvrir
+                    la fenêtre d'import. <br />
+                    <b>Seul ce format est accepté.</b>
                   </p>
                 </Grid>
               </>
