@@ -47,7 +47,7 @@ describe("calculateTempoPrices", () => {
         value: 270,
       },
     ];
-    const optionKey = OptionKey.TEMPO;
+    const optionKey = OptionKey.BLEU_TEMPO;
     const offerType = OfferType.BLEU;
     const hpHcData = (await hphc_data) as HpHcSlot[];
 

@@ -1,5 +1,3 @@
-import * as fs from "fs/promises";
-import * as path from "path";
 import hphc_mapping from "../statics/hp_hc.json";
 import { HpHcSlot, OfferType, OptionKey, PowerClass } from "../types";
 import {
@@ -66,7 +64,7 @@ describe("isHpOrHcSlot", () => {
     { endOfTimeSlot: "23:30", expected: "HP" },
   ];
   testMapping.forEach(({ endOfTimeSlot, expected }) => {
-    it(endOfTimeSlot, () => {
+    it(`${endOfTimeSlot}`, () => {
       const date = new Date(`2023-10-10T${endOfTimeSlot}:00+02:00`);
       const slotType = isHpOrHcSlot(date, hphcMapping);
       expect(slotType).toBe(expected);
@@ -180,21 +178,5 @@ describe("Holidays", () => {
     expect(isHoliday(new Date("2025-01-01 02:30:00"))).toBe(true);
     expect(isHoliday(new Date("2025-01-01 23:30:00"))).toBe(true);
     expect(isHoliday(new Date("2025-01-02 00:00:00"))).toBe(true);
-  });
-});
-
-describe("readFileAsString", () => {
-  const testFilePath = path.join(__dirname, "utils.test.txt");
-
-  beforeAll(async () => {
-    await fs.writeFile(
-      testFilePath,
-      `[{\"recordedAt\":\"2024-09-30T00:00:00+02:00\",\"value\":212},{\"recordedAt\":\"2024-09-30T23:30:00+02:00\",\"value\":212},{\"recordedAt\":\"2024-09-30T23:00:00+02:00\",\"value\":934}]`
-    );
-  });
-
-  afterAll(async () => {
-    // Clean up the temporary file after tests
-    await fs.unlink(testFilePath);
   });
 });

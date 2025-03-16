@@ -1,7 +1,7 @@
 export enum OptionKey {
   BASE = "BASE",
   HPHC = "HPHC",
-  TEMPO = "TEMPO",
+  BLEU_TEMPO = "BLEU_TEMPO",
   WEEK_END_HPHC = "WEEK_END_HPHC",
   FLEX_ECO = "FLEX_ECO",
   FLEX_SOBRIETE = "FLEX_SOBRIETE",
