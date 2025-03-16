@@ -171,7 +171,7 @@ export function ComparisonTable() {
                   Coût de votre consommation (€)
                 </StyledTableCell>
                 <StyledTableCell align="center">
-                  Total simulé (sans taxes, €)
+                  Total simulé (€)
                 </StyledTableCell>
                 <StyledTableCell align="center">
                   % de différence
