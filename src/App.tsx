@@ -1,6 +1,6 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
-import { LinearProgress, useColorScheme } from "@mui/material";
+import { useColorScheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
@@ -124,11 +124,6 @@ export default function App() {
 
   return (
     <>
-      {formState.isGlobalLoading ? (
-        <LinearProgress sx={{ height: "5px" }} />
-      ) : (
-        <div style={{ height: "5px" }} />
-      )}
       <CssBaseline enableColorScheme />
       <Box sx={{ position: "fixed", top: "1rem", right: "1rem" }}>
         <ColorModeIconDropdown />

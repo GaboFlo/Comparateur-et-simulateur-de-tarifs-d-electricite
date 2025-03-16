@@ -2,6 +2,8 @@ import axios from "axios";
 import { addDays, format, getDate, getMonth, subMinutes } from "date-fns";
 import Holidays from "date-holidays";
 import allHolidays from "../assets/holidays.json";
+import tempoFile from "../statics/hp_hc-BLEU_TEMPO.json";
+import flexFile from "../statics/hp_hc-ZEN_FLEX.json";
 import price_mapping from "../statics/price_mapping.json";
 import {
   HpHcSlot,
@@ -169,6 +171,12 @@ export const getAnalyzedDateRange = (
 };
 
 export const getHpHcJson = (overridingHpHcKey: string) => {
-  // TODO
-  return [];
+  switch (overridingHpHcKey) {
+    case "BLEU_TEMPO":
+      return tempoFile as HpHcSlot[];
+    case "ZEN_FLEX":
+      return flexFile as HpHcSlot[];
+    default:
+      throw new Error(`No hpHcGrid found for key: ${overridingHpHcKey}`);
+  }
 };

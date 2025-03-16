@@ -75,7 +75,8 @@ export default function Info({
         variant="body1"
         sx={{ fontWeight: "medium", m: 1, textAlign: "justify" }}
       >
-        Vos données sont conservées uniquement le temps des calculs.
+        Vos données restent dans votre navigateur, et ne sont pas envoyées à un
+        serveur.
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
         <Button

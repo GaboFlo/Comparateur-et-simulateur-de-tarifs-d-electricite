@@ -108,12 +108,12 @@ function calculateHpHcPrices(
   };
 }
 
-async function calculateTempoPricesOptimized(
+function calculateTempoPricesOptimized(
   item: CalculatedData,
   tempoDatesMap: Record<string, TempoCodeDay>,
   tempoMappingMap: Partial<Record<string, TempoMapping>>,
   customHpHcGrid: HpHcSlot[]
-): Promise<Cost> {
+): Cost {
   const slotType = isHpOrHcSlot(new Date(item.recordedAt), customHpHcGrid);
   const dateKey = getTempoDateKey(item.recordedAt);
 
@@ -136,7 +136,7 @@ async function calculateTempoPricesOptimized(
   };
 }
 
-export async function calculatePrices({
+export function calculatePrices({
   data,
   optionKey,
   offerType,
@@ -149,7 +149,7 @@ export async function calculatePrices({
   tempoDates?: TempoDates;
   hpHcData: HpHcSlot[];
   provider: ProviderType;
-}): Promise<FullCalculatedData> {
+}): FullCalculatedData {
   const priceMappingData = price_mapping as PriceMappingFile;
   const option = priceMappingData.find(
     (item) =>
@@ -196,7 +196,7 @@ export async function calculatePrices({
       if (!option.overridingHpHcKey) {
         throw new Error(`No overridingHpHcKey found ${commonThrowError}`);
       }
-      new_cost = await calculateTempoPricesOptimized(
+      new_cost = calculateTempoPricesOptimized(
         item,
         tempoDatesMap,
         tempoMappingMap,
@@ -230,7 +230,7 @@ interface FullCalculatePricesInterface {
   provider: ProviderType;
 }
 
-export async function calculateRowSummary({
+export function calculateRowSummary({
   data,
   powerClass,
   dateRange,
@@ -241,8 +241,8 @@ export async function calculateRowSummary({
   hpHcData,
   provider,
   overridingHpHcKey,
-}: FullCalculatePricesInterface): Promise<ComparisonTableInterfaceRow> {
-  const calculatedData = await calculatePrices({
+}: FullCalculatePricesInterface): ComparisonTableInterfaceRow {
+  const calculatedData = calculatePrices({
     data,
     offerType,
     optionKey,

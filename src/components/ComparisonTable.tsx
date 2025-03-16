@@ -1,12 +1,6 @@
-import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import {
-  CircularProgress,
-  LinearProgress,
-  Link,
-  Typography,
-} from "@mui/material";
+import { CircularProgress, Link, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -16,8 +10,11 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import React from "react";
+import { useNavigate } from "react-router";
 import { useFormContext } from "../context/FormContext";
 import { calculateRowSummary } from "../scripts/calculators";
+import allOffersFile from "../statics/price_mapping.json";
+import { PriceMappingFile } from "../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -40,41 +37,58 @@ const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
 );
 
 export function ComparisonTable() {
-  const { formState } = useFormContext();
-  const { trackEvent } = useMatomo();
+  const { formState, setFormState } = useFormContext();
+  const allOffers = allOffersFile as PriceMappingFile;
+  const navigate = useNavigate();
 
-  const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
-    const fetchData = async () => {
-      const dateRange = formState.analyzedDateRange; //TODO : check if this is the right date range
-      if (
-        !dateRange ||
-        !formState.parsedData ||
-        !formState.hpHcConfig ||
-        !formState.rowSummaries
-      ) {
-        alert("Missing data to calculate prices");
-        return;
-      }
-      for (const option of options) {
-        const costForOption = await calculateRowSummary({
-          data: formState.parsedData,
-          dateRange,
-          powerClass: formState.powerClass,
-          optionKey: option.optionKey,
-          offerType: option.offerType,
-          optionName: option.optionName,
-          provider: option.provider,
-          link: option.link,
-          hpHcData: formState.hpHcConfig,
-          overridingHpHcKey: option.overridingHpHcKey,
-        });
-        formState.rowSummaries.push(costForOption);
-      }
-    };
+    const dateRange = formState.analyzedDateRange; //TODO : check if this is the right date range
 
-    fetchData();
-  }, []);
+    if (
+      !dateRange ||
+      !formState.parsedData ||
+      !formState.hpHcConfig ||
+      !formState.rowSummaries
+    ) {
+      navigate("?step=0");
+      return;
+    } else {
+      setFormState((prevState) => ({
+        ...prevState,
+        isGlobalLoading: true,
+      }));
+    }
+
+    for (const option of allOffers) {
+      const costForOption = calculateRowSummary({
+        data: formState.parsedData,
+        dateRange,
+        powerClass: formState.powerClass,
+        optionKey: option.optionKey,
+        offerType: option.offerType,
+        optionName: option.optionName,
+        provider: option.provider,
+        link: option.link,
+        hpHcData: formState.hpHcConfig,
+        overridingHpHcKey: option.overridingHpHcKey,
+      });
+      if (
+        !formState.rowSummaries.some(
+          (summary) => summary.optionKey === costForOption.optionKey
+        )
+      ) {
+        setFormState((prevState) => ({
+          ...prevState,
+          rowSummaries: prevState.rowSummaries.concat(costForOption),
+        }));
+      }
+    }
+    setFormState((prevState) => ({
+      ...prevState,
+      isGlobalLoading: false,
+    }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allOffers, formState.analyzedDateRange, formState.parsedData]);
 
   const currentOfferTotal =
     formState.rowSummaries.find(
@@ -93,25 +107,6 @@ export function ComparisonTable() {
       return "green";
     }
   };
-
-  const startTimeRef = React.useRef<number | null>(null);
-
-  React.useEffect(() => {
-    if (loading) {
-      startTimeRef.current = Date.now();
-    } else if (startTimeRef.current) {
-      const loadTime = Date.now() - startTimeRef.current;
-
-      trackEvent({
-        category: "Performance",
-        action: "Query Load Time",
-        name: "ComparisonTable",
-        value: Math.round(loadTime / 1000),
-      });
-
-      startTimeRef.current = null;
-    }
-  }, [loading, trackEvent]);
 
   return (
     <TableContainer component={Paper} sx={{ my: 3 }}>
@@ -238,7 +233,6 @@ export function ComparisonTable() {
                 ))}
             </TableBody>
           </Table>
-          {loading && <LinearProgress />}
         </>
       )}
     </TableContainer>

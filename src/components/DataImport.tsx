@@ -12,6 +12,7 @@ import { endOfDay, startOfDay } from "date-fns";
 import JSZip from "jszip";
 import * as React from "react";
 import { useDropzone } from "react-dropzone";
+import { useNavigate } from "react-router";
 import { useFormContext } from "../context/FormContext";
 import { parseCsvToConsumptionLoadCurveData } from "../scripts/csvParser";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
@@ -24,6 +25,15 @@ interface Props {
 export default function DataImport({ handleNext }: Readonly<Props>) {
   const { formState, setFormState } = useFormContext();
   const { trackEvent } = useMatomo();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!formState.hpHcConfig) {
+      navigate("?step=0");
+      return;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   React.useEffect(() => {
     const explanationOpened = localStorage.getItem(
@@ -35,15 +45,11 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
     }
   }, []);
 
-  React.useEffect(() => {
-    setFormState((prevState) => {
-      return { ...prevState, isGlobalLoading: false };
-    });
-  }, [setFormState]);
-
   const onDrop = async (acceptedFiles: File[]) => {
-    formState.isGlobalLoading = true;
-
+    setFormState((prevState) => ({
+      ...prevState,
+      isGlobalLoading: true,
+    }));
     for (const file of acceptedFiles) {
       try {
         const zip = await JSZip.loadAsync(file);
@@ -58,8 +64,6 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
         });
         const csvBlobs = await Promise.all(csvFiles);
 
-        // Process the CSV blobs as needed
-        console.log(csvBlobs);
         if (csvBlobs.length !== 1) {
           alert("No CSV file found in the ZIP.");
           return;
@@ -84,7 +88,6 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
           seasonHourlyAnalysis: seasonData,
           analyzedDateRange: analyzedDateRange,
           totalConsumption: totalConsumption,
-          isGlobalLoading: false,
           parsedData: parsedData,
         }));
         handleNext();
@@ -123,81 +126,81 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   return (
     <Stack spacing={{ xs: 3, sm: 3 }} useFlexGap>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        {!formState.isGlobalLoading && (
-          <>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <MobileDateRangePicker
-                value={formState.dateRange}
-                onAccept={(newValue) => {
-                  const start = startOfDay(newValue[0] ?? new Date());
-                  const end = endOfDay(newValue[1] ?? new Date());
-                  trackEvent({
-                    category: "date-range",
-                    action: "set",
-                    name: `${Math.ceil(
-                      Math.abs(
-                        new Date(end).getTime() - new Date(start).getTime()
-                      ) /
-                        (1000 * 60 * 60 * 24)
-                    )}`,
-                  });
-                  setRange([start, end]);
-                }}
-                disableFuture
-                localeText={{
-                  start: "Début de simulation",
-                  end: "Fin de simulation",
-                  cancelButtonLabel: "Annuler",
-                  toolbarTitle: "",
-                }}
-              />
-            </Box>
-            <Alert
-              severity="info"
-              icon={<InfoRoundedIcon />}
-              variant="outlined"
-              sx={{
-                alignItems: "center",
-                width: "100%",
-              }}
-            >
-              Vous pouvez télécharger votre consommation, par pallier de 30
-              minutes, sur votre Espace EDF. Le fichier ZIP doit être réimporté
-              ici.{" "}
-              <IconButton
-                onClick={handleTooltipCsvOpen}
-                size="medium"
-                sx={{
-                  border: "none",
-                }}
-              >
-                <HelpOutlineIcon />
-              </IconButton>
-              <TooltipModal
-                title="Comment télécharger votre consommation ?"
-                description="Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/><br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."
-                open={openTooltipCsv}
-                handleClose={handleTooltipCsvClose}
-                imgPath="/edf-download.png"
-                imgDescription="Page de téléchargement de la consommation"
-              />
-            </Alert>
-            <Box
-              {...getRootProps()}
-              sx={{
-                border: "2px dashed #ccc",
-                borderRadius: "8px",
-                padding: 2,
-                textAlign: "center",
-                cursor: "pointer",
-              }}
-            >
-              <Grid
-                container
-                spacing={1}
-                alignItems="center"
-                justifyContent="center"
-              >
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+          <MobileDateRangePicker
+            value={formState.dateRange}
+            onAccept={(newValue) => {
+              const start = startOfDay(newValue[0] ?? new Date());
+              const end = endOfDay(newValue[1] ?? new Date());
+              trackEvent({
+                category: "date-range",
+                action: "set",
+                name: `${Math.ceil(
+                  Math.abs(
+                    new Date(end).getTime() - new Date(start).getTime()
+                  ) /
+                    (1000 * 60 * 60 * 24)
+                )}`,
+              });
+              setRange([start, end]);
+            }}
+            disableFuture
+            localeText={{
+              start: "Début de simulation",
+              end: "Fin de simulation",
+              cancelButtonLabel: "Annuler",
+              toolbarTitle: "",
+            }}
+          />
+        </Box>
+        <Alert
+          severity="info"
+          icon={<InfoRoundedIcon />}
+          variant="outlined"
+          sx={{
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          Vous pouvez télécharger votre consommation, par pallier de 30 minutes,
+          sur votre Espace EDF. Le fichier ZIP doit être réimporté ici.{" "}
+          <IconButton
+            onClick={handleTooltipCsvOpen}
+            size="medium"
+            sx={{
+              border: "none",
+            }}
+          >
+            <HelpOutlineIcon />
+          </IconButton>
+          <TooltipModal
+            title="Comment télécharger votre consommation ?"
+            description="Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/><br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."
+            open={openTooltipCsv}
+            handleClose={handleTooltipCsvClose}
+            imgPath="/edf-download.png"
+            imgDescription="Page de téléchargement de la consommation"
+          />
+        </Alert>
+        <Box
+          {...getRootProps()}
+          sx={{
+            border: "2px dashed #ccc",
+            borderRadius: "8px",
+            padding: 2,
+            textAlign: "center",
+            cursor: "pointer",
+          }}
+        >
+          <Grid
+            container
+            spacing={1}
+            alignItems="center"
+            justifyContent="center"
+          >
+            {formState.isGlobalLoading && <CircularProgress />}
+            {!formState.isGlobalLoading && (
+              <>
                 <Grid size={2}>
                   <input {...getInputProps()} />
                   <UploadFileRoundedIcon sx={{ fontSize: 50 }} />
@@ -208,11 +211,10 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                     fenêtre d'import
                   </p>
                 </Grid>
-              </Grid>
-            </Box>
-          </>
-        )}
-        {formState.isGlobalLoading && <CircularProgress />}
+              </>
+            )}
+          </Grid>
+        </Box>
       </Box>
     </Stack>
   );
