@@ -25,10 +25,3 @@ jobs:
           npm ci
           REACT_APP_VERSION=$VERSION npm run build
           mv build ../frontend_build
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-build
-          path: frontend_build
-          retention-days: 0
