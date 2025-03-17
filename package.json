@@ -42,7 +42,7 @@
     "@mui/icons-material": "^6.4.0",
     "@mui/material": "^6.4.7",
     "@mui/system": "^6.4.0",
-    "@mui/x-charts": "^7.27.0",
+    "@mui/x-charts": "^7.28.0",
     "@mui/x-date-pickers": "^7.24.1",
     "@mui/x-date-pickers-pro": "^7.27.3",
     "axios": "^1.8.2",
