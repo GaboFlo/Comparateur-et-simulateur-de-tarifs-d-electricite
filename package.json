@@ -7,7 +7,7 @@
     "deadcode:all": "ts-prune",
     "deadcode:ci": "ts-prune | (! grep -v 'used in module') | (! grep -v 'migration') | (! grep -v 'd.ts')",
     "depcheck": "depcheck --ignores=node-fetch,@types/jest,sort-package-json",
-    "depcheck:ci": "depcheck --ignores=node-fetch,@types/jest,sort-package-json | (! grep -v 'No depcheck issue') ",
+    "depcheck:ci": "depcheck --ignores=node-fetch,@types/jest,sort-package-json,eslint-config-react-app | (! grep -v 'No depcheck issue') ",
     "fetch-and-update-tempo-data": "cd services && tsx run-tempo.ts",
     "lint": "eslint --ext .js,.ts .",
     "lint:ci": "eslint --ext .js,.ts . | (! grep -v 'warning') | (! grep -v 'error')",
