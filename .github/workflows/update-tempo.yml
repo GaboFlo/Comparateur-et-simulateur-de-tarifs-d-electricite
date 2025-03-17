@@ -1,8 +1,9 @@
 name: Fetch Tempo Data
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "36 * * * *"
 
 jobs:
   fetch-tempo-data:
@@ -10,7 +11,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -30,5 +31,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
-          local-dir: ../src/assets/tempo.json
-          server-dir: ${{secrets.FTP_SERVER_DIR}}
+          local-dir: src/assets/
+          server-dir: ${{secrets.FTP_SERVER_DIR}}assets/
+          dangerous-clean-slate: true
