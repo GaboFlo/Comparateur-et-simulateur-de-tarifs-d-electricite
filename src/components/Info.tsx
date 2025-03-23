@@ -47,11 +47,6 @@ export default function Info({
       >
         <ol>
           <li style={{ marginBottom: "1em" }}>
-            La simulation <b>ne calcule pas les taxes</b> (qui seront les mêmes
-            peu importe votre fournisseur, et proportionnelles à votre
-            consommation)
-          </li>
-          <li style={{ marginBottom: "1em" }}>
             Les simulations sont faites avec le <b>prix actuel</b> de
             l'électricité. Ce qui peut expliquer une variation entre votre
             facturation réelle et la simulation (si le prix de l'électricité a
