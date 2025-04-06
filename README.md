@@ -1,4 +1,12 @@
-# Comparateur des fournisseurs et de leurs offres d'électricité
+# Comparateur en ligne des offres d'électricité selon votre historique de consommation Linky. 
+
+Gratuit, sans email, direct.
+
+Importez votre consommation passée et obtenez vos simulations selon votre consommation réelle.
+
+Lien 🔗 : https://comparateur-electricite.gaboflo.fr
+
+---
 
 [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 
