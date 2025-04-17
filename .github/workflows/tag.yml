@@ -23,4 +23,4 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git commit -am "Update package.json version to ${{ github.ref_name }}"
-          git push origin master --force
+          git push origin main --force
