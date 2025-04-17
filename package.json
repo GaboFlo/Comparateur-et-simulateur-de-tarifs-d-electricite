@@ -1,6 +1,6 @@
 {
   "name": "comparateur_fournisseur_electricite",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "scripts": {
     "build": "REACT_APP_VERSION=$(node -p \"require('./package.json').version\") react-scripts build",
@@ -52,7 +52,7 @@
     "jszip": "^3.10.1",
     "notistack": "^3.0.2",
     "react": "^19.1.0",
-    "react-dom": "^19.0.0",
+    "react-dom": "^19.1.0",
     "react-dropzone": "^14.3.5",
     "react-router-dom": "^7.3.0",
     "react-scripts": "^5.0.1"
