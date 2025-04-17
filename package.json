@@ -1,6 +1,6 @@
 {
   "name": "comparateur_fournisseur_electricite",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "private": true,
   "scripts": {
     "build": "REACT_APP_VERSION=$(node -p \"require('./package.json').version\") react-scripts build",
