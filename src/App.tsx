@@ -87,20 +87,16 @@ export default function App() {
 
   React.useEffect(() => {
     switch (activeStep) {
-      case 0:
-        document.title =
-          "Offre actuelle - Simulateur et comparateur de tarifs d'électricité.";
-        break;
       case 1:
         document.title =
-          "Données de consommation - Simulateur et comparateur de tarifs d'électricité.";
+          "Données de consommation - Simulateur et comparateur de tarifs d'électricité";
         break;
       case 2:
         document.title =
-          "Simulations - Simulateur et comparateur de tarifs d'électricité.";
+          "Simulations - Simulateur et comparateur de tarifs d'électricité";
         break;
       default:
-        document.title = "Simulateur et comparateur de tarifs d'électricité.";
+        document.title = "Simulateur et comparateur de tarifs d'électricité";
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStep]);
