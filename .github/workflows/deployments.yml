@@ -15,11 +15,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Update package version
+        run: |
+          # Obtenez le nom du tag actuel
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "Version: $VERSION"
+          # Mettez à jour la version dans package.json
+          npm version $VERSION --no-git-tag-version
+        env:
+          GITHUB_REF: ${{ github.ref }}
+
       - name: Build frontend
         run: |
           npm ci
           REACT_APP_VERSION=$VERSION npm run build
           mv build frontend_build
+        env:
+          VERSION: ${GITHUB_REF#refs/tags/}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
