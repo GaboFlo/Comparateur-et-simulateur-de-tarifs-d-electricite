@@ -15,10 +15,22 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Get the version from the tag
+        id: get_version
+        run: echo "VERSION=`${{GITHUB_REF#refs/tags/}" >>}$`GITHUB_ENV
+
+      - name: Update package.json version
+        run: |
+          jq '.version = "`${{{ env.VERSION }}"' package.json > tmp.`}$`$
+.tmp && mv tmp.
+$$`
+
+.tmp package.json
+
       - name: Build frontend
         run: |
           npm ci
-          REACT_APP_VERSION=$VERSION npm run build
+          REACT_APP_VERSION=${{ env.VERSION }} npm run build
           mv build frontend_build
 
       - name: Upload build artifact
