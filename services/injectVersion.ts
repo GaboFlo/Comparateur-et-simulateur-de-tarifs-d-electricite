@@ -18,7 +18,7 @@ fs.readFile(indexPath, "utf8", (err, data) => {
   // Injecter la version dans une balise meta
   const result = data.replace(
     /<title>[^<]*<\/title>/,
-    `<title>$&</title><meta name="version" content="${version}">`
+    `$&<meta name="version" content="${version}">`
   );
 
   // Écrire les modifications dans index.html
