@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const indexPath = path.resolve(__dirname, "build", "index.html");
+const indexPath = path.resolve(__dirname, "..", "build", "index.html");
 const version = process.env.REACT_APP_VERSION;
 
 fs.readFile(indexPath, "utf8", (err, data) => {
