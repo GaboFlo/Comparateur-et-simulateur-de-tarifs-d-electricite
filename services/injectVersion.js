@@ -24,7 +24,10 @@ fs.readFile(indexPath, "utf8", (err, data) => {
   );
 
   fs.writeFile(indexPath, result, "utf8", (err) => {
-    if (err) return console.log(err);
+    if (err) {
+      console.error("Error writing to file:", err);
+      process.exit(1);
+    }
     console.log("Version injected into index.html");
   });
 });
