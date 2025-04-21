@@ -43,7 +43,7 @@ jobs:
         run: |
           node ./services/injectVersion.js
         env:
-          REACT_APP_VERSION: ${GITHUB_REF#refs/tags/}
+          REACT_APP_VERSION: $VERSION
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
