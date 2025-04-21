@@ -41,9 +41,11 @@ jobs:
 
       - name: Compile and run injectVersion script
         run: |
+          echo "Version: $VERSION"
+          echo "Injecting version into index.html ${GITHUB_REF#refs/tags/}"
           node ./services/injectVersion.js
         env:
-          REACT_APP_VERSION: $VERSION
+          REACT_APP_VERSION: ${GITHUB_REF#refs/tags/}
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
