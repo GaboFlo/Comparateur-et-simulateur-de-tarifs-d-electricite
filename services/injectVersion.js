@@ -14,7 +14,8 @@ const indexPath = path.resolve(__dirname, "..", "build", "index.html");
 
 fs.readFile(indexPath, "utf8", (err, data) => {
   if (err) {
-    return console.log(err);
+    console.error("Error reading file:", err.message);
+    process.exit(1);
   }
 
   const result = data.replace(
