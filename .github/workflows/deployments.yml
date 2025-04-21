@@ -41,8 +41,8 @@ jobs:
 
       - name: Compile and run injectVersion script
         run: |
-          npx tsc injectVersion.ts
-          node injectVersion.js
+          npx tsc  ./services/injectVersion.ts
+          node ./services/injectVersion.js
         env:
           REACT_APP_VERSION: ${GITHUB_REF#refs/tags/}
 
