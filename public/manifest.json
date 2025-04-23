@@ -3,17 +3,17 @@
   "name": "Simulateur et comparateur de tarifs d'électricité : gratuit, immédiat, selon vos consommations passées.",
   "icons": [
     {
-      "src": "logo48.png",
+      "src": "/logo48.png",
       "type": "image/png",
       "sizes": "48x48"
     },
     {
-      "src": "logo192.png",
+      "src": "/logo192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "logo512.png",
+      "src": "/logo512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
