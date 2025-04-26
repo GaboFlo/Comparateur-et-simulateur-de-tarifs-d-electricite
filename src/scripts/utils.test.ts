@@ -99,7 +99,7 @@ describe("getSeason", () => {
 });
 
 describe("findMonthlySubscriptionCost", () => {
-  it("BASE BLEU 9", () => {
+  it("BASE - BLEU 9", () => {
     const monthly = findMonthlySubscriptionCost(
       9 as PowerClass,
       OfferType.BLEU,
