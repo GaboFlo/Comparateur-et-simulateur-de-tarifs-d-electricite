@@ -3,7 +3,6 @@ import { HpHcSlot, OfferType, OptionKey, PowerClass } from "../types";
 import {
   findFirstAndLastDate,
   findMonthlySubscriptionCost,
-  getAnalyzedDateRange,
   getHolidaysBetweenDates,
   getSeason,
   isHoliday,
@@ -146,14 +145,6 @@ describe("findFirstAndLastDate", () => {
     expect(findFirstAndLastDate(data)).toStrictEqual([
       new Date("2025-01-10T01:00:00.000Z").getTime(),
       new Date("2025-02-11").getTime(),
-    ]);
-    const dateRangeToAnalyse = getAnalyzedDateRange(data, [
-      new Date("2024-01-05T01:00:00.000Z"),
-      new Date("2025-01-16T01:00:00.000Z"),
-    ]);
-    expect(dateRangeToAnalyse).toStrictEqual([
-      new Date("2025-01-10T01:00:00.000Z").getTime(),
-      new Date("2025-01-16T01:00:00.000Z").getTime(),
     ]);
   });
 });

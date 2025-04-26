@@ -123,11 +123,11 @@ export function findMonthlySubscriptionCost(
 
 export const findFirstAndLastDate = (
   data: ConsumptionLoadCurveData[]
-): [number, number] => {
+): [Date, Date] => {
   const dates = data.map((item) => new Date(item.recordedAt)?.getTime());
   const firstDate = Math.min(...dates);
   const lastDate = Math.max(...dates);
-  return [firstDate, lastDate];
+  return [new Date(firstDate), new Date(lastDate)];
 };
 
 export function isHoliday(endOfSlotRecorded: Date) {
@@ -142,17 +142,6 @@ export function isDayApplicable(mapping: Mapping, endOfSlotRecorded: Date) {
     (mapping.include_holidays && isHoliday(endOfSlotRecorded))
   );
 }
-
-export const getAnalyzedDateRange = (
-  data: ConsumptionLoadCurveData[],
-  askedDateRange: [Date, Date]
-): [number, number] => {
-  const dateRangeOfFile = findFirstAndLastDate(data);
-  return [
-    Math.max(dateRangeOfFile[0], askedDateRange[0].getTime()),
-    Math.min(dateRangeOfFile[1], askedDateRange[1].getTime()),
-  ];
-};
 
 export const getHpHcJson = (overridingHpHcKey: string) => {
   switch (overridingHpHcKey) {

@@ -31,10 +31,7 @@ describe("analyseHourByHourBySeason", () => {
     ];
     const result = analyseHourByHourBySeason({
       data,
-      dateRange: [
-        new Date("2020-01-10").getTime(),
-        new Date("2025-01-11").getTime(),
-      ],
+      dateRange: [new Date("2020-01-10"), new Date("2025-01-11")],
     });
 
     const expected = [
