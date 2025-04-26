@@ -45,26 +45,20 @@ export default function Info({
         icon={<WarningRoundedIcon />}
         sx={{ m: 1, textAlign: "justify" }}
       >
-        <ol>
-          <li style={{ marginBottom: "1em" }}>
-            Les simulations sont faites avec le <b>prix actuel</b> de
-            l'électricité. Ce qui peut expliquer une variation entre votre
-            facturation réelle et la simulation (si le prix de l'électricité a
-            été modifié dans l'intervalle de la période simulée)
-          </li>
-          <li style={{ marginBottom: "1em" }}>
-            <b>Ce simulateur reste en phase de test</b>, pour toutes
-            suggestions, remontées de bugs, ou participations merci de passer
-            uniquement par{" "}
-            <a
-              href="https://github.com/GaboFlo/ComparateurFournisseurElectricity/issues"
-              target="_blank"
-              rel="noreferrer"
-            >
-              GitHub
-            </a>
-          </li>
-        </ol>
+        Les simulations sont faites avec le <b>prix actuel</b> de l'électricité.
+        Ce qui peut expliquer une variation entre votre facturation réelle et la
+        simulation (si le prix de l'électricité a été modifié dans l'intervalle
+        de la période simulée)
+        <br /> <br />
+        <b>Ce simulateur reste en phase de test</b>, pour toutes suggestions,
+        remontées de bugs, ou participations merci de passer uniquement par{" "}
+        <a
+          href="https://github.com/GaboFlo/ComparateurFournisseurElectricity/issues"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub
+        </a>
       </Alert>{" "}
       <Typography
         variant="body1"

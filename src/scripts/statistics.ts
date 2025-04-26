@@ -18,7 +18,7 @@ interface ConsumptionLoadCurveData {
 
 interface Props {
   data: ConsumptionLoadCurveData[];
-  dateRange: [number, number];
+  dateRange: [Date, Date];
 }
 export const analyseHourByHourBySeason = ({
   data,
@@ -33,7 +33,7 @@ export const analyseHourByHourBySeason = ({
 
   const filteredData = data.filter((record) => {
     const date = new Date(record.recordedAt).getTime();
-    return date >= dateRange[0] && date <= dateRange[1];
+    return date >= dateRange[0].getTime() && date <= dateRange[1].getTime();
   });
   for (const record of filteredData) {
     const date = new Date(record.recordedAt);

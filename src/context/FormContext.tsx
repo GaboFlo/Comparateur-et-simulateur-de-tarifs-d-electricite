@@ -24,8 +24,7 @@ interface FormState {
   powerClass: PowerClass;
   isGlobalLoading: boolean;
   seasonHourlyAnalysis?: SeasonHourlyAnalysis[];
-  dateRange: [Date, Date];
-  analyzedDateRange?: [number, number];
+  analyzedDateRange: [Date, Date];
   requestId?: string;
   optionLink?: string;
   totalConsumption: number;
@@ -59,7 +58,10 @@ export const DEFAULT_FORM_STATE: FormState = {
   optionType: OptionKey.BASE,
   powerClass: 6,
   isGlobalLoading: false,
-  dateRange: [startOfDay(subYears(new Date(), 2)), endOfDay(new Date())],
+  analyzedDateRange: [
+    startOfDay(subYears(new Date(), 2)),
+    endOfDay(new Date()),
+  ],
   totalConsumption: 1,
   rowSummaries: [],
 };

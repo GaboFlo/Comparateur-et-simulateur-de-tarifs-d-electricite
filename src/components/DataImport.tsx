@@ -7,8 +7,6 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
-import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
-import { endOfDay, startOfDay } from "date-fns";
 import JSZip from "jszip";
 import * as React from "react";
 import { useDropzone } from "react-dropzone";
@@ -16,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
 import { parseCsvToConsumptionLoadCurveData } from "../scripts/csvParser";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
-import { getAnalyzedDateRange } from "../scripts/utils";
+import { findFirstAndLastDate } from "../scripts/utils";
 import TooltipModal from "./TooltipModal";
 
 interface Props {
@@ -82,10 +80,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
 
         const csvText = await csvFiles[0].text();
         const parsedData = parseCsvToConsumptionLoadCurveData(csvText);
-        const analyzedDateRange = getAnalyzedDateRange(
-          parsedData,
-          formState.dateRange
-        );
+        const analyzedDateRange = findFirstAndLastDate(parsedData);
         const seasonData = analyseHourByHourBySeason({
           data: parsedData,
           dateRange: analyzedDateRange,
@@ -155,43 +150,9 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
     trackEvent({ category: "info-upload-data", action: "open" });
   };
 
-  const setRange = (range: [Date, Date]) => {
-    setFormState((prevState) => ({
-      ...prevState,
-      dateRange: range,
-    }));
-  };
-
   return (
     <Stack spacing={{ xs: 3, sm: 3 }} useFlexGap>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <MobileDateRangePicker
-            value={formState.dateRange}
-            onAccept={(newValue) => {
-              const start = startOfDay(newValue[0] ?? new Date());
-              const end = endOfDay(newValue[1] ?? new Date());
-              trackEvent({
-                category: "date-range",
-                action: "set",
-                name: `${Math.ceil(
-                  Math.abs(
-                    new Date(end).getTime() - new Date(start).getTime()
-                  ) /
-                    (1000 * 60 * 60 * 24)
-                )}`,
-              });
-              setRange([start, end]);
-            }}
-            disableFuture
-            localeText={{
-              start: "Début de simulation",
-              end: "Fin de simulation",
-              cancelButtonLabel: "Annuler",
-              toolbarTitle: "",
-            }}
-          />
-        </Box>
         <Alert
           severity="info"
           icon={<InfoRoundedIcon />}

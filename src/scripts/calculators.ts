@@ -220,7 +220,7 @@ export function calculatePrices({
 interface FullCalculatePricesInterface {
   data: ConsumptionLoadCurveData[];
   powerClass: PowerClass;
-  dateRange: [number, number];
+  dateRange: [Date, Date];
   optionKey: OptionKey;
   offerType: OfferType;
   optionName: string;

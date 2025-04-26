@@ -1,6 +1,6 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import CloseIcon from "@mui/icons-material/Close";
-import ExpandMoreRoundedIcon from "@mui/icons-material/ExpandMoreRounded";
+import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Drawer from "@mui/material/Drawer";
@@ -26,7 +26,20 @@ export default function InfoMobile() {
   };
 
   const DrawerList = (
-    <Box sx={{ width: "auto", px: 3, pb: 3, pt: 8 }}>
+    <Box
+      sx={{
+        width: "auto",
+        px: 3,
+        pb: 3,
+        pt: 8,
+      }}
+    >
+      <Typography
+        variant="h5"
+        sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}
+      >
+        Comment ça marche ?
+      </Typography>
       <IconButton
         onClick={toggleDrawer(false)}
         sx={{ position: "absolute", right: 8, top: 8 }}
@@ -41,8 +54,13 @@ export default function InfoMobile() {
     <Stack>
       <Button
         variant="text"
-        endIcon={<ExpandMoreRoundedIcon />}
         onClick={toggleDrawer(true)}
+        sx={(theme) => ({
+          borderRadius: theme.shape.borderRadius,
+          border: "1px solid",
+          borderColor: theme.palette.divider,
+          backgroundColor: theme.palette.background.paper,
+        })}
       >
         Comment ça marche ?
       </Button>
