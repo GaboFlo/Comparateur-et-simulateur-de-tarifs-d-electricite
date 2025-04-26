@@ -143,8 +143,8 @@ describe("findFirstAndLastDate", () => {
       },
     ];
     expect(findFirstAndLastDate(data)).toStrictEqual([
-      new Date("2025-01-10T01:00:00.000Z").getTime(),
-      new Date("2025-02-11").getTime(),
+      new Date("2025-01-10T01:00:00.000Z"),
+      new Date("2025-02-11"),
     ]);
   });
 });
