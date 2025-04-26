@@ -3,8 +3,6 @@ import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { useColorScheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid2";
 import Step from "@mui/material/Step";
@@ -121,7 +119,17 @@ export default function App() {
   return (
     <>
       <CssBaseline enableColorScheme />
-      <Box sx={{ position: "fixed", top: "1rem", right: "1rem" }}>
+      <Box
+        sx={{
+          position: "fixed",
+          top: "1rem",
+          right: "1rem",
+          zIndex: 12,
+        }}
+      >
+        <InfoMobile />
+      </Box>
+      <Box sx={{ position: "fixed", top: "1rem", left: "1rem", zIndex: 12 }}>
         <ColorModeIconDropdown />
       </Box>
       <Grid
@@ -183,18 +191,6 @@ export default function App() {
               </Stepper>
             </Box>
           </Box>
-          <Card sx={{ display: { xs: "flex" }, width: "100%" }}>
-            <CardContent
-              sx={{
-                display: "flex",
-                width: "100%",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <InfoMobile />
-            </CardContent>
-          </Card>
           <Box
             sx={{
               display: "flex",

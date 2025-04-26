@@ -35,6 +35,8 @@ export default function ColorModeIconDropdown(
           borderRadius: theme.shape.borderRadius,
           border: "1px solid",
           borderColor: theme.palette.divider,
+          backgroundColor: theme.palette.background.paper,
+          zIndex: 12,
         })}
       />
     );
