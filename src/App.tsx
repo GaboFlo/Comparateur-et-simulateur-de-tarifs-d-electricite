@@ -94,7 +94,8 @@ export default function App() {
           "Simulations - Simulateur et comparateur de tarifs d'électricité";
         break;
       default:
-        document.title = "Simulateur et comparateur de tarifs d'électricité";
+        document.title =
+          "Simulateur et comparateur de tarifs d'électricité selon vos consommations passées, gratuit, immédiat, sans inscription";
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStep]);

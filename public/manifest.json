@@ -1,6 +1,6 @@
 {
-  "short_name": "Simulateur et comparateur de tarifs d'électricité.",
-  "name": "Simulateur et comparateur de tarifs d'électricité : gratuit, immédiat, selon vos consommations passées.",
+  "short_name": "Simulateur et comparateur de tarifs d'électricité",
+  "name": "Simulateur et comparateur de tarifs d'électricité selon vos consommations passées, gratuit, immédiat, sans inscription",
   "icons": [
     {
       "src": "/logo48.png",
