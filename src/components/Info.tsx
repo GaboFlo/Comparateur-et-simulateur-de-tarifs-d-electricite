@@ -26,10 +26,11 @@ export default function Info({
         sx={{ m: 1, textAlign: "justify" }}
       >
         <b>
-          Ce site vous permet de simuler réellement un changement de contrat,
-          sur la base précise de vos consommations, heure par heure sur vos
-          derniers mois, que vous exporterez via EDF (pour l'instant). <br /> La
-          simulation est directement accessible à la fin des deux étapes.
+          Ce site, gratuit et sans inscription, vous permet de simuler
+          réellement un changement de contrat, sur la base précise de vos
+          consommations, heure par heure sur vos derniers mois, que vous
+          exporterez via EDF (pour l'instant). <br /> La simulation est
+          directement accessible à la fin des deux étapes.
         </b>
       </Alert>
       <Typography
