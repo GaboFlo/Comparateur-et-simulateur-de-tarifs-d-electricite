@@ -6,13 +6,10 @@ import { feedbackCustomizations } from "./customizations/feedback";
 import { inputsCustomizations } from "./customizations/inputs";
 import { navigationCustomizations } from "./customizations/navigation";
 import { surfacesCustomizations } from "./customizations/surfaces";
-import { colorSchemes, shadows, shape, typography } from "./themePrimitives";
+import { shadows, shape, typography } from "./themePrimitives";
 
 interface AppThemeProps {
   children: React.ReactNode;
-  /**
-   * This is for the docs site. You can ignore it or remove it.
-   */
   disableCustomTheme?: boolean;
   themeComponents?: ThemeOptions["components"];
 }
@@ -28,7 +25,7 @@ export default function AppTheme(props: Readonly<AppThemeProps>) {
             colorSchemeSelector: "data-mui-color-scheme",
             cssVarPrefix: "template",
           },
-          colorSchemes, // Recently added in v6 for building light & dark mode app, see https://mui.com/material-ui/customization/palette/#color-schemes
+          //colorSchemes, TODO pour remettre le darkTheme
           typography,
           shadows,
           shape,

@@ -86,11 +86,13 @@ export default function Simulations() {
       <Typography variant="body2" sx={{ mb: 1 }}>
         <Alert severity="info" sx={{ m: 1, textAlign: "justify" }}>
           Vous avez consommé{" "}
-          {new Intl.NumberFormat("fr-FR").format(formState.totalConsumption)}{" "}
-          kWh sur la période analysée (
+          <b>
+            {new Intl.NumberFormat("fr-FR").format(formState.totalConsumption)}{" "}
+            kWh{" "}
+          </b>
+          sur la période analysée (du{" "}
           {format(formState.analyzedDateRange[0], "dd/MM/yyyy")} au{" "}
-          {format(formState.analyzedDateRange[1], "dd/MM/yyyy")}). <br />
-          Soit une{" "}
+          {format(formState.analyzedDateRange[1], "dd/MM/yyyy")}), soit une{" "}
           <b>
             moyenne de{" "}
             {new Intl.NumberFormat("fr-FR", {
@@ -98,7 +100,6 @@ export default function Simulations() {
             }).format(formState.totalConsumption / diffDays)}{" "}
             kWh par jour
           </b>{" "}
-          .
         </Alert>
       </Typography>
       <HourlySeasonChart />

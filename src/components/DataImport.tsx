@@ -5,7 +5,7 @@ import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded";
 import { CircularProgress, IconButton } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import JSZip from "jszip";
 import * as React from "react";
@@ -213,8 +213,8 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                 <Grid size={10}>
                   <p>
                     Déposez votre fichier <b>ZIP</b> ici, ou cliquez pour ouvrir
-                    la fenêtre d'import. <br />
-                    <b>Seul ce format est accepté.</b>
+                    la fenêtre d'import <br />
+                    <b>Seul ce format est accepté</b>
                   </p>
                 </Grid>
               </>
