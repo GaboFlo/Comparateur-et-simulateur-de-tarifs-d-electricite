@@ -4,7 +4,7 @@ import { useColorScheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
@@ -16,7 +16,6 @@ import Footer from "./components/Footer";
 import InfoMobile from "./components/InfoMobile";
 import Simulations from "./components/Simulations";
 import { DEFAULT_FORM_STATE, useFormContext } from "./context/FormContext";
-import ColorModeIconDropdown from "./theme/ColorModeIconDropdown";
 import { APP_VERSION } from "./types";
 
 const steps = ["Votre offre actuelle", "Votre consommation", "Simulations"];
@@ -130,9 +129,7 @@ export default function App() {
       >
         <InfoMobile />
       </Box>
-      <Box sx={{ position: "fixed", top: "1rem", left: "1rem", zIndex: 12 }}>
-        <ColorModeIconDropdown />
-      </Box>
+
       <Grid
         container
         sx={{

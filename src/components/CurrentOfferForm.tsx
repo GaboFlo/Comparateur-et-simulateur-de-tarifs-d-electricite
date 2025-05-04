@@ -18,7 +18,7 @@ import {
   SelectChangeEvent,
   Typography,
 } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { useFormContext } from "../context/FormContext";
 import hpHcFile from "../statics/hp_hc.json";
 import allOffersFile from "../statics/price_mapping.json";
