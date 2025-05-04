@@ -213,8 +213,8 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                 <Grid size={10}>
                   <p>
                     Déposez votre fichier <b>ZIP</b> ici, ou cliquez pour ouvrir
-                    la fenêtre d'import. <br />
-                    <b>Seul ce format est accepté.</b>
+                    la fenêtre d'import <br />
+                    <b>Seul ce format est accepté</b>
                   </p>
                 </Grid>
               </>
