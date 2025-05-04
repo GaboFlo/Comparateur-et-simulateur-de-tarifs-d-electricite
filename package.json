@@ -40,7 +40,7 @@
     "@jonkoops/matomo-tracker": "^0.7.0",
     "@jonkoops/matomo-tracker-react": "^0.7.0",
     "@mui/icons-material": "^6.4.0",
-    "@mui/material": "^6.4.7",
+    "@mui/material": "^7.0.2",
     "@mui/system": "^7.0.2",
     "@mui/x-charts": "^7.28.0",
     "@mui/x-date-pickers": "^7.24.1",
