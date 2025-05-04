@@ -1,6 +1,6 @@
-import { LicenseInfo } from "@mui/x-date-pickers-pro";
-import { AdapterDateFns } from "@mui/x-date-pickers-pro/AdapterDateFnsV3";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { LicenseInfo } from "@mui/x-license";
 import { fr } from "date-fns/locale/fr";
 import { SnackbarProvider } from "notistack";
 import ReactDOM from "react-dom/client";
