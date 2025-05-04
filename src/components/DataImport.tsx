@@ -5,7 +5,7 @@ import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded";
 import { CircularProgress, IconButton } from "@mui/material";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import JSZip from "jszip";
 import * as React from "react";
