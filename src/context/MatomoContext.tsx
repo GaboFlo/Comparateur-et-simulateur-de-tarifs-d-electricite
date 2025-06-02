@@ -15,7 +15,7 @@ const trackError = (
     action: "JavaScript Error",
     name: error.toString(),
     customDimensions: errorInfo
-      ? [{ id: 3, value: errorInfo.componentStack || "No component stack" }]
+      ? [{ id: 3, value: errorInfo.componentStack ?? "No component stack" }]
       : undefined,
   });
 };
