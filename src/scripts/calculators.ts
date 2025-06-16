@@ -119,6 +119,9 @@ function calculateTempoPricesOptimized(
 
   const tempoCodeDay = tempoDatesMap[dateKey];
   if (tempoCodeDay === undefined || tempoCodeDay === null) {
+    console.error(tempoDatesMap)
+    console.error(dateKey)
+    console.error(item.recordedAt)
     throw new Error(
       `TempoCodeDay ${tempoCodeDay} found for date ${dateKey} - ${item.recordedAt}`
     );
