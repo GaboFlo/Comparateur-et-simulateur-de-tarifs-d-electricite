@@ -45,17 +45,18 @@ jobs:
           git commit -m "Update JSON data"
           git push
 
+      - name: Compile and run injectVersion script
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "Version: $VERSION"
+          node ./services/injectVersion.js $VERSION
+
       - name: Build frontend
         run: |
           REACT_APP_VERSION=$VERSION npm run build
         env:
           VERSION: ${GITHUB_REF#refs/tags/}
 
-      - name: Compile and run injectVersion script
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/}
-          echo "Version: $VERSION"
-          node ./services/injectVersion.js $VERSION
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
