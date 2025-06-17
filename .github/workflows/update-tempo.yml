@@ -3,7 +3,7 @@ name: Fetch and Commit with GitHub App Token
 on:
   workflow_dispatch:
   schedule:
-    - cron: "36 */6 * * *"
+    - cron: "36 */8 * * *"
 
 jobs:
   fetch-and-commit:
@@ -33,6 +33,7 @@ jobs:
         run: npm run fetch-and-update-tempo-data
 
       - name: Commit changes
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
