@@ -5,6 +5,8 @@ on:
   schedule:
     - cron: "36 */8 * * *"
 
+concurrency: production
+
 jobs:
   fetch-and-commit:
     runs-on: ubuntu-latest
@@ -42,13 +44,39 @@ jobs:
           git add .
           git commit -m "Update JSON data"
           git push
-      - name: Trigger Deployment Workflow
-        uses: actions/github-script@v6
+
+      - name: Build frontend
+        run: |
+          REACT_APP_VERSION=$VERSION npm run build
+        env:
+          VERSION: ${GITHUB_REF#refs/tags/}
+
+      - name: Compile and run injectVersion script
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          echo "Version: $VERSION"
+          node ./services/injectVersion.js $VERSION
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
         with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deployments.yml',
-              ref: 'main'
-            })
+          name: frontend-build
+          path: build
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend_build
+
+      - name: Deploy Frontend to FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOSTNAME }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          local-dir: "frontend_build/"
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
