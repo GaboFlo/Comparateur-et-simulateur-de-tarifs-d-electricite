@@ -1,14 +1,13 @@
-name: Fetch Tempo Data
+name: Fetch and Deploy
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "36 * * * *"
+    - cron: "20 * * * *"
 
 jobs:
-  fetch-tempo-data:
+  fetch-and-update-tempo-data:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -19,18 +18,26 @@ jobs:
           node-version: "20"
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run fetchTempoData
         run: npm run fetch-and-update-tempo-data
 
-      - name: Deploy JSON to SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add .
+          git commit -m "Update JSON data"
+          git push
+
+      - name: Trigger Deployment Workflow
+        uses: actions/github-script@v6
         with:
-          server: ${{ secrets.FTP_HOSTNAME }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: 21
-          local-dir: src/assets/
-          server-dir: ${{secrets.FTP_SERVER_DIR}}assets/
-          dangerous-clean-slate: true
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deployments.yml',
+              ref: 'main'
+            })
