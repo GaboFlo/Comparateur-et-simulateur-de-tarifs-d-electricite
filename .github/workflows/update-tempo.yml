@@ -1,4 +1,4 @@
-name: Fetch and Commit
+name: Fetch and Commit with GitHub App Token
 
 on:
   workflow_dispatch:
@@ -7,14 +7,14 @@ on:
 
 jobs:
   fetch-and-commit:
-    name: Fetch and Commit Changes
     runs-on: ubuntu-latest
     steps:
-      - name: Generate GitHub App token
-        uses: electron/github-app-auth-action@v1.1.1
+      - name: Generate GitHub App Token
         id: generate-token
+        uses: actions/create-github-app-token@v1
         with:
-          creds: ${{ secrets.GA_UPDATER }}
+          app-id: ${{ secrets.FETCH_APP_ID }}
+          private-key: ${{ secrets.FETCH_APP_PRIVATE_KEY }}
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -33,7 +33,11 @@ jobs:
         run: npm run fetch-and-update-tempo-data
 
       - name: Commit changes
-        uses: dsanders11/github-app-commit-action@v1
-        with:
-          message: 'Update JSON data'
-          token: ${{ steps.generate-token.outputs.token }}
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
+        run: |
+          git config --global user.name 'GitHub App'
+          git config --global user.email 'github-app@example.com'
+          git add .
+          git commit -m "Update JSON data"
+          git push
