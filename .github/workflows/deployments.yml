@@ -1,6 +1,7 @@
 name: Deployments
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - "*"
