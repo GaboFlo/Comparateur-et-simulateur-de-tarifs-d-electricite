@@ -1,16 +1,25 @@
-name: Fetch and Deploy
+name: Fetch and Commit
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "20 * * * *"
+    - cron: "36 * * * *"
 
 jobs:
-  fetch-and-update-tempo-data:
+  fetch-and-commit:
+    name: Fetch and Commit Changes
     runs-on: ubuntu-latest
     steps:
+      - name: Generate GitHub App token
+        uses: electron/github-app-auth-action@v1.1.1
+        id: generate-token
+        with:
+          creds: ${{ secrets.GH_APP_CREDS }}
+
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -23,21 +32,8 @@ jobs:
       - name: Run fetchTempoData
         run: npm run fetch-and-update-tempo-data
 
-      - name: Commit and push changes
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
-          git add .
-          git commit -m "Update JSON data"
-          git push https://${{ secrets.GA_TOKEN_COMP }}@github.com/GaboFlo/Comparateur-et-simulateur-de-tarifs-d-electricite.git
-
-      - name: Trigger Deployment Workflow
-        uses: actions/github-script@v6
+      - name: Commit changes
+        uses: dsanders11/github-app-commit-action@v1
         with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deployments.yml',
-              ref: 'main'
-            })
+          message: 'Update JSON data'
+          token: ${{ steps.generate-token.outputs.token }}
