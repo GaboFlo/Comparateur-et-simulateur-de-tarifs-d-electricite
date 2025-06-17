@@ -1,12 +1,9 @@
 name: Fetch and Commit with GitHub App Token
-
 on:
-  workflow_dispatch:
+  workflow_dispatch: null
   schedule:
-    - cron: "36 */8 * * *"
-
+    - cron: 36 */8 * * *
 concurrency: production
-
 jobs:
   fetch-and-commit:
     runs-on: ubuntu-latest
@@ -17,23 +14,18 @@ jobs:
         with:
           app-id: ${{ secrets.FETCH_APP_ID }}
           private-key: ${{ secrets.FETCH_APP_PRIVATE_KEY }}
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ steps.generate-token.outputs.token }}
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
       - name: Install dependencies
         run: npm ci
-
       - name: Run fetchTempoData
         run: npm run fetch-and-update-tempo-data
-
       - name: Commit changes
         continue-on-error: true
         env:
@@ -44,20 +36,15 @@ jobs:
           git add .
           git commit -m "Update JSON data"
           git push
-
-
-
-       - name: Get latest tag
+      - name: Get latest tag
         id: get-latest-tag
         run: |
           LATEST_TAG=$(git describe --tags --abbrev=0)
           echo "Latest tag: $LATEST_TAG"
           echo "VERSION=$LATEST_TAG" >> $GITHUB_ENV
-
       - name: Build frontend
         run: |
           REACT_APP_VERSION=$VERSION npm run build
-
       - name: Compile and run injectVersion script
         run: |
           echo "Version: $VERSION"
@@ -69,13 +56,11 @@ jobs:
           path: build
           if-no-files-found: error
           retention-days: 1
-
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
           path: frontend_build
-
       - name: Deploy Frontend to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
@@ -83,5 +68,5 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
-          local-dir: "frontend_build/"
+          local-dir: frontend_build/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
