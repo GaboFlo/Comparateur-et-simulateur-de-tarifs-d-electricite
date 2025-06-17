@@ -41,7 +41,7 @@ jobs:
           git add .
           git commit -m "Update JSON data"
           git push
-    - name: Trigger Deployment Workflow
+      - name: Trigger Deployment Workflow
         uses: actions/github-script@v6
         with:
           script: |
