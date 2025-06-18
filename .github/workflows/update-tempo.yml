@@ -76,6 +76,16 @@ jobs:
           FULL_VERSION="${{ env.VERSION }}-${{ env.TIMESTAMP }}"
           echo "FULL_VERSION=$FULL_VERSION" >> $GITHUB_ENV
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+
+     - name: Install dependencies
+        run: npm ci
+
+
       - name: Build frontend
         run: |
           REACT_APP_VERSION=$FULL_VERSION npm run build
