@@ -50,6 +50,7 @@ jobs:
 
   deploy:
     needs: fetch-and-commit
+    environment: production
     if: needs.fetch-and-commit.outputs.commit-status == 'success'
     runs-on: ubuntu-latest
     steps:
