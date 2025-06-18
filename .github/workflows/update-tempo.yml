@@ -86,6 +86,7 @@ jobs:
 
       - name: Build frontend
         run: |
+          npm version $FULL_VERSION --no-git-tag-version
           REACT_APP_VERSION=$FULL_VERSION npm run build
 
       - name: Compile and run injectVersion script
