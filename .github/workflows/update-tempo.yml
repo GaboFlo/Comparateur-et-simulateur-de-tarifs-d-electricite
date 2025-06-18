@@ -47,6 +47,11 @@ jobs:
           git commit -m "🤖 Update tempo JSON data"
           git push
 
+  deploy:
+    needs: fetch-and-commit
+    if: needs.fetch-and-commit.outputs.commit-status == 'success'
+    runs-on: ubuntu-latest
+    steps:
       - name: Get latest tag
         id: get-latest-tag
         run: |
@@ -71,11 +76,6 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  deploy:
-    needs: fetch-and-commit
-    if: needs.fetch-and-commit.outputs.commit-status == 'success'
-    runs-on: ubuntu-latest
-    steps:
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
