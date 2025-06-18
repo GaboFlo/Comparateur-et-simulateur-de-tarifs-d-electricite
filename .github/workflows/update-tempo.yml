@@ -1,11 +1,10 @@
+---
 name: Update Tempo & Deploy
 on:
-  workflow_dispatch:
+  workflow_dispatch: null
   schedule:
-    - cron: '36 */8 * * *'
-
+    - cron: 36 */8 * * *
 concurrency: production
-
 jobs:
   fetch-and-commit:
     runs-on: ubuntu-latest
@@ -18,24 +17,19 @@ jobs:
         with:
           app-id: ${{ secrets.FETCH_APP_ID }}
           private-key: ${{ secrets.FETCH_APP_PRIVATE_KEY }}
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           token: ${{ steps.generate-token.outputs.token }}
           fetch-depth: 0
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
       - name: Install dependencies
         run: npm ci
-
       - name: Run fetchTempoData
         run: npm run fetch-and-update-tempo-data
-
       - name: Commit changes
         continue-on-error: true
         id: commit-changes
@@ -47,7 +41,6 @@ jobs:
           git add .
           git commit -m "🤖 Update tempo JSON data"
           git push
-
   deploy:
     needs: fetch-and-commit
     environment: production
@@ -58,47 +51,38 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-
       - name: Get latest tag
         id: get-latest-tag
         run: |
           LATEST_TAG=$(git describe --tags --abbrev=0)
           echo "Latest tag: $LATEST_TAG"
           echo "VERSION=$LATEST_TAG" >> $GITHUB_ENV
-
       - name: Generate timestamp
         run: |
           TIMESTAMP=$(date +"%Y%m%d%H%M%S")
           echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
-
       - name: Combine tag and timestamp
         run: |
           FULL_VERSION="${{ env.VERSION }}-${{ env.TIMESTAMP }}"
           echo "FULL_VERSION=$FULL_VERSION" >> $GITHUB_ENV
-       env: 
-         FULL_VERSION: ${FULL_VERSION}
-
+        env:
+          FULL_VERSION: ${FULL_VERSION}
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
       - name: Install dependencies
         run: npm ci
-
       - name: Build frontend
         run: |
           npm version $FULL_VERSION --no-git-tag-version
           REACT_APP_VERSION=$FULL_VERSION npm run build
-        env: 
+        env:
           FULL_VERSION: ${FULL_VERSION}
-
-
       - name: Compile and run injectVersion script
         run: |
           echo "Version: $FULL_VERSION"
           node ./services/injectVersion.js $FULL_VERSION
-
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -106,13 +90,11 @@ jobs:
           path: build
           if-no-files-found: error
           retention-days: 1
-
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: frontend-build
           path: frontend_build
-
       - name: Deploy Frontend to FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
