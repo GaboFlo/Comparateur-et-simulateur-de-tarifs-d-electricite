@@ -37,6 +37,7 @@ jobs:
         run: npm run fetch-and-update-tempo-data
 
       - name: Commit changes
+        continue-on-error: true
         id: commit-changes
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
