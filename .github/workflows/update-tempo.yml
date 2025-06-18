@@ -54,6 +54,11 @@ jobs:
     if: needs.fetch-and-commit.outputs.commit-status == 'success'
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Get latest tag
         id: get-latest-tag
         run: |
