@@ -32,10 +32,10 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
-          git config --global user.name 'GitHub App'
-          git config --global user.email 'github-app@example.com'
+          git config --global user.name 'GaboFlo Bot'
+          git config --global user.email 'contact@gaboflo.fr'
           git add .
-          git commit -m "Update JSON data"
+          git commit -m "🤖 Update tempo JSON data"
           git push
       - name: Get latest tag
         id: get-latest-tag
