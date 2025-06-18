@@ -87,10 +87,10 @@ jobs:
 
       - name: Build frontend
         run: |
-          npm version $FULL_VERSION --no-git-tag-version
-          REACT_APP_VERSION=$FULL_VERSION npm run build
+          npm version ${{ env.FULL_VERSION }} --no-git-tag-version
+          REACT_APP_VERSION=${{ env.FULL_VERSION }} npm run build
         env:
-          FULL_VERSION: $FULL_VERSION
+          FULL_VERSION: ${{ env.FULL_VERSION }}
 
       - name: Compile and run injectVersion script
         run: |
