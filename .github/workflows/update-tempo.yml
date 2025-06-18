@@ -75,6 +75,8 @@ jobs:
         run: |
           FULL_VERSION="${{ env.VERSION }}-${{ env.TIMESTAMP }}"
           echo "FULL_VERSION=$FULL_VERSION" >> $GITHUB_ENV
+       env: 
+         VERSION: ${FULL_VERSION}
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -88,6 +90,9 @@ jobs:
         run: |
           npm version $FULL_VERSION --no-git-tag-version
           REACT_APP_VERSION=$FULL_VERSION npm run build
+        env: 
+          FULL_VERSION: ${FULL_VERSION}
+
 
       - name: Compile and run injectVersion script
         run: |
