@@ -61,14 +61,24 @@ jobs:
           echo "Latest tag: $LATEST_TAG"
           echo "VERSION=$LATEST_TAG" >> $GITHUB_ENV
 
+      - name: Generate timestamp
+        run: |
+          TIMESTAMP=$(date +"%Y%m%d%H%M%S")
+          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+
+      - name: Combine tag and timestamp
+        run: |
+          FULL_VERSION="${{ env.VERSION }}-${{ env.TIMESTAMP }}"
+          echo "FULL_VERSION=$FULL_VERSION" >> $GITHUB_ENV
+
       - name: Build frontend
         run: |
-          REACT_APP_VERSION=$VERSION npm run build
+          REACT_APP_VERSION=$FULL_VERSION npm run build
 
       - name: Compile and run injectVersion script
         run: |
-          echo "Version: $VERSION"
-          node ./services/injectVersion.js $VERSION
+          echo "Version: $FULL_VERSION"
+          node ./services/injectVersion.js $FULL_VERSION
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
