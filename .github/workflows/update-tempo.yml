@@ -42,7 +42,7 @@ jobs:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
           git config --global user.name 'GaboFlo Bot'
-          git config --global user.email 'contact@gaboflo.fr'
+          git config --global user.email 'noreply@gaboflo.fr'
           git add .
           git commit -m "🤖 Update tempo JSON data"
           git push
