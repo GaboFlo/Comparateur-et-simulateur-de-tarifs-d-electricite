@@ -120,4 +120,3 @@ jobs:
           port: 21
           local-dir: frontend_build/
           server-dir: ${{ secrets.FTP_SERVER_DIR }}
-          
