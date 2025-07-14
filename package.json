@@ -42,7 +42,7 @@
     "@mui/icons-material": "^7.0.2",
     "@mui/material": "^7.1.0",
     "@mui/system": "^7.0.2",
-    "@mui/x-charts": "^7.28.0",
+    "@mui/x-charts": "^7.29.1",
     "@mui/x-date-pickers": "^7.24.1",
     "@mui/x-date-pickers-pro": "^7.28.0",
     "axios": "^1.8.2",
@@ -58,7 +58,7 @@
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.14",
+    "@types/jest": "^30.0.0",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.0.3",
     "@types/react-router-dom": "^5.3.3",
