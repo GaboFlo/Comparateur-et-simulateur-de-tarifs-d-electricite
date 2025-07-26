@@ -13,15 +13,11 @@ export default function InfoMobile() {
   const [open, setOpen] = React.useState(false);
   const { trackEvent } = useMatomo();
 
-  React.useEffect(() => {
-    if (!localStorage.getItem("explanation_modal_opened")) {
-      setOpen(true);
-      localStorage.setItem("explanation_modal_opened", "true");
-    }
-  }, []);
-
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
+    newOpen === true &&
+      localStorage.setItem("explanation_modal_opened", "true");
+
     newOpen && trackEvent({ category: "info", action: "open" });
   };
 
@@ -38,7 +34,7 @@ export default function InfoMobile() {
         variant="h5"
         sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}
       >
-        Comment ça marche ?
+        ℹ️ Comment ça marche ?
       </Typography>
       <IconButton
         onClick={toggleDrawer(false)}
@@ -62,7 +58,7 @@ export default function InfoMobile() {
           backgroundColor: theme.palette.background.paper,
         })}
       >
-        Comment ça marche ?
+        ℹ️ Comment ça marche ?
       </Button>
       <Drawer open={open} anchor="top" onClose={toggleDrawer(false)}>
         {DrawerList}
