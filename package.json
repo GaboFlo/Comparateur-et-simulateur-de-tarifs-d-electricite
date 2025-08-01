@@ -63,7 +63,7 @@
     "@types/react-dom": "^19.0.3",
     "@types/react-router-dom": "^5.3.3",
     "depcheck": "^1.4.7",
-    "sort-package-json": "^3.1.0",
+    "sort-package-json": "^3.4.0",
     "ts-jest": "^29.3.1",
     "ts-prune": "^0.10.3",
     "tsx": "^4.20.3"
