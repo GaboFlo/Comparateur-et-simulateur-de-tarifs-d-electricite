@@ -48,7 +48,7 @@
     "axios": "^1.8.2",
     "date-fns": "^4.1.0",
     "date-holidays": "^3.24.0",
-    "eslint": "^9.22.0",
+    "eslint": "^9.32.0",
     "jszip": "^3.10.1",
     "notistack": "^3.0.2",
     "react": "^19.1.0",
