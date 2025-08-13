@@ -195,7 +195,7 @@
         "optionKey": "WEEK_END_HPHC",
         "optionName": "Week-end avec Heures Creuses",
         "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end.html",
-        "lastUpdate": "2025-02-01",
+        "lastUpdate": "2025-08-01",
         "offerType": "ZEN",
         "subscriptions": [
             {
@@ -390,7 +390,7 @@
         "optionKey": "WEEK_END_PLUS_VENREDI",
         "optionName": "Week-end + Vendredi",
         "link": "https://particulier.edf.fr/fr/accueil/electricite-gaz/zen-week-end-plus.html",
-        "lastUpdate": "2025-02-01",
+        "lastUpdate": "2025-08-01",
         "offerType": "ZEN",
         "subscriptions": [
             {
@@ -1182,7 +1182,7 @@
         "provider": "TotalEnergies",
         "optionKey": "ECO_BASE",
         "optionName": "Base",
-        "lastUpdate": "2025-02-01",
+        "lastUpdate": "2025-08-01",
         "offerType": "HEURES ÉCO",
         "link": "https://www.totalenergies.fr/particuliers/electricite-et-gaz/grilles-tarifaires#c115104",
         "subscriptions": [
@@ -1565,7 +1565,7 @@
         "provider": "OctopusEnergy",
         "optionKey": "Base",
         "optionName": "Base",
-        "lastUpdate": "2025-02-01",
+        "lastUpdate": "2025-08-01",
         "offerType": "",
         "link": "https://www.octopusenergy.fr/offre-electricite-tarifs#:~:text=leur%20budget.-,Nos%20offres,-Premi%C3%A8re%20option%20%3A%20le",
         "subscriptions": [
@@ -1625,7 +1625,7 @@
         "provider": "OctopusEnergy",
         "optionKey": "HPHC",
         "optionName": "Heures Creuses",
-        "lastUpdate": "2025-02-01",
+        "lastUpdate": "2025-08-01",
         "offerType": "",
         "link": "https://www.octopusenergy.fr/offre-electricite-tarifs#:~:text=leur%20budget.-,Nos%20offres,-Premi%C3%A8re%20option%20%3A%20le",
         "subscriptions": [
