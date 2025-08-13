@@ -14,9 +14,9 @@ describe("calculateTempoPrices", () => {
   it("RED days 2025-01-10 (previous is white)", async () => {
     const tempoDates = tempo_data as TempoDates;
 
-    const hpRedPrice = 6586;
-    const hcRedPrice = 1518;
-    const hcWhitePrice = 1447;
+    const hpRedPrice = 6468;
+    const hcRedPrice = 1460;
+    const hcWhitePrice = 1391;
     const data: ConsumptionLoadCurveData[] = [
       {
         recordedAt: "2025-01-10 02:00:00",
@@ -140,7 +140,7 @@ describe("calculateTempoPrices", () => {
           ],
         },
       ],
-      totalCost: 2728042,
+      totalCost: 2656936,
       optionKey,
       offerType,
     };
@@ -160,7 +160,7 @@ describe("calculateBasePrices", () => {
     },
   ];
 
-  const basePrice = 2016;
+  const basePrice = 1952;
   const optionKey = OptionKey.BASE;
   const offerType = OfferType.BLEU;
   const hpHcData = hphc_data as HpHcSlot[];
@@ -219,8 +219,8 @@ describe("calculateHpHcPrices", () => {
         value: 100,
       },
     ];
-    const hpPrice = 2146;
-    const hcPrice = 1696;
+    const hpPrice = 2081;
+    const hcPrice = 1635;
     const optionKey = OptionKey.HPHC;
     const offerType = OfferType.BLEU;
     const hpHcData = hphc_data as HpHcSlot[];
