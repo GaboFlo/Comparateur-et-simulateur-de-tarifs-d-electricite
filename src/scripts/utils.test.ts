@@ -106,7 +106,7 @@ describe("findMonthlySubscriptionCost", () => {
       OptionKey.BASE,
       "EDF"
     );
-    expect(monthly).toBe(1727);
+    expect(monthly).toBe(1939);
   });
 });
 
