@@ -117,6 +117,15 @@ export interface SeasonHourlyAnalysis {
   hourly: { hour: string; value: number }[];
 }
 
+export interface HpHcSeasonAnalysis {
+  season: Season;
+  seasonTotalSum: number;
+  hpHcData: {
+    HP: number;
+    HC: number;
+  };
+}
+
 export interface ComparisonTableInterfaceRow {
   provider: ProviderType;
   offerType: OfferType;

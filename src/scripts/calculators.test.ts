@@ -8,7 +8,12 @@ import {
   OptionKey,
   TempoDates,
 } from "../types";
-import { calculatePrices, getTempoDateKey, parseTime } from "./calculators";
+import {
+  calculateHpHcSeasonAnalysis,
+  calculatePrices,
+  getTempoDateKey,
+  parseTime,
+} from "./calculators";
 
 describe("calculateTempoPrices", () => {
   it("RED days 2025-01-10 (previous is white)", async () => {
@@ -297,5 +302,72 @@ describe("getTempoDateKey", () => {
   test("handles edge cases like leap years and different months", () => {
     expect(getTempoDateKey("2020-03-01")).toBe("2020-02-29"); // Leap year
     expect(getTempoDateKey("2019-02-28T15:00:00+01:00")).toBe("2019-02-28"); // Non-leap year
+  });
+});
+
+describe("calculateHpHcSeasonAnalysis", () => {
+  const mockHpHcMapping: HpHcSlot[] = hphc_data as HpHcSlot[];
+
+  const createMockData = (
+    date: string,
+    value: number
+  ): ConsumptionLoadCurveData => ({
+    recordedAt: date,
+    value,
+  });
+
+  it("devrait calculer correctement la répartition HP/HC par saison", () => {
+    const mockData: ConsumptionLoadCurveData[] = [
+      // Hiver - HP (fin de slot à 8h00 et 8h30)
+      createMockData("2024-01-15T08:00:00Z", 100),
+      createMockData("2024-01-15T08:30:00Z", 150),
+      // Hiver - HC (fin de slot à 3h00 et 3h30)
+      createMockData("2024-01-16T03:00:00Z", 80),
+      createMockData("2024-01-16T03:30:00Z", 60),
+
+      // Été - HP (fin de slot à 8h00 et 8h30)
+      createMockData("2024-07-15T08:00:00Z", 120),
+      createMockData("2024-07-15T08:30:00Z", 180),
+      // Été - HC (fin de slot à 3h00 et 3h30)
+      createMockData("2024-07-16T03:00:00Z", 90),
+      createMockData("2024-07-16T03:30:00Z", 70),
+    ];
+
+    const result = calculateHpHcSeasonAnalysis(mockData, mockHpHcMapping);
+
+    expect(result).toHaveLength(4);
+
+    const hiver = result.find((r) => r.season === "Hiver");
+    const ete = result.find((r) => r.season === "Été");
+
+    expect(hiver).toBeDefined();
+    expect(hiver?.hpHcData.HC).toBe(70); // 80+60
+    expect(hiver?.hpHcData.HP).toBe(125); // 100+150
+
+    expect(ete).toBeDefined();
+    expect(ete?.hpHcData.HP).toBe(150); // 120+180
+    expect(ete?.hpHcData.HC).toBe(80); // 90+70
+  });
+
+  it("devrait gérer les données vides", () => {
+    const result = calculateHpHcSeasonAnalysis([], mockHpHcMapping);
+
+    expect(result).toHaveLength(4);
+
+    result.forEach((season) => {
+      expect(season.seasonTotalSum).toBe(0);
+      expect(season.hpHcData.HP).toBe(0);
+      expect(season.hpHcData.HC).toBe(0);
+    });
+  });
+
+  it("devrait inclure toutes les saisons même sans données", () => {
+    const result = calculateHpHcSeasonAnalysis([], mockHpHcMapping);
+
+    const seasons = result.map((r) => r.season);
+    expect(seasons).toContain("Hiver");
+    expect(seasons).toContain("Printemps");
+    expect(seasons).toContain("Été");
+    expect(seasons).toContain("Automne");
   });
 });
