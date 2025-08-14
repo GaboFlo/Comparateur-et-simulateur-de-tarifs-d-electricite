@@ -153,3 +153,28 @@ export const getHpHcJson = (overridingHpHcKey: string) => {
       throw new Error(`No hpHcGrid found for key: ${overridingHpHcKey}`);
   }
 };
+
+export const formatKWh = (
+  value: number,
+  includeUnit: boolean = true
+): string => {
+  const roundedValue = Math.round(value);
+  return `${new Intl.NumberFormat("fr-FR").format(roundedValue)}${
+    includeUnit ? " kWh" : ""
+  }`;
+};
+
+export const formatKWhLarge = (value: number): string => {
+  return new Intl.NumberFormat("fr-FR").format(Math.round(value)) + " kWh";
+};
+
+export const SEASON_COLORS: Record<Season, string> = {
+  Été: "#FFD700",
+  Hiver: "#1E90FF",
+  Automne: "#FF8C00",
+  Printemps: "#32CD32",
+};
+
+export const getSeasonColor = (season: Season): string => {
+  return SEASON_COLORS[season];
+};

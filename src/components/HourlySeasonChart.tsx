@@ -3,29 +3,16 @@ import Typography from "@mui/material/Typography";
 import { pieArcLabelClasses, PieChart } from "@mui/x-charts";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useFormContext } from "../context/FormContext";
-import { Season } from "../types";
+import { formatKWhLarge, getSeasonColor } from "../scripts/utils";
 
 export default function HourlySeasonChart() {
   const { formState } = useFormContext();
 
   const valueFormatter = (value: number | null) => {
-    return value
-      ? `${new Intl.NumberFormat("fr-FR").format(Math.round(value))} kWh`
-      : "N/A";
+    return value ? formatKWhLarge(value) : "N/A";
   };
   const pieValueFormatter = (item: { value: number }) =>
-    `${new Intl.NumberFormat("fr-FR").format(Math.round(item.value))} kWh`;
-
-  const colorPalette: Record<Season, string> = {
-    Été: "#FFD700",
-    Hiver: "#1E90FF",
-    Automne: "#FF8C00",
-    Printemps: "#32CD32",
-  };
-
-  const getColor = (season: Season) => {
-    return colorPalette[season];
-  };
+    formatKWhLarge(item.value);
 
   const chartSetting = {
     yAxis: [
@@ -63,7 +50,7 @@ export default function HourlySeasonChart() {
               label: d.season,
               stack: "stack",
               valueFormatter,
-              color: getColor(d.season),
+              color: getSeasonColor(d.season),
             }))}
             margin={{ left: 75, right: 20, top: 20, bottom: 20 }}
             grid={{ horizontal: true }}
@@ -95,7 +82,7 @@ export default function HourlySeasonChart() {
                   id: d.season,
                   label: d.season,
                   value: d.seasonTotalSum,
-                  color: getColor(d.season),
+                  color: getSeasonColor(d.season),
                   arcLabelMinAngle: 35,
                   arcLabelRadius: "60%",
                 })),

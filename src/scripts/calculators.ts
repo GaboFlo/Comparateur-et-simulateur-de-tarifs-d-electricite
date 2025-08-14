@@ -6,6 +6,7 @@ import {
   ComparisonTableInterfaceRow,
   Cost,
   FullCalculatedData,
+  HpHcSeasonAnalysis,
   HpHcSlot,
   Mapping,
   OfferType,
@@ -15,6 +16,7 @@ import {
   PowerClass,
   PriceMappingFile,
   ProviderType,
+  Season,
   SlotType,
   TempoCodeDay,
   TempoDates,
@@ -24,6 +26,7 @@ import { ConsumptionLoadCurveData } from "./csvParser";
 import {
   findMonthlySubscriptionCost,
   getHpHcJson,
+  getSeason,
   isDayApplicable,
   isHpOrHcSlot,
   PRICE_COEFF,
@@ -119,9 +122,9 @@ function calculateTempoPricesOptimized(
 
   const tempoCodeDay = tempoDatesMap[dateKey];
   if (tempoCodeDay === undefined || tempoCodeDay === null) {
-    console.error(tempoDatesMap)
-    console.error(dateKey)
-    console.error(item.recordedAt)
+    console.error(tempoDatesMap);
+    console.error(dateKey);
+    console.error(item.recordedAt);
     throw new Error(
       `TempoCodeDay ${tempoCodeDay} found for date ${dateKey} - ${item.recordedAt}`
     );
@@ -282,4 +285,40 @@ export function calculateRowSummary({
     ),
     overridingHpHcKey,
   } as ComparisonTableInterfaceRow;
+}
+
+export function calculateHpHcSeasonAnalysis(
+  data: ConsumptionLoadCurveData[],
+  hpHcMapping: HpHcSlot[]
+): HpHcSeasonAnalysis[] {
+  const seasonData: Record<Season, { total: number; HP: number; HC: number }> =
+    {
+      Été: { total: 0, HP: 0, HC: 0 },
+      Hiver: { total: 0, HP: 0, HC: 0 },
+      Automne: { total: 0, HP: 0, HC: 0 },
+      Printemps: { total: 0, HP: 0, HC: 0 },
+    };
+
+  for (const item of data) {
+    const date = new Date(item.recordedAt);
+    const season = getSeason(date);
+    const slotType = isHpOrHcSlot(date, hpHcMapping);
+
+    seasonData[season].total += item.value;
+
+    if (slotType === "HP") {
+      seasonData[season].HP += item.value / 2;
+    } else if (slotType === "HC") {
+      seasonData[season].HC += item.value / 2;
+    }
+  }
+
+  return Object.entries(seasonData).map(([season, data]) => ({
+    season: season as Season,
+    seasonTotalSum: data.total,
+    hpHcData: {
+      HP: data.HP,
+      HC: data.HC,
+    },
+  }));
 }
