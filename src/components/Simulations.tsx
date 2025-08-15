@@ -5,8 +5,10 @@ import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
 import { differenceInDays, endOfDay, format, startOfDay } from "date-fns";
 import { useFormContext } from "../context/FormContext";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
+import { formatKWhLarge } from "../scripts/utils";
 import { ComparisonTable } from "./ComparisonTable";
 import HourlySeasonChart from "./HourlySeasonChart";
+import HpHcSeasonChart from "./HpHcSeasonChart";
 import HpHcSlotSelector from "./HpHcSelector";
 
 export default function Simulations() {
@@ -86,23 +88,19 @@ export default function Simulations() {
       <Typography variant="body2" sx={{ mb: 1 }}>
         <Alert severity="info" sx={{ m: 1, textAlign: "justify" }}>
           Vous avez consommé{" "}
-          <b>
-            {new Intl.NumberFormat("fr-FR").format(formState.totalConsumption)}{" "}
-            kWh{" "}
-          </b>
+          <b>{formatKWhLarge(formState.totalConsumption)} </b>
           sur la période analysée (du{" "}
           {format(formState.analyzedDateRange[0], "dd/MM/yyyy")} au{" "}
           {format(formState.analyzedDateRange[1], "dd/MM/yyyy")}), soit une{" "}
           <b>
-            moyenne de{" "}
-            {new Intl.NumberFormat("fr-FR", {
-              maximumFractionDigits: 1,
-            }).format(formState.totalConsumption / diffDays)}{" "}
-            kWh par jour
+            moyenne de {formatKWhLarge(formState.totalConsumption / diffDays)}{" "}
+            par jour
           </b>{" "}
         </Alert>
       </Typography>
       <HourlySeasonChart />
+      <Divider sx={{ marginX: 2, mt: 2 }} />
+      <HpHcSeasonChart />
       <Divider sx={{ marginX: 2, mt: 2 }} />
       <Typography variant="h5" sx={{ mt: 2 }}>
         Combien auriez-vous gagné en changeant d'offre ?
