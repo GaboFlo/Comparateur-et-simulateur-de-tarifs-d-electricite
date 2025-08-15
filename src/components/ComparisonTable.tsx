@@ -35,7 +35,8 @@ interface StyledTableRowProps {
 
 const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
   ({ theme, highlight }) => ({
-    backgroundColor: highlight ? theme.palette.primary.light : "inherit",
+    backgroundColor:
+      highlight === "true" ? theme.palette.primary.light : "inherit",
   })
 );
 
