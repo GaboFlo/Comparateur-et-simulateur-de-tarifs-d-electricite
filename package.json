@@ -6,7 +6,7 @@
   "scripts": {
     "build": "vite build",
     "deadcode:all": "ts-prune",
-    "deadcode:ci": "ts-prune | (! grep -v 'used in module') | (! grep -v 'migration') | (! grep -v 'd.ts') | (! grep -v 'themePrimitives.ts')",
+    "deadcode:ci": "ts-prune | (! grep -v 'used in module') | (! grep -v 'migration') | (! grep -v 'd.ts') | (! grep -v 'themePrimitives.ts') | (! grep -v 'vite.config.ts')",
     "depcheck": "depcheck --ignores=node-fetch,@types/jest,sort-package-json",
     "depcheck:ci": "depcheck --ignores=node-fetch,@types/jest,sort-package-json,eslint-config-react-app | (! grep -v 'No depcheck issue') ",
     "fetch-and-update-tempo-data": "cd services && tsx run-tempo.ts",
