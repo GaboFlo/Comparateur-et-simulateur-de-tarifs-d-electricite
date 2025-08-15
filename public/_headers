@@ -1,0 +1,45 @@
+# En-têtes de cache pour optimiser les performances
+
+# Fichiers JavaScript - cache long (30 jours)
+
+/assets/js/\*.js
+Cache-Control: public, max-age=2592000, immutable
+
+# Fichiers CSS - cache long (30 jours)
+
+/assets/\*.css
+Cache-Control: public, max-age=2592000, immutable
+
+# Images et icônes - cache très long (1 an)
+
+/assets/images/\*
+Cache-Control: public, max-age=31536000, immutable
+
+/assets/fonts/\*
+Cache-Control: public, max-age=31536000, immutable
+
+# Fichiers de données statiques - cache long (30 jours)
+
+/statics/\*.json
+Cache-Control: public, max-age=2592000, immutable
+
+# Fichiers de build avec hash - cache très long (1 an)
+
+/_-_.js
+Cache-Control: public, max-age=31536000, immutable
+
+/_-_.css
+Cache-Control: public, max-age=31536000, immutable
+
+# Page principale - cache court (1 heure)
+
+/index.html
+Cache-Control: public, max-age=3600
+
+# Manifest et autres fichiers - cache moyen (1 jour)
+
+/manifest.json
+Cache-Control: public, max-age=86400
+
+/sw.js
+Cache-Control: public, max-age=86400

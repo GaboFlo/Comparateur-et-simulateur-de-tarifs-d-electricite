@@ -196,6 +196,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
           </Alert>
         )}
         <Box
+          component="button"
           {...getRootProps()}
           sx={{
             border: "2px dashed #ccc",
@@ -203,7 +204,10 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
             padding: 2,
             textAlign: "center",
             cursor: "pointer",
+            background: "none",
+            width: "100%",
           }}
+          aria-label="Zone de dépôt de fichier ZIP. Déposez votre fichier ZIP ici ou cliquez pour ouvrir la fenêtre d'import"
         >
           <Grid
             container
@@ -217,7 +221,10 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
             {!formState.isGlobalLoading && (
               <>
                 <Grid size={2}>
-                  <input {...getInputProps()} />
+                  <input
+                    {...getInputProps()}
+                    aria-label="Sélectionner un fichier ZIP"
+                  />
                   <UploadFileRoundedIcon style={{ fontSize: 50 }} />
                 </Grid>
                 <Grid size={10}>

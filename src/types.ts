@@ -139,4 +139,12 @@ export interface ComparisonTableInterfaceRow {
   overridingHpHcKey?: string;
 }
 
-export const APP_VERSION = process.env.REACT_APP_VERSION ?? "dev";
+export const APP_VERSION = (() => {
+  if (typeof document !== "undefined") {
+    const metaVersion = document
+      ?.querySelector('meta[name="version"]')
+      ?.getAttribute("content");
+    return metaVersion ?? "dev";
+  }
+  return "default-dev";
+})();
