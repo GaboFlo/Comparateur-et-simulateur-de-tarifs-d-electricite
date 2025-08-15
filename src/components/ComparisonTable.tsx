@@ -30,7 +30,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 interface StyledTableRowProps {
-  highlight: boolean;
+  highlight: string;
 }
 
 const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
@@ -144,10 +144,10 @@ export function ComparisonTable() {
               .map((row) => (
                 <StyledTableRow
                   key={`${row.provider}-${row.offerType}-${row.optionKey}`}
-                  highlight={
+                  highlight={(
                     row.offerType === formState.offerType &&
                     row.optionKey === formState.optionType
-                  }
+                  ).toString()}
                 >
                   <StyledTableCell
                     align="center"
