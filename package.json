@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
+    "build:analyze": "vite build --config vite.config.analyze.ts",
     "deadcode:all": "ts-prune",
     "deadcode:ci": "ts-prune | (! grep -v 'used in module') | (! grep -v 'migration') | (! grep -v 'd.ts') | (! grep -v 'themePrimitives.ts') | (! grep -v 'vite.config.ts')",
     "depcheck": "depcheck --ignores=node-fetch,@types/jest,sort-package-json,ts-jest,typescript,@typescript-eslint/eslint-plugin",
@@ -70,11 +71,15 @@
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "jest": "^30.0.5",
+    "rollup-plugin-visualizer": "^5.14.0",
     "sort-package-json": "^3.4.0",
+    "terser": "^5.43.1",
     "ts-jest": "^29.3.1",
     "ts-prune": "^0.10.3",
     "tsx": "^4.20.3",
     "typescript": "^5.6.3",
-    "vite": "^5.4.10"
+    "vite": "^5.4.10",
+    "vite-plugin-compression2": "^0.10.6",
+    "vite-plugin-pwa": "^0.19.8"
   }
 }

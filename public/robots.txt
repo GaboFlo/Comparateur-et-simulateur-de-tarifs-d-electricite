@@ -1,2 +1,24 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://comparateur-electricite.gaboflo.fr/sitemap.xml
+
+# Crawl-delay pour éviter de surcharger le serveur
+Crawl-delay: 1
+
+# Bloquer les fichiers non nécessaires
+Disallow: /build/
+Disallow: /node_modules/
+Disallow: /coverage/
+Disallow: /.git/
+Disallow: /services/
+Disallow: /*.json$
+Disallow: /*.js.map$
+Disallow: /*.css.map$
+
+# Permettre l'accès aux ressources importantes
+Allow: /manifest.json
+Allow: /favicon.ico
+Allow: /logo*.png
+Allow: /favicon.svg
