@@ -209,12 +209,12 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
             alignItems="center"
             justifyContent="center"
           >
-            {formState.isGlobalLoading && <CircularProgress />}
+            {formState.isGlobalLoading && <CircularProgress thickness={4} />}
             {!formState.isGlobalLoading && (
               <>
                 <Grid size={2}>
                   <input {...getInputProps()} />
-                  <UploadFileRoundedIcon sx={{ fontSize: 50 }} />
+                  <UploadFileRoundedIcon style={{ fontSize: 50 }} />
                 </Grid>
                 <Grid size={10}>
                   <p>

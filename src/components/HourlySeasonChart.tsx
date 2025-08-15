@@ -55,7 +55,7 @@ export default function HourlySeasonChart() {
             height: 300,
           }}
         >
-          <CircularProgress />
+          <CircularProgress thickness={4} />
         </div>
       ) : (
         <>

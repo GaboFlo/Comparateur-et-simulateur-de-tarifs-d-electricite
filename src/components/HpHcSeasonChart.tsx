@@ -72,7 +72,7 @@ export default function HpHcSeasonChart() {
             height: 300,
           }}
         >
-          <CircularProgress />
+          <CircularProgress thickness={4} />
         </div>
       ) : (
         <BarChart

@@ -121,7 +121,7 @@ export function ComparisonTable() {
   return (
     <TableContainer component={Paper} sx={{ my: 3 }}>
       {formState.isGlobalLoading || !formState.rowSummaries ? (
-        <CircularProgress />
+        <CircularProgress thickness={4} />
       ) : (
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
