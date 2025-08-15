@@ -23,8 +23,7 @@
     <meta name="format-detection" content="telephone=no" />
 
     <!-- Preload critical resources -->
-    <link rel="preload" href="/src/index.tsx" as="script" />
-    <link rel="preload" href="/src/index.css" as="style" />
+    <link rel="preload" href="/src/index.css" as="style" crossorigin="anonymous" />
 
     <!-- DNS prefetch pour les domaines externes -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com" />
@@ -65,7 +64,7 @@
     <link rel="apple-touch-icon" href="/logo192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/logo192.png" />
     <meta name="apple-mobile-web-app-title" content="Comparateur Électricité">
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <link rel="manifest" href="/manifest.json" />
 
@@ -119,21 +118,6 @@
 
     <!-- Script principal avec optimisations -->
     <script type="module" src="/src/index.tsx"></script>
-
-    <!-- Service Worker registration -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then((registration) => {
-                        console.log('SW registered: ', registration);
-                    })
-                    .catch((registrationError) => {
-                        console.log('SW registration failed: ', registrationError);
-                    });
-            });
-        }
-    </script>
 </body>
 
 </html>

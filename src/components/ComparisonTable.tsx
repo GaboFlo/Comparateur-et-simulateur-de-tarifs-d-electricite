@@ -141,6 +141,8 @@ export function ComparisonTable() {
                   highlight={
                     row.offerType === formState.offerType &&
                     row.optionKey === formState.optionType
+                      ? "true"
+                      : undefined
                   }
                 >
                   <StyledTableCell

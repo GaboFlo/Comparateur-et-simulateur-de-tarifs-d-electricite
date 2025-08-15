@@ -85,19 +85,16 @@ export default function Simulations() {
           }}
         />
       </Box>
-      <Typography variant="body2" sx={{ mb: 1 }}>
-        <Alert severity="info" sx={{ m: 1, textAlign: "justify" }}>
-          Vous avez consommé{" "}
-          <b>{formatKWhLarge(formState.totalConsumption)} </b>
-          sur la période analysée (du{" "}
-          {format(formState.analyzedDateRange[0], "dd/MM/yyyy")} au{" "}
-          {format(formState.analyzedDateRange[1], "dd/MM/yyyy")}), soit une{" "}
-          <b>
-            moyenne de {formatKWhLarge(formState.totalConsumption / diffDays)}{" "}
-            par jour
-          </b>{" "}
-        </Alert>
-      </Typography>
+      <Alert severity="info" sx={{ m: 1, textAlign: "justify" }}>
+        Vous avez consommé <b>{formatKWhLarge(formState.totalConsumption)} </b>
+        sur la période analysée (du{" "}
+        {format(formState.analyzedDateRange[0], "dd/MM/yyyy")} au{" "}
+        {format(formState.analyzedDateRange[1], "dd/MM/yyyy")}), soit une{" "}
+        <b>
+          moyenne de {formatKWhLarge(formState.totalConsumption / diffDays)} par
+          jour
+        </b>{" "}
+      </Alert>
       <HourlySeasonChart />
       <Divider sx={{ marginX: 2, mt: 2 }} />
       <HpHcSeasonChart />
