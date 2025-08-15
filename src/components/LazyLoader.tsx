@@ -13,7 +13,7 @@ const DefaultFallback = () => (
     alignItems="center"
     minHeight="200px"
   >
-    <CircularProgress thickness={4} />
+    <CircularProgress thickness={8} size={60} />
   </Box>
 );
 

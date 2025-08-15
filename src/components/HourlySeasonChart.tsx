@@ -12,10 +12,7 @@ export default function HourlySeasonChart() {
 
   useEffect(() => {
     if (formState.seasonHourlyAnalysis) {
-      const timer = setTimeout(() => {
-        setIsChartReady(true);
-      }, 100);
-      return () => clearTimeout(timer);
+      setIsChartReady(true);
     } else {
       setIsChartReady(false);
     }
@@ -55,7 +52,7 @@ export default function HourlySeasonChart() {
             height: 300,
           }}
         >
-          <CircularProgress thickness={4} />
+          <CircularProgress thickness={8} size={60} />
         </div>
       ) : (
         <>

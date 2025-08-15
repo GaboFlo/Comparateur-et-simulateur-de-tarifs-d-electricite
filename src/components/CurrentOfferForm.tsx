@@ -233,7 +233,7 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
               fullWidth
             >
               {!allOffers ? (
-                <CircularProgress thickness={4} />
+                <CircularProgress thickness={8} size={60} />
               ) : (
                 getDistinctOfferTypes(allOffers, formState.provider).map(
                   (value) => (

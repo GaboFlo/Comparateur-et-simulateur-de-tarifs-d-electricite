@@ -13,10 +13,7 @@ export default function HpHcSeasonChart() {
 
   useEffect(() => {
     if (formState.parsedData && formState.hpHcConfig) {
-      const timer = setTimeout(() => {
-        setIsChartReady(true);
-      }, 100);
-      return () => clearTimeout(timer);
+      setIsChartReady(true);
     } else {
       setIsChartReady(false);
     }
@@ -72,7 +69,7 @@ export default function HpHcSeasonChart() {
             height: 300,
           }}
         >
-          <CircularProgress thickness={4} />
+          <CircularProgress thickness={8} size={60} />
         </div>
       ) : (
         <BarChart

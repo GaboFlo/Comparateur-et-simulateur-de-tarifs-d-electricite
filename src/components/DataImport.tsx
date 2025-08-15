@@ -97,6 +97,10 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
           totalConsumption,
           parsedData
         );
+        setFormState((prevState) => ({
+          ...prevState,
+          isGlobalLoading: false,
+        }));
         handleNext();
       } catch (error) {
         console.error("Erreur lors de l'analyse du fichier:", error);
@@ -107,8 +111,6 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
         }));
       }
     }
-
-    formState.isGlobalLoading = false;
   };
 
   const extractCsvFiles = async (zip: JSZip): Promise<Blob[]> => {
@@ -209,7 +211,9 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
             alignItems="center"
             justifyContent="center"
           >
-            {formState.isGlobalLoading && <CircularProgress thickness={4} />}
+            {formState.isGlobalLoading && (
+              <CircularProgress thickness={8} size={60} />
+            )}
             {!formState.isGlobalLoading && (
               <>
                 <Grid size={2}>
