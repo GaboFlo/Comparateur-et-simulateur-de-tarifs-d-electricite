@@ -130,7 +130,7 @@ export const findFirstAndLastDate = (
 };
 
 export function isHoliday(endOfSlotRecorded: Date) {
-  const holidays = allHolidays as string[];
+  const holidays = allHolidays;
   const minuteBefore = subMinutes(endOfSlotRecorded, 1);
   return holidays.includes(format(minuteBefore, "yyyy-MM-dd"));
 }
