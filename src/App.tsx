@@ -41,6 +41,14 @@ export default function App() {
     if (!formState.seasonHourlyAnalysis && activeStep === 2) {
       handleStepChange(0);
     }
+
+    // Preload des composants suivants pour améliorer les performances
+    if (activeStep === 0) {
+      import("./components/DataImport");
+    }
+    if (activeStep === 1) {
+      import("./components/Simulations");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStep, stepParam]);
 
