@@ -11,7 +11,7 @@
     "depcheck:ci": "depcheck --ignores=node-fetch,@types/jest,sort-package-json,eslint-config-react-app,ts-jest,typescript,@typescript-eslint/eslint-plugin | (! grep -v 'No depcheck issue') ",
     "fetch-and-update-tempo-data": "cd services && tsx run-tempo.ts",
     "lint": "eslint --ext .js,.ts .",
-    "lint:ci": "eslint --ext .js,.ts . | (! grep -v 'warning') | (! grep -v 'error')",
+    "lint:ci": "eslint --ext .js,.ts . --max-warnings 0",
     "preview": "vite preview",
     "sort-package:check": "sort-package-json --check",
     "sort-package:sort": "sort-package-json",

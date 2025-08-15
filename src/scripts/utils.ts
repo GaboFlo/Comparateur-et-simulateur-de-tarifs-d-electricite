@@ -60,12 +60,11 @@ export const isHpOrHcSlot = (endOfRecordedPeriod: Date, grids: HpHcSlot[]) => {
       return "HP";
     }
     return potentialGrid.slotType as SlotType;
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const errorMessage = e instanceof Error ? e.message : String(e);
     console.log(slotHourTime, grids, e);
     throw new Error(
-      `Error while finding slot type ${JSON.stringify(slotHourTime)} ${
-        e.message
-      }`
+      `Error while finding slot type ${JSON.stringify(slotHourTime)} ${errorMessage}`
     );
   }
 };
@@ -131,7 +130,7 @@ export const findFirstAndLastDate = (
 };
 
 export function isHoliday(endOfSlotRecorded: Date) {
-  const holidays = allHolidays;
+  const holidays = allHolidays as string[];
   const minuteBefore = subMinutes(endOfSlotRecorded, 1);
   return holidays.includes(format(minuteBefore, "yyyy-MM-dd"));
 }
