@@ -140,7 +140,11 @@ export interface ComparisonTableInterfaceRow {
 }
 
 export const APP_VERSION = (() => {
-  return document
-    .querySelector('meta[name="version"]')
-    ?.getAttribute("content");
+  if (typeof document !== "undefined") {
+    const metaVersion = document
+      ?.querySelector('meta[name="version"]')
+      ?.getAttribute("content");
+    return metaVersion ?? "dev";
+  }
+  return "default-dev";
 })();

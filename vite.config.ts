@@ -18,8 +18,6 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
-      strategies: "injectManifest",
-      injectRegister: "auto",
       manifest: {
         name: "Simulateur et comparateur de tarifs d'électricité",
         short_name: "Comparateur Électricité",
