@@ -12,10 +12,14 @@ export default function HpHcSeasonChart() {
   const [isChartReady, setIsChartReady] = useState(false);
 
   useEffect(() => {
-    if (formState.parsedData && formState.hpHcConfig) {
+    if (
+      formState.parsedData &&
+      formState.hpHcConfig &&
+      formState.parsedData.length > 0
+    ) {
       const timer = setTimeout(() => {
         setIsChartReady(true);
-      }, 100);
+      }, 50);
       return () => clearTimeout(timer);
     } else {
       setIsChartReady(false);

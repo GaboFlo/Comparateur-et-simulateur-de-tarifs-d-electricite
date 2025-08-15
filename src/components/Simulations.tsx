@@ -3,6 +3,7 @@ import { Alert, Button, Divider, Typography } from "@mui/material";
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/system";
 import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
 import { differenceInDays, endOfDay, format, startOfDay } from "date-fns";
+import { useEffect, useState } from "react";
 import { useFormContext } from "../context/FormContext";
 import { usePerformance } from "../hooks/usePerformance";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
@@ -18,6 +19,9 @@ export default function Simulations() {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
   const { deferHeavyCalculation } = usePerformance();
+  const [showHourlyChart, setShowHourlyChart] = useState(false);
+  const [showHpHcChart, setShowHpHcChart] = useState(false);
+  const [showComparisonTable, setShowComparisonTable] = useState(false);
 
   const setRange = (range: [Date, Date]) => {
     setFormState((prevState) => ({
@@ -51,10 +55,34 @@ export default function Simulations() {
         seasonHourlyAnalysis: seasonData,
         analyzedDateRange: range,
         totalConsumption: totalConsumption,
-        isGlobalLoading: false,
       }));
+
+      setTimeout(() => {
+        setFormState((prevState) => ({
+          ...prevState,
+          isGlobalLoading: false,
+        }));
+      }, 200);
     });
   };
+
+  useEffect(() => {
+    if (formState.seasonHourlyAnalysis) {
+      const timer1 = setTimeout(() => setShowHourlyChart(true), 100);
+      const timer2 = setTimeout(() => setShowHpHcChart(true), 300);
+      const timer3 = setTimeout(() => setShowComparisonTable(true), 500);
+
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        clearTimeout(timer3);
+      };
+    } else {
+      setShowHourlyChart(false);
+      setShowHpHcChart(false);
+      setShowComparisonTable(false);
+    }
+  }, [formState.seasonHourlyAnalysis]);
 
   const handlePrint = () => {
     window.print();
@@ -107,20 +135,24 @@ export default function Simulations() {
           jour
         </b>{" "}
       </Alert>
-      <HourlySeasonChart />
-      <Divider sx={{ marginX: 2, mt: 2 }} />
-      <HpHcSeasonChart />
-      <Divider sx={{ marginX: 2, mt: 2 }} />
-      <Typography variant="h5" sx={{ mt: 2 }}>
-        Combien auriez-vous gagné en changeant d'offre ?
-      </Typography>
-      <Typography variant="body2" sx={{ mb: 1 }}>
-        Les prix (TTC) sont <b>simulés</b> en fonction de votre consommation que
-        vous venez d'importer, sur la même période. <br />
-        Ils peuvent différer de vos factures car la simulation est réalisée sur
-        la base des tarifs actuels des fournisseurs.
-      </Typography>
-      <ComparisonTable />
+      {showHourlyChart && <HourlySeasonChart />}
+      {showHourlyChart && <Divider sx={{ marginX: 2, mt: 2 }} />}
+      {showHpHcChart && <HpHcSeasonChart />}
+      {showHpHcChart && <Divider sx={{ marginX: 2, mt: 2 }} />}
+      {showComparisonTable && (
+        <>
+          <Typography variant="h5" sx={{ mt: 2 }}>
+            Combien auriez-vous gagné en changeant d'offre ?
+          </Typography>
+          <Typography variant="body2" sx={{ mb: 1 }}>
+            Les prix (TTC) sont <b>simulés</b> en fonction de votre consommation
+            que vous venez d'importer, sur la même période. <br />
+            Ils peuvent différer de vos factures car la simulation est réalisée
+            sur la base des tarifs actuels des fournisseurs.
+          </Typography>
+          <ComparisonTable />
+        </>
+      )}
       {isDesktop && <HpHcSlotSelector readOnly />}
       <Button
         variant="contained"

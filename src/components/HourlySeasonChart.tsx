@@ -11,10 +11,13 @@ export default function HourlySeasonChart() {
   const [isChartReady, setIsChartReady] = useState(false);
 
   useEffect(() => {
-    if (formState.seasonHourlyAnalysis) {
+    if (
+      formState.seasonHourlyAnalysis &&
+      formState.seasonHourlyAnalysis.length > 0
+    ) {
       const timer = setTimeout(() => {
         setIsChartReady(true);
-      }, 100);
+      }, 50);
       return () => clearTimeout(timer);
     } else {
       setIsChartReady(false);
