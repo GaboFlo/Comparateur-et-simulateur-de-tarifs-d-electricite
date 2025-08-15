@@ -1,0 +1,6 @@
+services/injectVersion.js
+src/vite-env.d.ts
+node_modules/
+dist/
+build/
+coverage/ 
