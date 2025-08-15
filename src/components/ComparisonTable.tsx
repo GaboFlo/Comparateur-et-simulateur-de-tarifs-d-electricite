@@ -1,6 +1,6 @@
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import UpdateIcon from "@mui/icons-material/Update";
+
 import { CircularProgress, Link, Tooltip, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
@@ -141,8 +141,6 @@ export function ComparisonTable() {
                   highlight={
                     row.offerType === formState.offerType &&
                     row.optionKey === formState.optionType
-                      ? "true"
-                      : undefined
                   }
                 >
                   <StyledTableCell
@@ -178,12 +176,15 @@ export function ComparisonTable() {
                         )}`}
                         arrow
                       >
-                        <UpdateIcon
-                          sx={{
+                        <span
+                          style={{
                             fontSize: "1rem",
                             verticalAlign: "middle",
+                            cursor: "help",
                           }}
-                        />
+                        >
+                          📅
+                        </span>
                       </Tooltip>{" "}
                       {row.offerType && `${row.offerType} - `}
                       {row.optionName}{" "}
