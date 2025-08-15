@@ -14,7 +14,7 @@ import { format } from "date-fns";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
-import { usePerformance } from "../hooks/usePerformance";
+
 import { calculateRowSummary } from "../scripts/calculators";
 import allOffersFile from "../statics/price_mapping.json";
 import { PriceMappingFile } from "../types";
@@ -43,7 +43,6 @@ export function ComparisonTable() {
   const { formState, setFormState } = useFormContext();
   const allOffers = allOffersFile as PriceMappingFile;
   const navigate = useNavigate();
-  const { deferHeavyCalculation } = usePerformance();
 
   React.useEffect(() => {
     const dateRange = formState.analyzedDateRange;
@@ -63,42 +62,39 @@ export function ComparisonTable() {
       isGlobalLoading: true,
     }));
 
-    // Utiliser deferHeavyCalculation pour décaler les calculs lourds
-    deferHeavyCalculation(() => {
-      const newRowSummaries: any[] = [];
+    const newRowSummaries: any[] = [];
 
-      if (!formState.parsedData || !formState.hpHcConfig) return;
+    if (!formState.parsedData || !formState.hpHcConfig) return;
 
-      for (const option of allOffers) {
-        const costForOption = calculateRowSummary({
-          data: formState.parsedData,
-          dateRange,
-          powerClass: formState.powerClass,
-          optionKey: option.optionKey,
-          offerType: option.offerType,
-          optionName: option.optionName,
-          provider: option.provider,
-          lastUpdate: option.lastUpdate,
-          link: option.link,
-          hpHcData: formState.hpHcConfig,
-          overridingHpHcKey: option.overridingHpHcKey,
-        });
+    for (const option of allOffers) {
+      const costForOption = calculateRowSummary({
+        data: formState.parsedData,
+        dateRange,
+        powerClass: formState.powerClass,
+        optionKey: option.optionKey,
+        offerType: option.offerType,
+        optionName: option.optionName,
+        provider: option.provider,
+        lastUpdate: option.lastUpdate,
+        link: option.link,
+        hpHcData: formState.hpHcConfig,
+        overridingHpHcKey: option.overridingHpHcKey,
+      });
 
-        if (
-          !formState.rowSummaries.some(
-            (summary) => summary.optionKey === costForOption.optionKey
-          )
-        ) {
-          newRowSummaries.push(costForOption);
-        }
+      if (
+        !formState.rowSummaries.some(
+          (summary) => summary.optionKey === costForOption.optionKey
+        )
+      ) {
+        newRowSummaries.push(costForOption);
       }
+    }
 
-      setFormState((prevState) => ({
-        ...prevState,
-        rowSummaries: prevState.rowSummaries.concat(newRowSummaries),
-        isGlobalLoading: false,
-      }));
-    });
+    setFormState((prevState) => ({
+      ...prevState,
+      rowSummaries: prevState.rowSummaries.concat(newRowSummaries),
+      isGlobalLoading: false,
+    }));
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allOffers, formState.analyzedDateRange, formState.parsedData]);
