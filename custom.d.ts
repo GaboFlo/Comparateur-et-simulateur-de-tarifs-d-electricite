@@ -19,6 +19,8 @@ declare module "date-fns" {
 }
 
 declare module "@mui/icons-material/UploadFileRounded" {
-  const UploadFileRoundedIcon: React.ComponentType<any>;
+  const UploadFileRoundedIcon: React.ComponentType<
+    React.SVGProps<SVGSVGElement>
+  >;
   export default UploadFileRoundedIcon;
 }

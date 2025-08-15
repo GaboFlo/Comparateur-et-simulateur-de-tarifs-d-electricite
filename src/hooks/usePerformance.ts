@@ -23,7 +23,8 @@ export const useMemoizedCalculation = <T>(
   calculation: () => T,
   dependencies: unknown[]
 ): T => {
-  return useMemo(() => calculation(), dependencies);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  return useMemo(() => calculation(), [...dependencies]);
 };
 
 // Hook pour l'intersection observer (lazy loading)
