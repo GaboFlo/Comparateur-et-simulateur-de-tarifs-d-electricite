@@ -15,6 +15,7 @@ import { useFormContext } from "../context/FormContext";
 import { parseCsvToConsumptionLoadCurveData } from "../scripts/csvParser";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
 import { findFirstAndLastDate } from "../scripts/utils";
+import { ConsumptionLoadCurveData, SeasonHourlyAnalysis } from "../types";
 import TooltipModal from "./TooltipModal";
 
 interface Props {
@@ -96,13 +97,20 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
           totalConsumption,
           parsedData
         );
+        setFormState((prevState) => ({
+          ...prevState,
+          isGlobalLoading: false,
+        }));
         handleNext();
       } catch (error) {
+        console.error("Erreur lors de l'analyse du fichier:", error);
         setFileError("Une erreur est survenue pendant l'analyse");
+        setFormState((prevState) => ({
+          ...prevState,
+          isGlobalLoading: false,
+        }));
       }
     }
-
-    formState.isGlobalLoading = false;
   };
 
   const extractCsvFiles = async (zip: JSZip): Promise<Blob[]> => {
@@ -119,10 +127,10 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   };
 
   const updateFormState = (
-    seasonData: any,
-    analyzedDateRange: any,
+    seasonData: SeasonHourlyAnalysis[],
+    analyzedDateRange: [Date, Date],
     totalConsumption: number,
-    parsedData: any
+    parsedData: ConsumptionLoadCurveData[]
   ) => {
     setFormState((prevState) => ({
       ...prevState,
@@ -203,12 +211,14 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
             alignItems="center"
             justifyContent="center"
           >
-            {formState.isGlobalLoading && <CircularProgress />}
+            {formState.isGlobalLoading && (
+              <CircularProgress thickness={8} size={60} />
+            )}
             {!formState.isGlobalLoading && (
               <>
                 <Grid size={2}>
                   <input {...getInputProps()} />
-                  <UploadFileRoundedIcon sx={{ fontSize: 50 }} />
+                  <UploadFileRoundedIcon style={{ fontSize: 50 }} />
                 </Grid>
                 <Grid size={10}>
                   <p>

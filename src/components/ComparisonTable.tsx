@@ -1,6 +1,6 @@
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import UpdateIcon from "@mui/icons-material/Update";
+
 import { CircularProgress, Link, Tooltip, Typography } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
@@ -14,9 +14,10 @@ import { format } from "date-fns";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
+
 import { calculateRowSummary } from "../scripts/calculators";
 import allOffersFile from "../statics/price_mapping.json";
-import { PriceMappingFile } from "../types";
+import { ComparisonTableInterfaceRow, PriceMappingFile } from "../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -29,12 +30,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 interface StyledTableRowProps {
-  highlight: boolean;
+  highlight: string;
 }
 
 const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
   ({ theme, highlight }) => ({
-    backgroundColor: highlight ? theme.palette.primary.light : "inherit",
+    backgroundColor:
+      highlight === "true" ? theme.palette.primary.light : "inherit",
   })
 );
 
@@ -54,12 +56,16 @@ export function ComparisonTable() {
     ) {
       navigate("?step=0");
       return;
-    } else {
-      setFormState((prevState) => ({
-        ...prevState,
-        isGlobalLoading: true,
-      }));
     }
+
+    setFormState((prevState) => ({
+      ...prevState,
+      isGlobalLoading: true,
+    }));
+
+    const newRowSummaries: ComparisonTableInterfaceRow[] = [];
+
+    if (!formState.parsedData || !formState.hpHcConfig) return;
 
     for (const option of allOffers) {
       const costForOption = calculateRowSummary({
@@ -75,21 +81,22 @@ export function ComparisonTable() {
         hpHcData: formState.hpHcConfig,
         overridingHpHcKey: option.overridingHpHcKey,
       });
+
       if (
         !formState.rowSummaries.some(
           (summary) => summary.optionKey === costForOption.optionKey
         )
       ) {
-        setFormState((prevState) => ({
-          ...prevState,
-          rowSummaries: prevState.rowSummaries.concat(costForOption),
-        }));
+        newRowSummaries.push(costForOption);
       }
     }
+
     setFormState((prevState) => ({
       ...prevState,
+      rowSummaries: prevState.rowSummaries.concat(newRowSummaries),
       isGlobalLoading: false,
     }));
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allOffers, formState.analyzedDateRange, formState.parsedData]);
 
@@ -114,7 +121,7 @@ export function ComparisonTable() {
   return (
     <TableContainer component={Paper} sx={{ my: 3 }}>
       {formState.isGlobalLoading || !formState.rowSummaries ? (
-        <CircularProgress />
+        <CircularProgress thickness={8} size={60} />
       ) : (
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
@@ -138,10 +145,10 @@ export function ComparisonTable() {
               .map((row) => (
                 <StyledTableRow
                   key={`${row.provider}-${row.offerType}-${row.optionKey}`}
-                  highlight={
+                  highlight={(
                     row.offerType === formState.offerType &&
                     row.optionKey === formState.optionType
-                  }
+                  ).toString()}
                 >
                   <StyledTableCell
                     align="center"
@@ -176,12 +183,15 @@ export function ComparisonTable() {
                         )}`}
                         arrow
                       >
-                        <UpdateIcon
-                          sx={{
+                        <span
+                          style={{
                             fontSize: "1rem",
                             verticalAlign: "middle",
+                            cursor: "help",
                           }}
-                        />
+                        >
+                          📅
+                        </span>
                       </Tooltip>{" "}
                       {row.offerType && `${row.offerType} - `}
                       {row.optionName}{" "}
