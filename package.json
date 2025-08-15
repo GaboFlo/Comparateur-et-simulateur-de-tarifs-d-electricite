@@ -16,7 +16,7 @@
     "sort-package:check": "sort-package-json --check",
     "sort-package:sort": "sort-package-json",
     "start": "vite",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --config jest.config.js"
   },
   "browserslist": {
     "production": [
@@ -70,6 +70,7 @@
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
+    "jest": "^30.0.5",
     "sort-package-json": "^3.4.0",
     "ts-jest": "^29.3.1",
     "ts-prune": "^0.10.3",
