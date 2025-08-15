@@ -11,7 +11,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { format } from "date-fns";
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
 import { usePerformance } from "../hooks/usePerformance";
@@ -30,13 +30,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 interface StyledTableRowProps {
-  highlight: string;
+  highlight: boolean;
 }
 
 const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
   ({ theme, highlight }) => ({
-    backgroundColor:
-      highlight === "true" ? theme.palette.primary.light : "inherit",
+    backgroundColor: highlight ? theme.palette.primary.light : "inherit",
   })
 );
 
@@ -45,7 +44,6 @@ export function ComparisonTable() {
   const allOffers = allOffersFile as PriceMappingFile;
   const navigate = useNavigate();
   const { deferHeavyCalculation } = usePerformance();
-  const [isTableReady, setIsTableReady] = useState(false);
 
   React.useEffect(() => {
     const dateRange = formState.analyzedDateRange;
@@ -100,10 +98,6 @@ export function ComparisonTable() {
         rowSummaries: prevState.rowSummaries.concat(newRowSummaries),
         isGlobalLoading: false,
       }));
-
-      setTimeout(() => {
-        setIsTableReady(true);
-      }, 100);
     });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -129,17 +123,8 @@ export function ComparisonTable() {
 
   return (
     <TableContainer component={Paper} sx={{ my: 3 }}>
-      {formState.isGlobalLoading || !isTableReady ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: "2rem",
-          }}
-        >
-          <CircularProgress />
-        </div>
+      {formState.isGlobalLoading || !formState.rowSummaries ? (
+        <CircularProgress />
       ) : (
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
@@ -163,10 +148,10 @@ export function ComparisonTable() {
               .map((row) => (
                 <StyledTableRow
                   key={`${row.provider}-${row.offerType}-${row.optionKey}`}
-                  highlight={(
+                  highlight={
                     row.offerType === formState.offerType &&
                     row.optionKey === formState.optionType
-                  ).toString()}
+                  }
                 >
                   <StyledTableCell
                     align="center"
