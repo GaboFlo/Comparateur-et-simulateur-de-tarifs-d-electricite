@@ -79,6 +79,8 @@ export default function TooltipModal({
             <img
               src={imgPath}
               alt={imgDescription}
+              width="480"
+              height="300"
               style={{
                 marginTop: "16px",
                 maxHeight: "300px",

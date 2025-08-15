@@ -98,7 +98,12 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
         );
         handleNext();
       } catch (error) {
+        console.error("Erreur lors de l'analyse du fichier:", error);
         setFileError("Une erreur est survenue pendant l'analyse");
+        setFormState((prevState) => ({
+          ...prevState,
+          isGlobalLoading: false,
+        }));
       }
     }
 

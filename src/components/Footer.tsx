@@ -37,6 +37,8 @@ export default function Footer() {
           <img
             src="./github.svg"
             alt="GitHub"
+            width="18"
+            height="18"
             style={{
               marginLeft: "0.5rem",
               marginRight: "0.5rem",
@@ -59,6 +61,8 @@ export default function Footer() {
         <img
           src="https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png"
           alt="Licence CC BY-NC-SA"
+          width="88"
+          height="31"
           style={{ marginLeft: "0.5rem" }}
         />
       </p>

@@ -10,4 +10,10 @@ declare module "date-fns" {
     date: Date | number | string,
     formatStr: string
   ): string;
+  export function differenceInDays(
+    dateLeft: Date | number,
+    dateRight: Date | number
+  ): number;
+  export function endOfDay(date: Date | number): Date;
+  export function startOfDay(date: Date | number): Date;
 }

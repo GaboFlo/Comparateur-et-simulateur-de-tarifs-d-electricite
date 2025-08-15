@@ -1,12 +1,25 @@
-import { Divider, Paper } from "@mui/material";
+import { CircularProgress, Divider, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { pieArcLabelClasses, PieChart } from "@mui/x-charts";
 import { BarChart } from "@mui/x-charts/BarChart";
+import { useEffect, useState } from "react";
 import { useFormContext } from "../context/FormContext";
 import { formatKWhLarge, getSeasonColor } from "../scripts/utils";
 
 export default function HourlySeasonChart() {
   const { formState } = useFormContext();
+  const [isChartReady, setIsChartReady] = useState(false);
+
+  useEffect(() => {
+    if (formState.seasonHourlyAnalysis) {
+      const timer = setTimeout(() => {
+        setIsChartReady(true);
+      }, 100);
+      return () => clearTimeout(timer);
+    } else {
+      setIsChartReady(false);
+    }
+  }, [formState.seasonHourlyAnalysis]);
 
   const valueFormatter = (value: number | null) => {
     return value ? formatKWhLarge(value) : "N/A";
@@ -33,6 +46,17 @@ export default function HourlySeasonChart() {
         <Typography>
           Aucune donnée à afficher. Veuillez importer un fichier EDF.
         </Typography>
+      ) : !isChartReady ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: 300,
+          }}
+        >
+          <CircularProgress />
+        </div>
       ) : (
         <>
           <BarChart

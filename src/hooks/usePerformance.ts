@@ -114,3 +114,32 @@ export const usePerformanceMonitor = () => {
 
   return { startMeasurement, endMeasurement };
 };
+
+export const usePerformance = () => {
+  const deferHeavyCalculation = useCallback((callback: () => void) => {
+    // Utiliser requestIdleCallback si disponible, sinon setTimeout
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      (
+        window as Window & {
+          requestIdleCallback: (
+            callback: () => void,
+            options?: { timeout: number }
+          ) => number;
+        }
+      ).requestIdleCallback(callback, { timeout: 1000 });
+    } else {
+      setTimeout(callback, 0);
+    }
+  }, []);
+
+  const batchStateUpdates = useCallback((updates: (() => void)[]) => {
+    deferHeavyCalculation(() => {
+      updates.forEach((update) => update());
+    });
+  }, []);
+
+  return {
+    deferHeavyCalculation,
+    batchStateUpdates,
+  };
+};

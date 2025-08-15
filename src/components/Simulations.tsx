@@ -4,6 +4,7 @@ import { Box, Stack, useMediaQuery, useTheme } from "@mui/system";
 import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
 import { differenceInDays, endOfDay, format, startOfDay } from "date-fns";
 import { useFormContext } from "../context/FormContext";
+import { usePerformance } from "../hooks/usePerformance";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
 import { formatKWhLarge } from "../scripts/utils";
 import { ComparisonTable } from "./ComparisonTable";
@@ -16,6 +17,7 @@ export default function Simulations() {
   const { trackEvent } = useMatomo();
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+  const { deferHeavyCalculation } = usePerformance();
 
   const setRange = (range: [Date, Date]) => {
     setFormState((prevState) => ({
@@ -23,25 +25,35 @@ export default function Simulations() {
       dateRange: range,
       isGlobalLoading: true,
     }));
+
     if (!formState.parsedData) {
+      setFormState((prevState) => ({
+        ...prevState,
+        isGlobalLoading: false,
+      }));
       return;
     }
-    const seasonData = analyseHourByHourBySeason({
-      data: formState.parsedData,
-      dateRange: range,
-    });
-    const totalConsumption = seasonData.reduce(
-      (acc, cur) => acc + cur.seasonTotalSum,
-      0
-    );
 
-    setFormState((prevState) => ({
-      ...prevState,
-      seasonHourlyAnalysis: seasonData,
-      analyzedDateRange: range,
-      totalConsumption: totalConsumption,
-      isGlobalLoading: false,
-    }));
+    deferHeavyCalculation(() => {
+      if (!formState.parsedData) return;
+
+      const seasonData = analyseHourByHourBySeason({
+        data: formState.parsedData,
+        dateRange: range,
+      });
+      const totalConsumption = seasonData.reduce(
+        (acc, cur) => acc + cur.seasonTotalSum,
+        0
+      );
+
+      setFormState((prevState) => ({
+        ...prevState,
+        seasonHourlyAnalysis: seasonData,
+        analyzedDateRange: range,
+        totalConsumption: totalConsumption,
+        isGlobalLoading: false,
+      }));
+    });
   };
 
   const handlePrint = () => {

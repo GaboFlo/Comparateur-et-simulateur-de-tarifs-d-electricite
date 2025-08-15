@@ -9,14 +9,16 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Stepper from "@mui/material/Stepper";
 import * as React from "react";
+import { lazy, Suspense } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CurrentOfferForm from "./components/CurrentOfferForm";
 import DataImport from "./components/DataImport";
 import Footer from "./components/Footer";
 import InfoMobile from "./components/InfoMobile";
-import Simulations from "./components/Simulations";
 import { DEFAULT_FORM_STATE, useFormContext } from "./context/FormContext";
 import { APP_VERSION } from "./types";
+
+const Simulations = lazy(() => import("./components/Simulations"));
 
 const steps = ["Votre offre actuelle", "Votre consommation", "Simulations"];
 
@@ -69,14 +71,35 @@ export default function App() {
     });
   };
 
+  const LoadingSpinner = () => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        padding: "2rem",
+      }}
+    >
+      <div className="spinner"></div>
+    </div>
+  );
+
   function getStepContent(step: number) {
     switch (step) {
       case 0:
         return <CurrentOfferForm handleNext={handleNextAndTrack} />;
       case 1:
-        return <DataImport handleNext={handleNext} />;
+        return (
+          <Suspense fallback={<LoadingSpinner />}>
+            <DataImport handleNext={handleNext} />
+          </Suspense>
+        );
       case 2:
-        return <Simulations />;
+        return (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Simulations />
+          </Suspense>
+        );
       default:
         throw new Error("Unknown step");
     }
@@ -178,7 +201,7 @@ export default function App() {
                 activeStep={activeStep}
                 sx={{ width: "100%", height: 40 }}
               >
-                {steps.map((label, index) => (
+                {steps.map((label) => (
                   <Step
                     sx={{
                       ":first-of-type": { pl: 0 },
@@ -208,7 +231,7 @@ export default function App() {
               alternativeLabel
               sx={{ display: { sm: "flex", md: "none" } }}
             >
-              {steps.map((label, index) => (
+              {steps.map((label) => (
                 <Step
                   sx={{
                     ":first-of-type": { pl: 0 },

@@ -81,7 +81,23 @@ export default defineConfig({
           mui: ["@mui/material", "@mui/icons-material", "@mui/system"],
           charts: ["@mui/x-charts"],
           utils: ["axios", "date-fns", "jszip"],
+          datePickers: ["@mui/x-date-pickers", "@mui/x-date-pickers-pro"],
         },
+        assetFileNames: (assetInfo) => {
+          const name = assetInfo.name;
+          if (!name) return "assets/[name]-[hash][extname]";
+          const info = name.split(".");
+          const ext = info[info.length - 1];
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(ext)) {
+            return `assets/images/[name]-[hash][extname]`;
+          }
+          if (/woff2?|eot|ttf|otf/i.test(ext)) {
+            return `assets/fonts/[name]-[hash][extname]`;
+          }
+          return `assets/[name]-[hash][extname]`;
+        },
+        chunkFileNames: "assets/js/[name]-[hash].js",
+        entryFileNames: "assets/js/[name]-[hash].js",
       },
     },
     chunkSizeWarningLimit: 1000,
@@ -90,6 +106,11 @@ export default defineConfig({
       compress: {
         drop_console: true,
         drop_debugger: true,
+        pure_funcs: ["console.log", "console.info", "console.debug"],
+        passes: 2,
+      },
+      mangle: {
+        safari10: true,
       },
     },
   },
