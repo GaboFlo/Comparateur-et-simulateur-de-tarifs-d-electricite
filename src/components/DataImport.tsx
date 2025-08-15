@@ -15,6 +15,7 @@ import { useFormContext } from "../context/FormContext";
 import { parseCsvToConsumptionLoadCurveData } from "../scripts/csvParser";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
 import { findFirstAndLastDate } from "../scripts/utils";
+import { ConsumptionLoadCurveData, SeasonHourlyAnalysis } from "../types";
 import TooltipModal from "./TooltipModal";
 
 interface Props {
@@ -124,10 +125,10 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   };
 
   const updateFormState = (
-    seasonData: any,
-    analyzedDateRange: any,
+    seasonData: SeasonHourlyAnalysis[],
+    analyzedDateRange: [Date, Date],
     totalConsumption: number,
-    parsedData: any
+    parsedData: ConsumptionLoadCurveData[]
   ) => {
     setFormState((prevState) => ({
       ...prevState,

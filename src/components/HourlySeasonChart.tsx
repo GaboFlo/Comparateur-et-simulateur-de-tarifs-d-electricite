@@ -98,7 +98,7 @@ export default function HourlySeasonChart() {
           <PieChart
             series={[
               {
-                arcLabel: (item: { value: any }) =>
+                arcLabel: (item: { value: number }) =>
                   `${Math.round(
                     (item.value / formState.totalConsumption) * 100
                   )}%`,

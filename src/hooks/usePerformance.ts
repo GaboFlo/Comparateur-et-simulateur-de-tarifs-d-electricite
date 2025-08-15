@@ -23,7 +23,7 @@ export const useMemoizedCalculation = <T>(
   calculation: () => T,
   dependencies: unknown[]
 ): T => {
-  return useMemo(calculation, dependencies);
+  return useMemo(() => calculation(), dependencies);
 };
 
 // Hook pour l'intersection observer (lazy loading)

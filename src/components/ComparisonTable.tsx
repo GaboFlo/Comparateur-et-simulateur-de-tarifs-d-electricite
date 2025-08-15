@@ -17,7 +17,7 @@ import { useFormContext } from "../context/FormContext";
 
 import { calculateRowSummary } from "../scripts/calculators";
 import allOffersFile from "../statics/price_mapping.json";
-import { PriceMappingFile } from "../types";
+import { ComparisonTableInterfaceRow, PriceMappingFile } from "../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -62,7 +62,7 @@ export function ComparisonTable() {
       isGlobalLoading: true,
     }));
 
-    const newRowSummaries: any[] = [];
+    const newRowSummaries: ComparisonTableInterfaceRow[] = [];
 
     if (!formState.parsedData || !formState.hpHcConfig) return;
 

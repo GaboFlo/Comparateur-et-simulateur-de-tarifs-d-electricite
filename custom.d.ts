@@ -17,3 +17,8 @@ declare module "date-fns" {
   export function endOfDay(date: Date | number): Date;
   export function startOfDay(date: Date | number): Date;
 }
+
+declare module "@mui/icons-material/UploadFileRounded" {
+  const UploadFileRoundedIcon: React.ComponentType<any>;
+  export default UploadFileRoundedIcon;
+}
