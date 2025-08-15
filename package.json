@@ -17,7 +17,10 @@
     "sort-package:check": "sort-package-json --check",
     "sort-package:sort": "sort-package-json",
     "start": "vite",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --config jest.config.js"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage --config jest.config.js",
+    "ui:modern": "node scripts/switch-ui.js modern",
+    "ui:classic": "node scripts/switch-ui.js classic",
+    "ui:status": "node scripts/switch-ui.js status"
   },
   "browserslist": {
     "production": [
@@ -51,6 +54,7 @@
     "axios": "^1.8.2",
     "date-fns": "^4.1.0",
     "date-holidays": "^3.24.0",
+    "framer-motion": "^12.23.12",
     "jszip": "^3.10.1",
     "notistack": "^3.0.2",
     "react": "^19.1.0",

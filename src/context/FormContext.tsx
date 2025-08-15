@@ -67,11 +67,56 @@ export const DEFAULT_FORM_STATE: FormState = {
 };
 
 export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
-  const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
+  // Récupérer l'état initial depuis localStorage ou utiliser les valeurs par défaut
+  const getInitialState = (): FormState => {
+    try {
+      const saved = localStorage.getItem("formState");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Convertir les dates string en objets Date
+        if (parsed.analyzedDateRange) {
+          parsed.analyzedDateRange = [
+            new Date(parsed.analyzedDateRange[0]),
+            new Date(parsed.analyzedDateRange[1]),
+          ];
+        }
+        return { ...DEFAULT_FORM_STATE, ...parsed };
+      }
+    } catch (error) {
+      console.error("Erreur lors du chargement du state:", error);
+    }
+    return DEFAULT_FORM_STATE;
+  };
+
+  const [formState, setFormState] = useState<FormState>(getInitialState);
+
+  // Sauvegarder dans localStorage à chaque changement
+  const setFormStateWithPersistence = React.useCallback(
+    (newState: FormState | ((prev: FormState) => FormState)) => {
+      setFormState((prevState) => {
+        const nextState =
+          typeof newState === "function" ? newState(prevState) : newState;
+
+        console.log("FormState updated:", {
+          seasonHourlyAnalysis: nextState.seasonHourlyAnalysis?.length,
+          totalConsumption: nextState.totalConsumption,
+          parsedDataLength: nextState.parsedData?.length,
+        });
+
+        try {
+          localStorage.setItem("formState", JSON.stringify(nextState));
+        } catch (error) {
+          console.error("Erreur lors de la sauvegarde du state:", error);
+        }
+        return nextState;
+      });
+    },
+    []
+  );
 
   const contextValue = useMemo(
-    () => ({ formState, setFormState }),
-    [formState]
+    () => ({ formState, setFormState: setFormStateWithPersistence }),
+    [formState, setFormStateWithPersistence]
   );
 
   return (

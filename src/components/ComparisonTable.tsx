@@ -1,7 +1,13 @@
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import { CircularProgress, Link, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Link,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -15,9 +21,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
 
-import { calculateRowSummary } from "../scripts/calculators";
 import allOffersFile from "../statics/price_mapping.json";
-import { ComparisonTableInterfaceRow, PriceMappingFile } from "../types";
+import { PriceMappingFile } from "../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -48,57 +53,46 @@ export function ComparisonTable() {
   React.useEffect(() => {
     const dateRange = formState.analyzedDateRange;
 
+    console.log("ComparisonTable useEffect - État actuel:", {
+      dateRange: !!dateRange,
+      parsedData: !!formState.parsedData,
+      hpHcConfig: !!formState.hpHcConfig,
+      rowSummaries: formState.rowSummaries?.length || 0,
+      isGlobalLoading: formState.isGlobalLoading,
+    });
+
     if (
       !dateRange ||
       !formState.parsedData ||
       !formState.hpHcConfig ||
       !formState.rowSummaries
     ) {
+      console.log("navigate to step 0 from comparison table");
+      console.log("dateRange", dateRange);
+      console.log("parsedData", formState.parsedData);
+      console.log("hpHcConfig", formState.hpHcConfig);
+      console.log("rowSummaries", formState.rowSummaries);
       navigate("?step=0");
       return;
     }
 
-    setFormState((prevState) => ({
-      ...prevState,
-      isGlobalLoading: true,
-    }));
-
-    const newRowSummaries: ComparisonTableInterfaceRow[] = [];
-
-    if (!formState.parsedData || !formState.hpHcConfig) return;
-
-    for (const option of allOffers) {
-      const costForOption = calculateRowSummary({
-        data: formState.parsedData,
-        dateRange,
-        powerClass: formState.powerClass,
-        optionKey: option.optionKey,
-        offerType: option.offerType,
-        optionName: option.optionName,
-        provider: option.provider,
-        lastUpdate: option.lastUpdate,
-        link: option.link,
-        hpHcData: formState.hpHcConfig,
-        overridingHpHcKey: option.overridingHpHcKey,
-      });
-
-      if (
-        !formState.rowSummaries.some(
-          (summary) => summary.optionKey === costForOption.optionKey
-        )
-      ) {
-        newRowSummaries.push(costForOption);
-      }
+    // Les calculs sont maintenant pré-calculés dans ModernDataImport
+    // On vérifie juste que les données sont présentes
+    if (!formState.rowSummaries || formState.rowSummaries.length === 0) {
+      console.log("Aucune donnée de simulation disponible");
+      return;
     }
 
-    setFormState((prevState) => ({
-      ...prevState,
-      rowSummaries: prevState.rowSummaries.concat(newRowSummaries),
-      isGlobalLoading: false,
-    }));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allOffers, formState.analyzedDateRange, formState.parsedData]);
+    console.log(
+      "Affichage des simulations pré-calculées:",
+      formState.rowSummaries.length,
+      "offres"
+    );
+  }, [
+    formState.analyzedDateRange,
+    formState.parsedData,
+    formState.rowSummaries,
+  ]);
 
   const currentOfferTotal =
     formState.rowSummaries.find(
@@ -120,8 +114,17 @@ export function ComparisonTable() {
 
   return (
     <TableContainer component={Paper} sx={{ my: 3 }}>
-      {formState.isGlobalLoading || !formState.rowSummaries ? (
-        <CircularProgress thickness={8} size={60} />
+      {formState.isGlobalLoading ||
+      !formState.rowSummaries ||
+      formState.rowSummaries.length === 0 ? (
+        <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+          <CircularProgress thickness={8} size={60} />
+          <Typography sx={{ ml: 2, alignSelf: "center" }}>
+            {formState.isGlobalLoading
+              ? "Calcul des simulations..."
+              : "Aucune donnée de simulation disponible"}
+          </Typography>
+        </Box>
       ) : (
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>

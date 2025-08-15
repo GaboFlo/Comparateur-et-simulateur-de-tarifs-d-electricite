@@ -1,4 +1,13 @@
-import { addDays, format, getDate, getMonth, subMinutes } from "date-fns";
+import {
+  addDays,
+  endOfDay,
+  format,
+  getDate,
+  getMonth,
+  startOfDay,
+  subMinutes,
+  subYears,
+} from "date-fns";
 import Holidays from "date-holidays";
 import allHolidays from "../assets/holidays.json";
 import tempoFile from "../statics/hp_hc-BLEU_TEMPO.json";
@@ -64,7 +73,9 @@ export const isHpOrHcSlot = (endOfRecordedPeriod: Date, grids: HpHcSlot[]) => {
     const errorMessage = e instanceof Error ? e.message : String(e);
     console.log(slotHourTime, grids, e);
     throw new Error(
-      `Error while finding slot type ${JSON.stringify(slotHourTime)} ${errorMessage}`
+      `Error while finding slot type ${JSON.stringify(
+        slotHourTime
+      )} ${errorMessage}`
     );
   }
 };
@@ -123,9 +134,30 @@ export function findMonthlySubscriptionCost(
 export const findFirstAndLastDate = (
   data: ConsumptionLoadCurveData[]
 ): [Date, Date] => {
-  const dates = data.map((item) => new Date(item.recordedAt)?.getTime());
-  const firstDate = Math.min(...dates);
-  const lastDate = Math.max(...dates);
+  if (!data || data.length === 0) {
+    // Retourner des dates par défaut si aucune donnée
+    const defaultStart = startOfDay(subYears(new Date(), 1));
+    const defaultEnd = endOfDay(new Date());
+    return [defaultStart, defaultEnd];
+  }
+
+  const validDates = data
+    .map((item) => {
+      const date = new Date(item.recordedAt);
+      return isNaN(date.getTime()) ? null : date.getTime();
+    })
+    .filter((time) => time !== null) as number[];
+
+  if (validDates.length === 0) {
+    // Retourner des dates par défaut si aucune date valide
+    const defaultStart = startOfDay(subYears(new Date(), 1));
+    const defaultEnd = endOfDay(new Date());
+    return [defaultStart, defaultEnd];
+  }
+
+  const firstDate = Math.min(...validDates);
+  const lastDate = Math.max(...validDates);
+
   return [new Date(firstDate), new Date(lastDate)];
 };
 
