@@ -141,7 +141,9 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth sx={{ marginY: 1 }}>
-            <FormLabel required>Fournisseur actuel</FormLabel>
+            <FormLabel id="provider-label" required>
+              Fournisseur actuel
+            </FormLabel>
             <Select
               id="provider"
               name="provider"
@@ -150,6 +152,7 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
               value={formState.provider}
               onChange={handleChange}
               sx={{ height: "55px" }}
+              aria-labelledby="provider-label"
             >
               {allOffers &&
                 getDisctinctProviders(allOffers).map((provider) => (
@@ -169,7 +172,9 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
           </FormControl>
 
           <FormControl fullWidth sx={{ marginY: 1 }}>
-            <FormLabel required>Option actuelle</FormLabel>
+            <FormLabel id="optionType-label" required>
+              Option actuelle
+            </FormLabel>
             <Select
               id="optionType"
               name="optionType"
@@ -177,6 +182,7 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
               onChange={handleChange}
               required
               disabled={!formState.offerType || !allOffers}
+              aria-labelledby="optionType-label"
             >
               {allOffers &&
                 getAvailableOptionsForOffer(
@@ -223,7 +229,9 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth sx={{ marginY: 1 }}>
-            <FormLabel required>Offre actuelle</FormLabel>
+            <FormLabel id="offerType-label" required>
+              Offre actuelle
+            </FormLabel>
             <Select
               id="offerType"
               name="offerType"
@@ -231,6 +239,7 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
               onChange={handleChange}
               required
               fullWidth
+              aria-labelledby="offerType-label"
             >
               {!allOffers ? (
                 <CircularProgress thickness={8} size={60} />
@@ -246,13 +255,16 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
             </Select>
           </FormControl>
           <FormControl fullWidth sx={{ marginY: 1 }}>
-            <FormLabel required>Puissance de votre compteur (kVA)</FormLabel>
+            <FormLabel id="powerClass-label" required>
+              Puissance de votre compteur (kVA)
+            </FormLabel>
             <Select
               id="powerClass"
               name="powerClass"
               value={formState.powerClass}
               onChange={handleChange}
               required
+              aria-labelledby="powerClass-label"
             >
               {powerClasses.map((value: PowerClass) => (
                 <MenuItem key={value} value={value}>
