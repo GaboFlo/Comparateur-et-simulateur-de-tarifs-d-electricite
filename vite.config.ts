@@ -18,6 +18,8 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
+      strategies: "injectManifest",
+      injectRegister: "auto",
       manifest: {
         name: "Simulateur et comparateur de tarifs d'électricité",
         short_name: "Comparateur Électricité",
@@ -53,6 +55,28 @@ export default defineConfig({
               },
             },
           },
+          {
+            urlPattern: /\.(?:js|css)$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "static-resources",
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
+            },
+          },
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|gif|ico|woff2)$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "images-cache",
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+              },
+            },
+          },
         ],
       },
       devOptions: {
@@ -74,6 +98,7 @@ export default defineConfig({
   build: {
     outDir: "build",
     sourcemap: false,
+    assetsInlineLimit: 4096,
     rollupOptions: {
       output: {
         manualChunks: {
