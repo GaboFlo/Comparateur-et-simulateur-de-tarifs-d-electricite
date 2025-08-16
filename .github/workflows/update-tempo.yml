@@ -87,6 +87,7 @@ jobs:
 
       - name: Build frontend
         run: |
+          REACT_APP_VERSION=$VERSION npm run build
           npm version ${{ env.FULL_VERSION }} --no-git-tag-version
         env:
           FULL_VERSION: ${{ env.FULL_VERSION }}
