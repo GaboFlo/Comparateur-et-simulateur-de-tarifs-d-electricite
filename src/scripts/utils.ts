@@ -1,4 +1,5 @@
-import { addDays, format, getDate, getMonth, subMinutes } from "date-fns";
+import dayjs from "dayjs";
+
 import Holidays from "date-holidays";
 import allHolidays from "../assets/holidays.json";
 import tempoFile from "../statics/hp_hc-BLEU_TEMPO.json";
@@ -27,9 +28,9 @@ export const getHolidaysBetweenDates = (range: [Date, Date]) => {
 
   while (currentDate <= range[1]) {
     if (isFrenchHoliday(currentDate)) {
-      holidays.push(format(new Date(currentDate), "yyyy-MM-dd"));
+      holidays.push(dayjs(currentDate).format("YYYY-MM-DD"));
     }
-    currentDate = addDays(currentDate, 1);
+    currentDate = dayjs(currentDate).add(1, "day").toDate();
   }
 
   return holidays;
@@ -62,16 +63,17 @@ export const isHpOrHcSlot = (endOfRecordedPeriod: Date, grids: HpHcSlot[]) => {
     return potentialGrid.slotType as SlotType;
   } catch (e: unknown) {
     const errorMessage = e instanceof Error ? e.message : String(e);
-    console.log(slotHourTime, grids, e);
     throw new Error(
-      `Error while finding slot type ${JSON.stringify(slotHourTime)} ${errorMessage}`
+      `Error while finding slot type ${JSON.stringify(
+        slotHourTime
+      )} ${errorMessage}`
     );
   }
 };
 
 export function getSeason(date: Date) {
-  const month = getMonth(date); // Get the month (0-indexed)
-  const day = getDate(date); // Get the day of the month
+  const month = dayjs(date).month(); // Get the month (0-indexed)
+  const day = dayjs(date).date(); // Get the day of the month
 
   // Define season start and end dates (adjust as needed for your specific definition)
   const seasons = [
@@ -123,16 +125,37 @@ export function findMonthlySubscriptionCost(
 export const findFirstAndLastDate = (
   data: ConsumptionLoadCurveData[]
 ): [Date, Date] => {
-  const dates = data.map((item) => new Date(item.recordedAt)?.getTime());
-  const firstDate = Math.min(...dates);
-  const lastDate = Math.max(...dates);
+  if (!data || data.length === 0) {
+    // Retourner des dates par défaut si aucune donnée
+    const defaultStart = dayjs().subtract(1, "year").startOf("day").toDate();
+    const defaultEnd = dayjs().endOf("day").toDate();
+    return [defaultStart, defaultEnd];
+  }
+
+  const validDates = data
+    .map((item) => {
+      const date = new Date(item.recordedAt);
+      return isNaN(date.getTime()) ? null : date.getTime();
+    })
+    .filter((time) => time !== null) as number[];
+
+  if (validDates.length === 0) {
+    // Retourner des dates par défaut si aucune date valide
+    const defaultStart = dayjs().subtract(1, "year").startOf("day").toDate();
+    const defaultEnd = dayjs().endOf("day").toDate();
+    return [defaultStart, defaultEnd];
+  }
+
+  const firstDate = Math.min(...validDates);
+  const lastDate = Math.max(...validDates);
+
   return [new Date(firstDate), new Date(lastDate)];
 };
 
 export function isHoliday(endOfSlotRecorded: Date) {
   const holidays = allHolidays;
-  const minuteBefore = subMinutes(endOfSlotRecorded, 1);
-  return holidays.includes(format(minuteBefore, "yyyy-MM-dd"));
+  const minuteBefore = dayjs(endOfSlotRecorded).subtract(1, "minute");
+  return holidays.includes(minuteBefore.format("YYYY-MM-DD"));
 }
 
 export function isDayApplicable(mapping: Mapping, endOfSlotRecorded: Date) {

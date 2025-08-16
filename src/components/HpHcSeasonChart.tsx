@@ -55,11 +55,7 @@ export default function HpHcSeasonChart() {
   );
 
   return (
-    <Paper sx={{ padding: 2 }}>
-      <Typography component="h2" gutterBottom variant="h6">
-        Répartition de la consommation Heures Pleines/Heures Creuses par saison
-      </Typography>
-
+    <>
       {!isChartReady ? (
         <div
           style={{
@@ -87,7 +83,7 @@ export default function HpHcSeasonChart() {
               data: hpHcSeasonAnalysis.map((s) => s.hpHcData.HP / 1000),
               label: "Heures Pleines",
               valueFormatter,
-              color: "#FF6B6B",
+              color: "#e0e0e0",
               stackOffset: "none",
               stack: "total",
             },
@@ -96,7 +92,7 @@ export default function HpHcSeasonChart() {
               data: hpHcSeasonAnalysis.map((s) => s.hpHcData.HC / 1000),
               label: "Heures Creuses",
               valueFormatter,
-              color: "#4ECDC4",
+              color: "#4CAF50",
               stackOffset: "none",
               stack: "total",
             },
@@ -114,6 +110,6 @@ export default function HpHcSeasonChart() {
           {...chartSetting}
         />
       )}
-    </Paper>
+    </>
   );
 }

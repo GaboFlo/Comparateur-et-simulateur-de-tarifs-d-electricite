@@ -5,22 +5,19 @@ declare module "*.svg" {
   export default src;
 }
 
-declare module "date-fns" {
-  export function format(
-    date: Date | number | string,
-    formatStr: string
-  ): string;
-  export function differenceInDays(
-    dateLeft: Date | number,
-    dateRight: Date | number
-  ): number;
-  export function endOfDay(date: Date | number): Date;
-  export function startOfDay(date: Date | number): Date;
-}
-
 declare module "@mui/icons-material/UploadFileRounded" {
   const UploadFileRoundedIcon: React.ComponentType<
     React.SVGProps<SVGSVGElement>
   >;
   export default UploadFileRoundedIcon;
+}
+
+declare module "@mui/icons-material/Settings" {
+  const SettingsIcon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  export default SettingsIcon;
+}
+
+declare module "@mui/icons-material/TrendingUp" {
+  const TrendingUpIcon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  export default TrendingUpIcon;
 }

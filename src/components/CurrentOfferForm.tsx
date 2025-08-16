@@ -1,36 +1,21 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
-import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  FormControl,
-  FormLabel,
-  Link,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Typography,
-} from "@mui/material";
-import Grid from "@mui/material/Grid";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import BusinessIcon from "@mui/icons-material/Business";
+import ElectricMeterIcon from "@mui/icons-material/ElectricMeter";
+import SettingsIcon from "@mui/icons-material/Settings";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import { useFormContext } from "../context/FormContext";
-import hpHcFile from "../statics/hp_hc.json";
 import allOffersFile from "../statics/price_mapping.json";
 import {
-  HpHcSlot,
   OfferType,
-  Option,
-  OptionKey,
   PowerClass,
   PriceMappingFile,
   ProviderType,
 } from "../types";
+import ActionButton from "./ActionButton";
+import FormCard from "./FormCard";
+import FormField from "./FormField";
 import HpHcSlotSelector from "./HpHcSelector";
 
 const powerClasses: PowerClass[] = [6, 9, 12, 15, 18, 24, 30, 36];
@@ -53,7 +38,7 @@ const getDisctinctProviders = (mapping: PriceMappingFile) => {
 export const getAvailableOfferForProvider = (
   mapping: PriceMappingFile,
   provider: ProviderType
-): OfferType[] => {
+) => {
   if (!provider) return [];
   const availableOffers = mapping
     .filter((item) => item.provider === provider)
@@ -65,7 +50,7 @@ export const getAvailableOptionsForOffer = (
   mapping: PriceMappingFile,
   provider: ProviderType,
   offerType: OfferType
-): Option[] => {
+) => {
   if (!offerType || !provider) return [];
   const availableOptions = mapping.filter(
     (item) => item.offerType === offerType && item.provider === provider
@@ -76,256 +61,233 @@ export const getAvailableOptionsForOffer = (
 interface Props {
   handleNext: () => void;
 }
+
 export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
   const { formState, setFormState } = useFormContext();
   const { trackEvent } = useMatomo();
   const allOffers = allOffersFile as PriceMappingFile;
-  const hpHc = hpHcFile as HpHcSlot[];
-  const getLinkForOffer = (
-    provider: ProviderType,
-    offerType: OfferType,
-    optionKey: OptionKey | ""
-  ) => {
-    return allOffers?.find((o) => {
-      return (
-        o.provider === provider &&
-        o.offerType === offerType &&
-        o.optionKey === optionKey
-      );
-    })?.link;
-  };
 
-  const handleChange = (event: SelectChangeEvent<string | number>) => {
-    const { name, value } = event.target;
-    const valueString = value.toString();
+  const handleChange = (field: string, value: string | number) => {
     setFormState((prevState) => {
-      const newState = { ...prevState, [name]: value };
-      if (name === "provider" && value !== prevState.provider && allOffers) {
+      const newState = { ...prevState, [field]: value };
+
+      if (field === "provider" && value !== prevState.provider && allOffers) {
         const offerType = getAvailableOfferForProvider(
           allOffers,
-          valueString as ProviderType
+          value as ProviderType
         )[0];
         newState.offerType = offerType;
         newState.optionType = getAvailableOptionsForOffer(
           allOffers,
-          valueString as ProviderType,
+          value as ProviderType,
           offerType
         )[0].optionKey;
       }
-      if (
-        name === "offerType" &&
-        valueString !== prevState.offerType &&
-        allOffers
-      ) {
+
+      if (field === "offerType" && value !== prevState.offerType && allOffers) {
         newState.optionType = getAvailableOptionsForOffer(
           allOffers,
           newState.provider,
           newState.offerType
         )[0].optionKey;
       }
+
       trackEvent({
         category: "form-change",
-        action: name,
-        name: valueString,
+        action: field,
+        name: value.toString(),
       });
 
       return newState;
     });
   };
 
+  const providerOptions = getDisctinctProviders(allOffers).map((provider) => ({
+    value: provider,
+    label: provider,
+    icon: (
+      <img
+        src={`/${provider}.png`}
+        alt={`Logo ${provider}`}
+        width="20"
+        height="20"
+        style={{
+          borderRadius: 4,
+          objectFit: "contain",
+          display: "block", // Assurer un affichage correct
+        }}
+      />
+    ),
+  }));
+
+  const offerTypeOptions = getDistinctOfferTypes(
+    allOffers,
+    formState.provider
+  ).map((offerType) => ({
+    value: offerType,
+    label: offerType,
+  }));
+
+  const optionTypeOptions = getAvailableOptionsForOffer(
+    allOffers,
+    formState.provider,
+    formState.offerType
+  ).map((option) => ({
+    value: option.optionKey,
+    label: option.optionName,
+  }));
+
+  const powerClassOptions = powerClasses.map((power) => ({
+    value: power,
+    label: `${power} kVA`,
+  }));
+
+  const isFormValid =
+    formState.provider &&
+    formState.offerType &&
+    formState.optionType &&
+    formState.powerClass;
+
   return (
-    <>
-      <Typography variant="h5" sx={{ textAlign: "center" }}>
-        Votre offre actuelle
-      </Typography>
-      <Grid container spacing={2}>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <FormControl fullWidth sx={{ marginY: 1 }}>
-            <FormLabel id="provider-label" required>
-              Fournisseur actuel
-            </FormLabel>
-            <Select
-              id="provider"
-              name="provider"
-              type="name"
-              required
-              value={formState.provider}
-              onChange={handleChange}
-              sx={{ height: "55px" }}
-              aria-labelledby="provider-label"
-            >
-              {allOffers &&
-                getDisctinctProviders(allOffers).map((provider) => (
-                  <MenuItem key={provider} value={provider}>
-                    <ListItemIcon sx={{ marginRight: 1 }}>
-                      <img
-                        src={`/${provider}.png`}
-                        alt={provider}
-                        width="24"
-                        height="24"
-                      />
-                    </ListItemIcon>
-                    <ListItemText primary={provider} />
-                  </MenuItem>
-                ))}
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth sx={{ marginY: 1 }}>
-            <FormLabel id="optionType-label" required>
-              Option actuelle
-            </FormLabel>
-            <Select
-              id="optionType"
-              name="optionType"
-              value={formState.optionType}
-              onChange={handleChange}
-              required
-              disabled={!formState.offerType || !allOffers}
-              aria-labelledby="optionType-label"
-            >
-              {allOffers &&
-                getAvailableOptionsForOffer(
-                  allOffers,
-                  formState.provider,
-                  formState.offerType
-                ).map((option) => (
-                  <MenuItem key={option.optionKey} value={option.optionKey}>
-                    {option.optionName}
-                    {option.overridingHpHcKey && (
-                      <AccessTimeFilledIcon
-                        sx={{
-                          fontSize: "1rem",
-                          verticalAlign: "middle",
-                          color: "orange",
-                          ml: 1,
-                        }}
-                      />
-                    )}
-                  </MenuItem>
-                ))}
-            </Select>
-            <Typography
-              sx={{ p: 1, fontWeight: "small" }}
-              variant="caption"
-              gutterBottom
-            >
-              <Link
-                href={getLinkForOffer(
-                  formState.provider,
-                  formState.offerType,
-                  formState.optionType
-                )}
-                target="_blank"
-                rel="noopener noreferrer"
-                underline="hover"
-              >
-                <OpenInNewIcon sx={{ fontSize: "1rem", mr: 0.5 }} />
-                Perdu ? Cliquez ici pour découvrir le descriptif de l'option
-                pour voir si elle correspond à votre situation.
-              </Link>
-            </Typography>
-          </FormControl>
-        </Grid>
-        <Grid size={{ xs: 12, md: 6 }}>
-          <FormControl fullWidth sx={{ marginY: 1 }}>
-            <FormLabel id="offerType-label" required>
-              Offre actuelle
-            </FormLabel>
-            <Select
-              id="offerType"
-              name="offerType"
-              value={formState.offerType}
-              onChange={handleChange}
-              required
-              fullWidth
-              aria-labelledby="offerType-label"
-            >
-              {!allOffers ? (
-                <CircularProgress thickness={8} size={60} />
-              ) : (
-                getDistinctOfferTypes(allOffers, formState.provider).map(
-                  (value) => (
-                    <MenuItem key={value} value={value}>
-                      {value}
-                    </MenuItem>
-                  )
-                )
-              )}
-            </Select>
-          </FormControl>
-          <FormControl fullWidth sx={{ marginY: 1 }}>
-            <FormLabel id="powerClass-label" required>
-              Puissance de votre compteur (kVA)
-            </FormLabel>
-            <Select
-              id="powerClass"
-              name="powerClass"
-              value={formState.powerClass}
-              onChange={handleChange}
-              required
-              aria-labelledby="powerClass-label"
-            >
-              {powerClasses.map((value: PowerClass) => (
-                <MenuItem key={value} value={value}>
-                  {value}
-                </MenuItem>
-              ))}
-            </Select>
-            <Typography
-              sx={{ p: 1, fontWeight: "small" }}
-              variant="caption"
-              gutterBottom
-            >
-              <Link
-                href="https://particulier.edf.fr/fr/accueil/gestion-contrat/compteur/modifier-puissance-electrique.html#:~:text=O%C3%B9%20trouver%20le%20niveau%20de,au%20verso%20de%20vos%20factures."
-                target="_blank"
-                rel="noopener noreferrer"
-                underline="hover"
-              >
-                <OpenInNewIcon sx={{ fontSize: "1rem", mr: 0.5 }} />
-                Comment retrouver ma puissance ?
-              </Link>
-            </Typography>
-          </FormControl>
-        </Grid>
-        {formState.provider !== "EDF" && (
-          <Alert
-            severity="warning"
-            sx={{ m: 1, textAlign: "justify", width: "100%" }}
-          >
-            Pour l'instant, il est uniquement possible, en étape 2, d'intéger
-            des données venant des fichiers EDF. Si vous n'êtes pas client EDF,
-            revenez plus tard, le temps qu'Enedis mette à disposition les
-            données nécessaires.
-          </Alert>
-        )}
-        <Divider sx={{ width: "100%", m: 2 }} />
-        {hpHc && <HpHcSlotSelector />}
-        <Box
+    <Stack spacing={4}>
+      <Box sx={{ textAlign: "center", mb: 2 }}>
+        <Typography
+          variant="h4"
+          component="h1"
           sx={{
-            display: "flex",
-            flexDirection: { xs: "column-reverse", sm: "row" },
-            alignItems: "end",
-            flexGrow: 1,
-            gap: 1,
-            pb: { xs: 12, sm: 0 },
-            mt: { xs: 2, sm: 0 },
+            fontWeight: 700,
+            color: "text.primary",
             mb: 1,
-
-            justifyContent: "flex-end",
           }}
         >
-          <Button
-            variant="contained"
-            endIcon={<ChevronRightRoundedIcon />}
-            onClick={handleNext}
-            sx={{ width: { xs: "100%", sm: "fit-content" } }}
+          Votre offre actuelle
+        </Typography>
+        <Typography
+          variant="body1"
+          sx={{
+            color: "text.secondary",
+            mx: "auto",
+          }}
+        >
+          Configurez votre contrat actuel pour obtenir une simulation précise de
+          vos économies potentielles
+        </Typography>
+      </Box>
+
+      <Grid
+        container
+        spacing={3}
+        sx={{
+          alignItems: "stretch",
+          "& .MuiGrid-item": {
+            display: "flex",
+            flexDirection: "column",
+          },
+        }}
+      >
+        <Grid size={{ xs: 12, md: 6 }}>
+          <FormCard
+            title="Fournisseur"
+            subtitle="Sélectionnez votre fournisseur d'électricité actuel"
+            icon={<BusinessIcon />}
           >
-            Suivant
-          </Button>
-        </Box>
+            <FormField
+              label="Fournisseur actuel"
+              type="select"
+              value={formState.provider}
+              onChange={(value) => handleChange("provider", value)}
+              options={providerOptions}
+              required
+            />
+          </FormCard>
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <FormCard
+            title="Type d'offre"
+            subtitle="Choisissez le type de contrat que vous avez"
+            icon={<AccountBalanceIcon />}
+          >
+            <FormField
+              label="Type d'offre"
+              type="select"
+              value={formState.offerType}
+              onChange={(value) => handleChange("offerType", value)}
+              options={offerTypeOptions}
+              required
+            />
+          </FormCard>
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <FormCard
+            title="Option tarifaire"
+            subtitle="Sélectionnez votre option (Base, Heures Creuses, etc.)"
+            icon={<SettingsIcon />}
+          >
+            <FormField
+              label="Option tarifaire"
+              type="select"
+              value={formState.optionType}
+              onChange={(value) => handleChange("optionType", value)}
+              options={optionTypeOptions}
+              required
+            />
+          </FormCard>
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <FormCard
+            title="Puissance souscrite"
+            subtitle="Indiquez la puissance de votre compteur"
+            icon={<ElectricMeterIcon />}
+          >
+            <FormField
+              label="Puissance (kVA)"
+              type="select"
+              value={formState.powerClass}
+              onChange={(value) => handleChange("powerClass", value)}
+              options={powerClassOptions}
+              required
+            />
+          </FormCard>
+        </Grid>
+
+        <Grid size={{ xs: 12 }}>
+          <FormCard
+            title="Créneaux d'heures creuses"
+            subtitle="Ajustez vos créneaux d'heures creuses pour une simulation précise"
+            icon={<AccessTimeIcon />}
+          >
+            <HpHcSlotSelector />
+          </FormCard>
+        </Grid>
       </Grid>
-    </>
+
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <ActionButton
+          variant="primary"
+          onClick={handleNext}
+          disabled={!isFormValid}
+          sx={{ minWidth: 200 }}
+          aria-describedby={
+            !isFormValid ? "form-validation-message" : undefined
+          }
+        >
+          Continuer vers l'import des données
+        </ActionButton>
+      </Box>
+
+      {!isFormValid && (
+        <Typography
+          id="form-validation-message"
+          variant="body2"
+          color="text.secondary"
+          sx={{ textAlign: "center", mt: 1 }}
+        >
+          Veuillez remplir tous les champs obligatoires pour continuer
+        </Typography>
+      )}
+    </Stack>
   );
 }

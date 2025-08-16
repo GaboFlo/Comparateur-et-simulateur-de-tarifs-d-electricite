@@ -123,7 +123,7 @@ export default defineConfig({
           vendor: ["react", "react-dom"],
           mui: ["@mui/material", "@mui/icons-material", "@mui/system"],
           charts: ["@mui/x-charts"],
-          utils: ["axios", "date-fns", "jszip"],
+          utils: ["axios", "jszip"],
           datePickers: ["@mui/x-date-pickers", "@mui/x-date-pickers-pro"],
           matomo: ["@jonkoops/matomo-tracker-react"],
         },

@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import dayjs from "dayjs";
 
 export interface ConsumptionLoadCurveData {
   recordedAt: string;
@@ -40,7 +40,7 @@ export function parseCsvToConsumptionLoadCurveData(
       /* A améliorer mais pour les HP-HC plus simple  */
       if ([0, 30].includes(date.getMinutes())) {
         allData.push({
-          recordedAt: format(date, "yyyy-MM-dd'T'HH:mm:ssXXX"),
+          recordedAt: dayjs(date).format("YYYY-MM-DDTHH:mm:ssZ"),
           value: Number(value),
         });
       }
