@@ -186,7 +186,7 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
           },
         }}
       >
-        <Grid size={{ xs: 12 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormCard
             title="Fournisseur"
             subtitle="Sélectionnez votre fournisseur d'électricité actuel"
@@ -203,7 +203,7 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
           </FormCard>
         </Grid>
 
-        <Grid size={{ xs: 12 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormCard
             title="Type d'offre"
             subtitle="Choisissez le type de contrat que vous avez"
@@ -220,7 +220,7 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
           </FormCard>
         </Grid>
 
-        <Grid size={{ xs: 12 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormCard
             title="Option tarifaire"
             subtitle="Sélectionnez votre option (Base, Heures Creuses, etc.)"
@@ -237,7 +237,7 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
           </FormCard>
         </Grid>
 
-        <Grid size={{ xs: 12 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormCard
             title="Puissance souscrite"
             subtitle="Indiquez la puissance de votre compteur"
