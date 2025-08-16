@@ -48,7 +48,7 @@ export default function FormField({
   disabled = false,
   fullWidth = true,
   sx,
-}: FormFieldProps) {
+}: Readonly<FormFieldProps>) {
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value);
   };
@@ -160,7 +160,7 @@ export default function FormField({
                       </Box>
                     )}
                     <Typography variant="body2" sx={{ flex: 1 }}>
-                      {option?.label || selected}
+                      {option?.label ?? selected}
                     </Typography>
                   </Box>
                 );

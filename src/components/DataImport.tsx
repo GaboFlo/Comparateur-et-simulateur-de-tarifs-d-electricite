@@ -44,6 +44,76 @@ interface Props {
   handleNext: () => void;
 }
 
+const processFileData = async (file: File) => {
+  const zip = new JSZip();
+  const zipContent = await zip.loadAsync(file);
+
+  const csvFile = Object.values(zipContent.files).find(
+    (f) =>
+      f.name.includes("puissances-atteintes-30min") && f.name.endsWith(".csv")
+  );
+
+  if (!csvFile) {
+    throw new Error("Aucun fichier CSV trouvé dans le ZIP");
+  }
+
+  const csvContent = await csvFile.async("string");
+  const parsedData = parseCsvToConsumptionLoadCurveData(csvContent);
+  const analyzedDateRange = findFirstAndLastDate(parsedData);
+  const seasonData = analyseHourByHourBySeason({
+    data: parsedData,
+    dateRange: analyzedDateRange,
+  });
+  const totalConsumption = seasonData.reduce(
+    (acc, cur) => acc + cur.seasonTotalSum,
+    0
+  );
+
+  return { parsedData, analyzedDateRange, seasonData, totalConsumption };
+};
+
+const scrollToPeriodAnalysis = (isProcessing: boolean) => {
+  setTimeout(() => {
+    const periodAnalysisElement = document.querySelector(
+      '[data-section="period-analysis"]'
+    );
+    if (periodAnalysisElement && !isProcessing) {
+      periodAnalysisElement.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest",
+      });
+    }
+  }, 500);
+};
+
+const scrollToBottom = () => {
+  setTimeout(() => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth",
+    });
+  }, 500);
+};
+
+const createDateRangeHandlers = (setRange: (range: [Date, Date]) => void) => ({
+  handleLast6Months: () => {
+    const endDate = dayjs().endOf("day").toDate();
+    const startDate = dayjs().subtract(6, "month").startOf("day").toDate();
+    setRange([startDate, endDate]);
+  },
+  handleLast12Months: () => {
+    const endDate = dayjs().endOf("day").toDate();
+    const startDate = dayjs().subtract(1, "year").startOf("day").toDate();
+    setRange([startDate, endDate]);
+  },
+  handleLast24Months: () => {
+    const endDate = dayjs().endOf("day").toDate();
+    const startDate = dayjs().subtract(2, "year").startOf("day").toDate();
+    setRange([startDate, endDate]);
+  },
+});
+
 export default function DataImport({ handleNext }: Readonly<Props>) {
   const { formState, setFormState } = useFormContext();
   const { trackEvent } = useMatomo();
@@ -93,8 +163,8 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
       // Calculer les simulations pour toutes les offres
       for (const option of allOffers) {
         const costForOption = calculateRowSummary({
-          data: formState.parsedData!,
-          dateRange: formState.analyzedDateRange!,
+          data: formState.parsedData,
+          dateRange: formState.analyzedDateRange,
           powerClass: formState.powerClass,
           optionKey: option.optionKey,
           offerType: option.offerType,
@@ -102,7 +172,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
           provider: option.provider,
           lastUpdate: option.lastUpdate,
           link: option.link,
-          hpHcData: formState.hpHcConfig!,
+          hpHcData: formState.hpHcConfig,
           overridingHpHcKey: option.overridingHpHcKey,
         });
 
@@ -116,24 +186,13 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
       }));
 
       // Scroll vers la section "Période d'analyse" une fois les calculs terminés
-      // Seulement si on est toujours sur la même étape (pas de navigation)
-      setTimeout(() => {
-        const periodAnalysisElement = document.querySelector(
-          '[data-section="period-analysis"]'
-        );
-        if (periodAnalysisElement && !isProcessing) {
-          periodAnalysisElement.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-            inline: "nearest",
-          });
-        }
-      }, 500);
+      scrollToPeriodAnalysis(isProcessing);
     } catch (error) {
       console.error("Erreur lors du pré-calcul des simulations:", error);
     } finally {
       setIsCalculating(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     formState.parsedData,
     formState.hpHcConfig,
@@ -161,7 +220,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   ]);
 
   const onDrop = React.useCallback(
-    async (acceptedFiles: File[]) => {
+    (acceptedFiles: File[]) => {
       if (acceptedFiles.length === 0) return;
 
       setIsProcessing(true);
@@ -169,74 +228,46 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
       setIsDataProcessed(false);
       const file = acceptedFiles[0];
 
-      try {
-        const zip = new JSZip();
-        const zipContent = await zip.loadAsync(file);
+      processFileData(file)
+        .then(
+          ({ parsedData, analyzedDateRange, seasonData, totalConsumption }) => {
+            updateFormState(
+              seasonData,
+              analyzedDateRange,
+              totalConsumption,
+              parsedData
+            );
+            setIsDataProcessed(true);
+            setError(null);
 
-        // Chercher spécifiquement le fichier de puissances atteintes par palier de 30 minutes
-        const csvFile = Object.values(zipContent.files).find(
-          (f) =>
-            f.name.includes("puissances-atteintes-30min") &&
-            f.name.endsWith(".csv")
-        );
+            scrollToBottom();
 
-        if (!csvFile) {
-          throw new Error("Aucun fichier CSV trouvé dans le ZIP");
-        }
-
-        const csvContent = await csvFile.async("string");
-
-        const parsedData = parseCsvToConsumptionLoadCurveData(csvContent);
-
-        const analyzedDateRange = findFirstAndLastDate(parsedData);
-        const seasonData = analyseHourByHourBySeason({
-          data: parsedData,
-          dateRange: analyzedDateRange,
-        });
-        const totalConsumption = seasonData.reduce(
-          (acc, cur) => acc + cur.seasonTotalSum,
-          0
-        );
-
-        updateFormState(
-          seasonData,
-          analyzedDateRange,
-          totalConsumption,
-          parsedData
-        );
-        setIsDataProcessed(true);
-        setError(null);
-
-        // Scroll vers le bas pour montrer le bouton de l'étape suivante
-        setTimeout(() => {
-          window.scrollTo({
-            top: document.body.scrollHeight,
-            behavior: "smooth",
+            trackEvent({
+              category: "data-import",
+              action: "success",
+              name: file.name,
+            });
+          }
+        )
+        .catch((error) => {
+          console.error("Erreur lors du traitement du fichier:", error);
+          setError(
+            error instanceof Error
+              ? error.message
+              : "Erreur lors du traitement du fichier"
+          );
+          setIsDataProcessed(false);
+          trackEvent({
+            category: "data-import",
+            action: "error",
+            name: error instanceof Error ? error.message : "Unknown error",
           });
-        }, 500);
-
-        trackEvent({
-          category: "data-import",
-          action: "success",
-          name: file.name,
+        })
+        .finally(() => {
+          setIsProcessing(false);
         });
-      } catch (error) {
-        console.error("Erreur lors du traitement du fichier:", error);
-        setError(
-          error instanceof Error
-            ? error.message
-            : "Erreur lors du traitement du fichier"
-        );
-        setIsDataProcessed(false);
-        trackEvent({
-          category: "data-import",
-          action: "error",
-          name: error instanceof Error ? error.message : "Unknown error",
-        });
-      } finally {
-        setIsProcessing(false);
-      }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [handleNext, trackEvent]
   );
 
@@ -309,23 +340,8 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
     }));
   };
 
-  const handleLast6Months = () => {
-    const endDate = dayjs().endOf("day").toDate();
-    const startDate = dayjs().subtract(6, "month").startOf("day").toDate();
-    setRange([startDate, endDate]);
-  };
-
-  const handleLast12Months = () => {
-    const endDate = dayjs().endOf("day").toDate();
-    const startDate = dayjs().subtract(1, "year").startOf("day").toDate();
-    setRange([startDate, endDate]);
-  };
-
-  const handleLast24Months = () => {
-    const endDate = dayjs().endOf("day").toDate();
-    const startDate = dayjs().subtract(2, "year").startOf("day").toDate();
-    setRange([startDate, endDate]);
-  };
+  const { handleLast6Months, handleLast12Months, handleLast24Months } =
+    createDateRangeHandlers(setRange);
 
   return (
     <Stack spacing={4}>

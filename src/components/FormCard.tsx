@@ -20,7 +20,7 @@ export default function FormCard({
   icon,
   variant = "default",
   ...props
-}: FormCardProps) {
+}: Readonly<FormCardProps>) {
   return (
     <MotionCard
       {...props}

@@ -22,7 +22,7 @@ export default function ActionButton({
   disabled,
   sx,
   ...props
-}: ActionButtonProps) {
+}: Readonly<ActionButtonProps>) {
   const getVariantStyles = () => {
     switch (variant) {
       case "primary":

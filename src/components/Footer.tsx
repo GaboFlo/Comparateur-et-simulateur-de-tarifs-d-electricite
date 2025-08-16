@@ -6,7 +6,7 @@ interface FooterProps {
   onHelpClick?: () => void;
 }
 
-export default function Footer({ onHelpClick }: FooterProps) {
+export default function Footer({ onHelpClick }: Readonly<FooterProps>) {
   return (
     <Box component="footer" sx={{ m: 1, textAlign: "center", width: "100%" }}>
       <p

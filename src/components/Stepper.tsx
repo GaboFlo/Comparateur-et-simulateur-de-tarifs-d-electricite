@@ -23,7 +23,7 @@ export default function MyStepper({
   steps,
   onStepClick,
   onHelpClick,
-}: StepperProps) {
+}: Readonly<StepperProps>) {
   return (
     <MotionBox
       initial={{ opacity: 0, y: 20 }}
@@ -126,35 +126,39 @@ export default function MyStepper({
                     }
                   : {},
               }}
-              StepIconComponent={({ active, completed, icon }) => (
-                <MotionBox
-                  sx={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "1rem",
-                    fontWeight: 600,
-                    color: "white",
-                    backgroundColor: completed
-                      ? "success.main"
-                      : active
-                      ? "primary.main"
-                      : "grey.300",
-                    boxShadow:
-                      active || completed
-                        ? "0px 4px 12px rgba(0, 0, 0, 0.15)"
-                        : "none",
-                    transition: "all 0.3s ease-in-out",
-                  }}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {completed ? "✓" : icon}
-                </MotionBox>
-              )}
+              StepIconComponent={({ active, completed, icon }) => {
+                const backgroundColor = completed
+                  ? "success.main"
+                  : active
+                  ? "primary.main"
+                  : "grey.300";
+
+                return (
+                  <MotionBox
+                    sx={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: "50%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "1rem",
+                      fontWeight: 600,
+                      color: "white",
+                      backgroundColor,
+                      boxShadow:
+                        active || completed
+                          ? "0px 4px 12px rgba(0, 0, 0, 0.15)"
+                          : "none",
+                      transition: "all 0.3s ease-in-out",
+                    }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {completed ? "✓" : icon}
+                  </MotionBox>
+                );
+              }}
             >
               <Typography
                 variant="body2"
