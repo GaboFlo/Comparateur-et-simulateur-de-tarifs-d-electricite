@@ -5,12 +5,16 @@ import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
-import { OfferType, OptionKey } from "../types";
+import {
+  ComparisonTableInterfaceRow,
+  OfferType,
+  OptionKey,
+  PriceMappingFile,
+} from "../types";
 
 import { calculateRowSummary } from "../scripts/calculators";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
 import allOffersFile from "../statics/price_mapping.json";
-import { ComparisonTableInterfaceRow, PriceMappingFile } from "../types";
 import { ComparisonTable } from "./ComparisonTable";
 import HpHcSlotSelector from "./HpHcSelector";
 import PeriodChips from "./PeriodChips";
