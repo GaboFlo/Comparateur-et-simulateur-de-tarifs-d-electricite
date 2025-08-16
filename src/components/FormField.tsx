@@ -14,7 +14,7 @@ import {
 import { motion } from "framer-motion";
 import * as React from "react";
 
-interface ModernFormFieldProps {
+interface FormFieldProps {
   label: string;
   required?: boolean;
   error?: boolean;
@@ -35,7 +35,7 @@ interface ModernFormFieldProps {
 
 const MotionBox = motion.create(Box);
 
-export default function ModernFormField({
+export default function FormField({
   label,
   required = false,
   error = false,
@@ -48,7 +48,7 @@ export default function ModernFormField({
   disabled = false,
   fullWidth = true,
   sx,
-}: ModernFormFieldProps) {
+}: FormFieldProps) {
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChange(event.target.value);
   };

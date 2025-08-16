@@ -2,7 +2,7 @@ import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import { Alert, Button, Chip, Divider, Typography } from "@mui/material";
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/system";
 import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
-import { differenceInDays, endOfDay, format, startOfDay } from "date-fns";
+import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
 import { OfferType, OptionKey } from "../types";
@@ -28,14 +28,8 @@ export default function Simulations() {
     // Vérifier si les dates sont valides
     if (!start || !end || isNaN(start.getTime()) || isNaN(end.getTime())) {
       // Retourner des dates par défaut si invalides
-      const defaultStart = startOfDay(
-        new Date(
-          new Date().getFullYear() - 1,
-          new Date().getMonth(),
-          new Date().getDate()
-        )
-      );
-      const defaultEnd = endOfDay(new Date());
+      const defaultStart = dayjs().subtract(1, "year").startOf("day").toDate();
+      const defaultEnd = dayjs().endOf("day").toDate();
       return [defaultStart, defaultEnd];
     }
 
@@ -107,14 +101,8 @@ export default function Simulations() {
   };
 
   const handleLast6Months = () => {
-    const endDate = endOfDay(new Date());
-    const startDate = startOfDay(
-      new Date(
-        new Date().getFullYear(),
-        new Date().getMonth() - 6,
-        new Date().getDate()
-      )
-    );
+    const endDate = dayjs().endOf("day").toDate();
+    const startDate = dayjs().subtract(6, "month").startOf("day").toDate();
 
     trackEvent({
       category: "date-range",
@@ -126,14 +114,8 @@ export default function Simulations() {
   };
 
   const handleLast12Months = () => {
-    const endDate = endOfDay(new Date());
-    const startDate = startOfDay(
-      new Date(
-        new Date().getFullYear() - 1,
-        new Date().getMonth(),
-        new Date().getDate()
-      )
-    );
+    const endDate = dayjs().endOf("day").toDate();
+    const startDate = dayjs().subtract(1, "year").startOf("day").toDate();
 
     trackEvent({
       category: "date-range",
@@ -145,14 +127,8 @@ export default function Simulations() {
   };
 
   const handleLast24Months = () => {
-    const endDate = endOfDay(new Date());
-    const startDate = startOfDay(
-      new Date(
-        new Date().getFullYear() - 2,
-        new Date().getMonth(),
-        new Date().getDate()
-      )
-    );
+    const endDate = dayjs().endOf("day").toDate();
+    const startDate = dayjs().subtract(2, "year").startOf("day").toDate();
 
     trackEvent({
       category: "date-range",
@@ -163,20 +139,21 @@ export default function Simulations() {
     setRange([startDate, endDate]);
   };
 
-  const diffDays = differenceInDays(
-    new Date(safeDateRange[1]),
-    new Date(safeDateRange[0])
-  );
+  const diffDays = dayjs(safeDateRange[1]).diff(dayjs(safeDateRange[0]), "day");
 
   return (
     <Stack textAlign={"center"}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <MobileDateRangePicker
-          value={[new Date(safeDateRange[0]), new Date(safeDateRange[1])]}
+          value={[dayjs(safeDateRange[0]), dayjs(safeDateRange[1])]}
           loading={formState.isGlobalLoading}
           onAccept={(newValue) => {
-            const start = startOfDay(newValue[0] ?? new Date());
-            const end = endOfDay(newValue[1] ?? new Date());
+            const start = dayjs(newValue[0] ?? new Date())
+              .startOf("day")
+              .toDate();
+            const end = dayjs(newValue[1] ?? new Date())
+              .endOf("day")
+              .toDate();
             trackEvent({
               category: "date-range",
               action: "set",
@@ -246,10 +223,9 @@ export default function Simulations() {
       </Box>
       <Alert severity="info" sx={{ m: 1, textAlign: "justify" }}>
         Vous avez consommé <b>{formatKWhLarge(formState.totalConsumption)} </b>
-        sur la période analysée (du {format(
-          safeDateRange[0],
-          "dd/MM/yyyy"
-        )} au {format(safeDateRange[1], "dd/MM/yyyy")}), soit une{" "}
+        sur la période analysée (du{" "}
+        {dayjs(safeDateRange[0]).format("DD/MM/YYYY")} au{" "}
+        {dayjs(safeDateRange[1]).format("DD/MM/YYYY")}), soit une{" "}
         <b>
           moyenne de {formatKWhLarge(formState.totalConsumption / diffDays)} par
           jour

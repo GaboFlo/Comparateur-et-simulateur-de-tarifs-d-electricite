@@ -2,7 +2,7 @@ import { Box, Card, CardContent, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import * as React from "react";
 
-interface ModernMetricCardProps {
+interface MetricCardProps {
   title: string;
   value: string | number;
   subtitle?: string;
@@ -18,7 +18,7 @@ interface ModernMetricCardProps {
 
 const MotionCard = motion.create(Card);
 
-export default function ModernMetricCard({
+export default function MetricCard({
   title,
   value,
   subtitle,
@@ -26,7 +26,7 @@ export default function ModernMetricCard({
   trend,
   variant = "default",
   onClick,
-}: ModernMetricCardProps) {
+}: MetricCardProps) {
   const getVariantStyles = () => {
     switch (variant) {
       case "highlighted":

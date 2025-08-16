@@ -7,14 +7,14 @@ import {
 import { motion } from "framer-motion";
 import * as React from "react";
 
-interface ModernActionButtonProps extends Omit<ButtonProps, "variant"> {
+interface ActionButtonProps extends Omit<ButtonProps, "variant"> {
   variant?: "primary" | "secondary" | "outline" | "ghost";
   loading?: boolean;
   icon?: React.ReactNode;
   children: React.ReactNode;
 }
 
-export default function ModernActionButton({
+export default function ActionButton({
   variant = "primary",
   loading = false,
   icon,
@@ -22,7 +22,7 @@ export default function ModernActionButton({
   disabled,
   sx,
   ...props
-}: ModernActionButtonProps) {
+}: ActionButtonProps) {
   const getVariantStyles = () => {
     switch (variant) {
       case "primary":

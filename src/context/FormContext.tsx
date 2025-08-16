@@ -1,4 +1,4 @@
-import { endOfDay, startOfDay, subYears } from "date-fns";
+import dayjs from "dayjs";
 import React, {
   createContext,
   ReactNode,
@@ -59,8 +59,8 @@ export const DEFAULT_FORM_STATE: FormState = {
   powerClass: 6,
   isGlobalLoading: false,
   analyzedDateRange: [
-    startOfDay(subYears(new Date(), 2)),
-    endOfDay(new Date()),
+    dayjs().subtract(2, "year").startOf("day").toDate(),
+    dayjs().endOf("day").toDate(),
   ],
   totalConsumption: 1,
   rowSummaries: [],
@@ -96,12 +96,6 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
       setFormState((prevState) => {
         const nextState =
           typeof newState === "function" ? newState(prevState) : newState;
-
-        console.log("FormState updated:", {
-          seasonHourlyAnalysis: nextState.seasonHourlyAnalysis?.length,
-          totalConsumption: nextState.totalConsumption,
-          parsedDataLength: nextState.parsedData?.length,
-        });
 
         try {
           localStorage.setItem("formState", JSON.stringify(nextState));

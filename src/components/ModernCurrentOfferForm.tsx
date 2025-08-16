@@ -13,10 +13,10 @@ import {
   PriceMappingFile,
   ProviderType,
 } from "../types";
+import ActionButton from "./ActionButton";
+import FormCard from "./FormCard";
+import FormField from "./FormField";
 import HpHcSlotSelector from "./HpHcSelector";
-import ModernActionButton from "./ModernActionButton";
-import ModernFormCard from "./ModernFormCard";
-import ModernFormField from "./ModernFormField";
 
 const powerClasses: PowerClass[] = [6, 9, 12, 15, 18, 24, 30, 36];
 
@@ -62,9 +62,7 @@ interface Props {
   handleNext: () => void;
 }
 
-export default function ModernCurrentOfferForm({
-  handleNext,
-}: Readonly<Props>) {
+export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
   const { formState, setFormState } = useFormContext();
   const { trackEvent } = useMatomo();
   const allOffers = allOffersFile as PriceMappingFile;
@@ -188,12 +186,12 @@ export default function ModernCurrentOfferForm({
         }}
       >
         <Grid size={{ xs: 12, md: 6 }}>
-          <ModernFormCard
+          <FormCard
             title="Fournisseur"
             subtitle="Sélectionnez votre fournisseur d'électricité actuel"
             icon={<BusinessIcon />}
           >
-            <ModernFormField
+            <FormField
               label="Fournisseur actuel"
               type="select"
               value={formState.provider}
@@ -201,16 +199,16 @@ export default function ModernCurrentOfferForm({
               options={providerOptions}
               required
             />
-          </ModernFormCard>
+          </FormCard>
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }}>
-          <ModernFormCard
+          <FormCard
             title="Type d'offre"
             subtitle="Choisissez le type de contrat que vous avez"
             icon={<AccountBalanceIcon />}
           >
-            <ModernFormField
+            <FormField
               label="Type d'offre"
               type="select"
               value={formState.offerType}
@@ -218,16 +216,16 @@ export default function ModernCurrentOfferForm({
               options={offerTypeOptions}
               required
             />
-          </ModernFormCard>
+          </FormCard>
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }}>
-          <ModernFormCard
+          <FormCard
             title="Option tarifaire"
             subtitle="Sélectionnez votre option (Base, Heures Creuses, etc.)"
             icon={<SettingsIcon />}
           >
-            <ModernFormField
+            <FormField
               label="Option tarifaire"
               type="select"
               value={formState.optionType}
@@ -235,16 +233,16 @@ export default function ModernCurrentOfferForm({
               options={optionTypeOptions}
               required
             />
-          </ModernFormCard>
+          </FormCard>
         </Grid>
 
         <Grid size={{ xs: 12, md: 6 }}>
-          <ModernFormCard
+          <FormCard
             title="Puissance souscrite"
             subtitle="Indiquez la puissance de votre compteur"
             icon={<ElectricMeterIcon />}
           >
-            <ModernFormField
+            <FormField
               label="Puissance (kVA)"
               type="select"
               value={formState.powerClass}
@@ -252,22 +250,22 @@ export default function ModernCurrentOfferForm({
               options={powerClassOptions}
               required
             />
-          </ModernFormCard>
+          </FormCard>
         </Grid>
 
         <Grid size={{ xs: 12 }}>
-          <ModernFormCard
+          <FormCard
             title="Créneaux d'heures creuses"
             subtitle="Ajustez vos créneaux d'heures creuses pour une simulation précise"
             icon={<AccessTimeIcon />}
           >
             <HpHcSlotSelector />
-          </ModernFormCard>
+          </FormCard>
         </Grid>
       </Grid>
 
       <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-        <ModernActionButton
+        <ActionButton
           variant="primary"
           onClick={handleNext}
           disabled={!isFormValid}
@@ -277,7 +275,7 @@ export default function ModernCurrentOfferForm({
           }
         >
           Continuer vers l'import des données
-        </ModernActionButton>
+        </ActionButton>
       </Box>
 
       {!isFormValid && (

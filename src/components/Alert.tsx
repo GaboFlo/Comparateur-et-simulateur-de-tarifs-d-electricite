@@ -2,7 +2,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Alert, AlertProps, Box, IconButton, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 
-interface ModernAlertProps extends Omit<AlertProps, "variant"> {
+interface AlertProps extends Omit<AlertProps, "variant"> {
   title?: string;
   description?: string;
   onClose?: () => void;
@@ -10,7 +10,7 @@ interface ModernAlertProps extends Omit<AlertProps, "variant"> {
   closable?: boolean;
 }
 
-export default function ModernAlert({
+export default function Alert({
   title,
   description,
   onClose,
@@ -19,7 +19,7 @@ export default function ModernAlert({
   children,
   sx,
   ...props
-}: ModernAlertProps) {
+}: AlertProps) {
   const getVariantStyles = () => {
     switch (variant) {
       case "info":

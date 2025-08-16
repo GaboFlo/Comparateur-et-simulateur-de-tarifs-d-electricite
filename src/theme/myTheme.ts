@@ -1,7 +1,7 @@
 import { createTheme, ThemeOptions } from "@mui/material/styles";
 
-// Palette de couleurs moderne et sobre - Respectant les normes RGAA
-const modernColors = {
+// Palette de couleurs e et sobre - Respectant les normes RGAA
+const Colors = {
   primary: {
     50: "#f0f9ff",
     100: "#e0f2fe",
@@ -64,49 +64,49 @@ const modernColors = {
   },
 };
 
-export const modernTheme = createTheme({
+export const Theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: modernColors.primary[600],
-      light: modernColors.primary[400],
-      dark: modernColors.primary[800],
+      main: Colors.primary[600],
+      light: Colors.primary[400],
+      dark: Colors.primary[800],
       contrastText: "#ffffff", // Contraste excellent
     },
     secondary: {
-      main: modernColors.neutral[600],
-      light: modernColors.neutral[400],
-      dark: modernColors.neutral[800],
+      main: Colors.neutral[600],
+      light: Colors.neutral[400],
+      dark: Colors.neutral[800],
       contrastText: "#ffffff",
     },
     success: {
-      main: modernColors.success[600],
-      light: modernColors.success[400],
-      dark: modernColors.success[800],
+      main: Colors.success[600],
+      light: Colors.success[400],
+      dark: Colors.success[800],
       contrastText: "#ffffff",
     },
     warning: {
-      main: modernColors.warning[600],
-      light: modernColors.warning[400],
-      dark: modernColors.warning[800],
+      main: Colors.warning[600],
+      light: Colors.warning[400],
+      dark: Colors.warning[800],
       contrastText: "#ffffff",
     },
     error: {
-      main: modernColors.error[600],
-      light: modernColors.error[400],
-      dark: modernColors.error[800],
+      main: Colors.error[600],
+      light: Colors.error[400],
+      dark: Colors.error[800],
       contrastText: "#ffffff",
     },
-    grey: modernColors.neutral,
+    grey: Colors.neutral,
     background: {
       default: "#ffffff",
       paper: "#ffffff",
     },
     text: {
-      primary: modernColors.neutral[900], // Contraste excellent
-      secondary: modernColors.neutral[600], // Contraste suffisant
+      primary: Colors.neutral[900], // Contraste excellent
+      secondary: Colors.neutral[600], // Contraste suffisant
     },
-    divider: modernColors.neutral[200],
+    divider: Colors.neutral[200],
   },
   typography: {
     fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
@@ -115,48 +115,48 @@ export const modernTheme = createTheme({
       fontWeight: 700,
       lineHeight: 1.2,
       letterSpacing: "-0.02em",
-      color: modernColors.neutral[900],
+      color: Colors.neutral[900],
     },
     h2: {
       fontSize: "2rem",
       fontWeight: 600,
       lineHeight: 1.3,
       letterSpacing: "-0.01em",
-      color: modernColors.neutral[900],
+      color: Colors.neutral[900],
     },
     h3: {
       fontSize: "1.5rem",
       fontWeight: 600,
       lineHeight: 1.4,
-      color: modernColors.neutral[900],
+      color: Colors.neutral[900],
     },
     h4: {
       fontSize: "1.25rem",
       fontWeight: 600,
       lineHeight: 1.4,
-      color: modernColors.neutral[900],
+      color: Colors.neutral[900],
     },
     h5: {
       fontSize: "1.125rem",
       fontWeight: 600,
       lineHeight: 1.4,
-      color: modernColors.neutral[900],
+      color: Colors.neutral[900],
     },
     h6: {
       fontSize: "1rem",
       fontWeight: 600,
       lineHeight: 1.4,
-      color: modernColors.neutral[900],
+      color: Colors.neutral[900],
     },
     body1: {
       fontSize: "1rem",
       lineHeight: 1.6,
-      color: modernColors.neutral[700], // Contraste suffisant
+      color: Colors.neutral[700], // Contraste suffisant
     },
     body2: {
       fontSize: "0.875rem",
       lineHeight: 1.6,
-      color: modernColors.neutral[600], // Contraste suffisant
+      color: Colors.neutral[600], // Contraste suffisant
     },
     button: {
       fontSize: "0.875rem",
@@ -210,14 +210,14 @@ export const modernTheme = createTheme({
             boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
           },
           "&:focus": {
-            outline: `2px solid ${modernColors.primary[600]}`,
+            outline: `2px solid ${Colors.primary[600]}`,
             outlineOffset: "2px",
           },
         },
         contained: {
-          background: `linear-gradient(135deg, ${modernColors.primary[600]} 0%, ${modernColors.primary[700]} 100%)`,
+          background: `linear-gradient(135deg, ${Colors.primary[600]} 0%, ${Colors.primary[700]} 100%)`,
           "&:hover": {
-            background: `linear-gradient(135deg, ${modernColors.primary[700]} 0%, ${modernColors.primary[800]} 100%)`,
+            background: `linear-gradient(135deg, ${Colors.primary[700]} 0%, ${Colors.primary[800]} 100%)`,
           },
         },
         outlined: {
@@ -232,7 +232,7 @@ export const modernTheme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 16,
-          border: `1px solid ${modernColors.neutral[200]}`,
+          border: `1px solid ${Colors.neutral[200]}`,
           boxShadow:
             "0px 1px 3px rgba(0, 0, 0, 0.1), 0px 1px 2px rgba(0, 0, 0, 0.06)",
           transition: "all 0.2s ease-in-out",
@@ -242,7 +242,7 @@ export const modernTheme = createTheme({
             transform: "translateY(-2px)",
           },
           "&:focus-within": {
-            outline: `2px solid ${modernColors.primary[600]}`,
+            outline: `2px solid ${Colors.primary[600]}`,
             outlineOffset: "2px",
           },
         },
@@ -264,12 +264,12 @@ export const modernTheme = createTheme({
             minHeight: 44, // Taille minimale pour l'accessibilité
             "&:hover": {
               "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: modernColors.primary[400],
+                borderColor: Colors.primary[400],
               },
             },
             "&.Mui-focused": {
               "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: modernColors.primary[600],
+                borderColor: Colors.primary[600],
                 borderWidth: "2px",
               },
             },
@@ -301,10 +301,10 @@ export const modernTheme = createTheme({
       styleOverrides: {
         root: {
           "&.Mui-active": {
-            color: modernColors.primary[600],
+            color: Colors.primary[600],
           },
           "&.Mui-completed": {
-            color: modernColors.success[600],
+            color: Colors.success[600],
           },
         },
       },
@@ -325,8 +325,8 @@ export const modernTheme = createTheme({
         root: {
           minHeight: 44, // Taille minimale pour l'accessibilité
           "&:focus": {
-            backgroundColor: `${modernColors.primary[50]} !important`,
-            outline: `2px solid ${modernColors.primary[600]}`,
+            backgroundColor: `${Colors.primary[50]} !important`,
+            outline: `2px solid ${Colors.primary[600]}`,
             outlineOffset: "-2px",
           },
         },

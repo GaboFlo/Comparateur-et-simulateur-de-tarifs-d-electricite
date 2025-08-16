@@ -16,13 +16,10 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { format } from "date-fns";
+import dayjs from "dayjs";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
-
-import allOffersFile from "../statics/price_mapping.json";
-import { PriceMappingFile } from "../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -46,20 +43,11 @@ const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
 );
 
 export function ComparisonTable() {
-  const { formState, setFormState } = useFormContext();
-  const allOffers = allOffersFile as PriceMappingFile;
+  const { formState } = useFormContext();
   const navigate = useNavigate();
 
   React.useEffect(() => {
     const dateRange = formState.analyzedDateRange;
-
-    console.log("ComparisonTable useEffect - État actuel:", {
-      dateRange: !!dateRange,
-      parsedData: !!formState.parsedData,
-      hpHcConfig: !!formState.hpHcConfig,
-      rowSummaries: formState.rowSummaries?.length || 0,
-      isGlobalLoading: formState.isGlobalLoading,
-    });
 
     if (
       !dateRange ||
@@ -67,31 +55,21 @@ export function ComparisonTable() {
       !formState.hpHcConfig ||
       !formState.rowSummaries
     ) {
-      console.log("navigate to step 0 from comparison table");
-      console.log("dateRange", dateRange);
-      console.log("parsedData", formState.parsedData);
-      console.log("hpHcConfig", formState.hpHcConfig);
-      console.log("rowSummaries", formState.rowSummaries);
       navigate("?step=0");
       return;
     }
 
-    // Les calculs sont maintenant pré-calculés dans ModernDataImport
+    // Les calculs sont maintenant pré-calculés dans DataImport
     // On vérifie juste que les données sont présentes
     if (!formState.rowSummaries || formState.rowSummaries.length === 0) {
-      console.log("Aucune donnée de simulation disponible");
       return;
     }
-
-    console.log(
-      "Affichage des simulations pré-calculées:",
-      formState.rowSummaries.length,
-      "offres"
-    );
   }, [
     formState.analyzedDateRange,
+    formState.hpHcConfig,
     formState.parsedData,
     formState.rowSummaries,
+    navigate,
   ]);
 
   const currentOfferTotal =
@@ -180,10 +158,9 @@ export function ComparisonTable() {
                   >
                     <Typography variant="body1" m={1}>
                       <Tooltip
-                        title={`Tarification mise à jour le ${format(
-                          row.lastUpdate,
-                          "dd/MM/yyyy"
-                        )}`}
+                        title={`Tarification mise à jour le ${dayjs(
+                          row.lastUpdate
+                        ).format("DD/MM/YYYY")}`}
                         arrow
                       >
                         <span

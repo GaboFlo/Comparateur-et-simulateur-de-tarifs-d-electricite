@@ -1,4 +1,4 @@
-import { differenceInMonths } from "date-fns";
+import dayjs from "dayjs";
 import tempo_data from "../assets/tempo.json";
 import price_mapping from "../statics/price_mapping.json";
 import {
@@ -268,7 +268,9 @@ export function calculateRowSummary({
   );
 
   const fullSubscriptionCost = Math.round(
-    (monthlyCost * (differenceInMonths(dateRange[1], dateRange[0]) + 1)) / 100
+    (monthlyCost *
+      (dayjs(dateRange[1]).diff(dayjs(dateRange[0]), "month") + 1)) /
+      100
   );
 
   return {

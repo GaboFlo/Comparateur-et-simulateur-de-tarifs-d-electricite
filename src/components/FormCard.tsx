@@ -2,7 +2,7 @@ import { Box, Card, CardContent, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import * as React from "react";
 
-interface ModernFormCardProps {
+interface FormCardProps {
   title: string;
   subtitle?: string;
   children: React.ReactNode;
@@ -12,13 +12,13 @@ interface ModernFormCardProps {
 
 const MotionCard = motion.create(Card);
 
-export default function ModernFormCard({
+export default function FormCard({
   title,
   subtitle,
   children,
   icon,
   variant = "default",
-}: ModernFormCardProps) {
+}: FormCardProps) {
   return (
     <MotionCard
       initial={{ opacity: 0, y: 20 }}

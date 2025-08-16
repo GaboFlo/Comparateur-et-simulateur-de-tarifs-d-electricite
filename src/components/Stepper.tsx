@@ -1,7 +1,7 @@
 import { Box, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 
-interface ModernStepperProps {
+interface StepperProps {
   activeStep: number;
   steps: string[];
   onStepClick?: (stepIndex: number) => void;
@@ -9,11 +9,11 @@ interface ModernStepperProps {
 
 const MotionBox = motion.create(Box);
 
-export default function ModernStepper({
+export default function MyStepper({
   activeStep,
   steps,
   onStepClick,
-}: ModernStepperProps) {
+}: StepperProps) {
   return (
     <MotionBox
       initial={{ opacity: 0, y: 20 }}

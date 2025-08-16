@@ -1,22 +1,18 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
-import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
 import { useColorScheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import Stepper from "@mui/material/Stepper";
 import * as React from "react";
-import { lazy, Suspense } from "react";
+import { lazy } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CurrentOfferForm from "./components/CurrentOfferForm";
 import DataImport from "./components/DataImport";
 import Footer from "./components/Footer";
 import InfoMobile from "./components/InfoMobile";
-import { DEFAULT_FORM_STATE, useFormContext } from "./context/FormContext";
-import { APP_VERSION } from "./types";
+import { useFormContext } from "./context/FormContext";
+import { APP_VERSION, OfferType, OptionKey } from "./types";
+import MyStepper from "./components/Stepper";
 
 const Simulations = lazy(() => import("./components/Simulations"));
 
@@ -38,22 +34,53 @@ export default function App() {
     if (stepParam && parseInt(stepParam) !== activeStep) {
       setActiveStep(parseInt(stepParam));
     }
-    if (!formState.seasonHourlyAnalysis && activeStep === 2) {
-      handleStepChange(0);
+
+    // Vérifier si les données de consommation sont disponibles pour l'étape 3
+    if (
+      !formState.seasonHourlyAnalysis ||
+      formState.seasonHourlyAnalysis.length === 0
+    ) {
+      if (activeStep === 2) {
+        handleStepChange(0);
+      }
     }
 
-    // Preload des composants suivants pour améliorer les performances
     if (activeStep === 0) {
       import("./components/DataImport");
     }
     if (activeStep === 1) {
       import("./components/Simulations");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStep, stepParam]);
+  }, [activeStep, stepParam, formState.seasonHourlyAnalysis]);
+
+  // Scroll vers le haut à chaque changement d'étape
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [activeStep]);
 
   const handleStepChange = (step: number) => {
     navigate(`?step=${step}`);
+  };
+
+  const handleStepClick = (stepIndex: number) => {
+    // Si on clique sur l'étape 1 (index 0), nettoyer le state et retourner à l'étape 0
+    if (stepIndex === 0) {
+      // Nettoyer le state en gardant seulement les valeurs par défaut
+      setFormState({
+        provider: "EDF",
+        offerType: OfferType.BLEU,
+        optionType: OptionKey.BASE,
+        powerClass: 6,
+        isGlobalLoading: false,
+        analyzedDateRange: [
+          new Date(new Date().getFullYear() - 2, 0, 1),
+          new Date(),
+        ],
+        totalConsumption: 1,
+        rowSummaries: [],
+      });
+    }
+    handleStepChange(stepIndex);
   };
 
   const handleNext = () => {
@@ -79,40 +106,6 @@ export default function App() {
     });
   };
 
-  const LoadingSpinner = () => (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "2rem",
-      }}
-    >
-      <div className="spinner"></div>
-    </div>
-  );
-
-  function getStepContent(step: number) {
-    switch (step) {
-      case 0:
-        return <CurrentOfferForm handleNext={handleNextAndTrack} />;
-      case 1:
-        return (
-          <Suspense fallback={<LoadingSpinner />}>
-            <DataImport handleNext={handleNext} />
-          </Suspense>
-        );
-      case 2:
-        return (
-          <Suspense fallback={<LoadingSpinner />}>
-            <Simulations />
-          </Suspense>
-        );
-      default:
-        throw new Error("Unknown step");
-    }
-  }
-
   React.useEffect(() => {
     switch (activeStep) {
       case 1:
@@ -127,7 +120,6 @@ export default function App() {
         document.title =
           "Simulateur et comparateur de tarifs d'électricité selon vos consommations passées, gratuit, immédiat, sans inscription";
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeStep]);
 
   React.useEffect(() => {
@@ -144,12 +136,25 @@ export default function App() {
           },
         ],
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStep, mode]);
+  }, [activeStep, mode, trackPageView, systemMode]);
+
+  const renderStepContent = () => {
+    switch (activeStep) {
+      case 0:
+        return <CurrentOfferForm handleNext={handleNextAndTrack} />;
+      case 1:
+        return <DataImport handleNext={handleNext} />;
+      case 2:
+        return <Simulations />;
+      default:
+        return <CurrentOfferForm handleNext={handleNextAndTrack} />;
+    }
+  };
 
   return (
     <>
       <CssBaseline enableColorScheme />
+
       <Box
         sx={{
           position: "fixed",
@@ -164,7 +169,7 @@ export default function App() {
       <Grid
         container
         sx={{
-          height: {
+          minHeight: {
             xs: "100%",
             sm: "calc(100dvh - var(--template-frame-height, 0px))",
           },
@@ -190,110 +195,33 @@ export default function App() {
           <Box
             sx={{
               display: "flex",
-              justifyContent: { sm: "space-between", md: "flex-end" },
-              alignItems: "center",
+              flexDirection: "column",
               width: "100%",
+              maxWidth: "1200px",
+              mx: "auto",
             }}
           >
+            <MyStepper
+              activeStep={activeStep}
+              steps={steps}
+              onStepClick={handleStepClick}
+            />
+
             <Box
               sx={{
-                display: { xs: "none", md: "flex" },
+                flex: 1,
+                width: "100%",
+                display: "flex",
                 flexDirection: "column",
-                justifyContent: "space-between",
-                alignItems: "flex-end",
-                flexGrow: 1,
               }}
             >
-              <Stepper
-                id="desktop-stepper"
-                activeStep={activeStep}
-                sx={{ width: "100%", height: 40 }}
-              >
-                {steps.map((label) => (
-                  <Step
-                    sx={{
-                      ":first-of-type": { pl: 0 },
-                      ":last-of-type": { pr: 0 },
-                    }}
-                    key={label}
-                  >
-                    <StepLabel>{label}</StepLabel>
-                  </Step>
-                ))}
-              </Stepper>
+              {renderStepContent()}
             </Box>
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              flexGrow: 1,
-              width: "100%",
-              maxHeight: "720px",
-              gap: { xs: 5, md: "none" },
-            }}
-          >
-            <Stepper
-              id="mobile-stepper"
-              activeStep={activeStep}
-              alternativeLabel
-              sx={{ display: { sm: "flex", md: "none" } }}
-            >
-              {steps.map((label) => (
-                <Step
-                  sx={{
-                    ":first-of-type": { pl: 0 },
-                    ":last-of-type": { pr: 0 },
-                    "& .MuiStepConnector-root": { top: { xs: 6, sm: 12 } },
-                  }}
-                  key={label}
-                >
-                  <StepLabel
-                    sx={{
-                      ".MuiStepLabel-labelContainer": { maxWidth: "70px" },
-                    }}
-                  >
-                    {label}
-                  </StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            {getStepContent(activeStep)}
-            <Box
-              sx={[
-                {
-                  display: "flex",
-                  flexDirection: { xs: "column-reverse", sm: "row" },
-                  alignItems: "end",
-                  flexGrow: 1,
-                  gap: 1,
-                  pb: { xs: 12, sm: 0 },
-                  mt: { xs: 2, sm: 0 },
-                  mb: 1,
-                },
-                activeStep !== 0
-                  ? { justifyContent: "space-between" }
-                  : { justifyContent: "flex-end" },
-              ]}
-            >
-              {activeStep !== 0 && (
-                <Button
-                  startIcon={<ChevronLeftRoundedIcon />}
-                  onClick={() => {
-                    setFormState(DEFAULT_FORM_STATE);
-                    handleStepChange(0);
-                  }}
-                  variant="text"
-                  sx={{ display: { xs: "none", sm: "flex" } }}
-                >
-                  Recommencer
-                </Button>
-              )}
-            </Box>
-            <Footer />
           </Box>
         </Grid>
       </Grid>
+
+      <Footer />
     </>
   );
 }
