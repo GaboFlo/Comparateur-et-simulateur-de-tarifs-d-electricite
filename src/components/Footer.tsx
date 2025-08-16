@@ -75,7 +75,15 @@ export default function Footer({ onHelpClick }: Readonly<FooterProps>) {
           underline="hover"
           target="_blank"
           rel="noopener noreferrer"
-          sx={{ display: "inline-flex", alignItems: "center" }}
+          sx={{
+            display: "inline-flex",
+            alignItems: "center",
+            color: "primary.dark",
+            fontWeight: 400,
+            "&:hover": {
+              color: "primary.main",
+            },
+          }}
         >
           🎉 Me soutenir 🎉
         </Link>{" "}

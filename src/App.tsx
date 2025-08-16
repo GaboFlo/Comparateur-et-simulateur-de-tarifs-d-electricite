@@ -265,7 +265,18 @@ export default function App() {
           </Typography>
           <IconButton
             onClick={handleHelpClose}
-            sx={{ position: "absolute", right: 8, top: 8 }}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: "text.primary",
+              backgroundColor: "background.paper",
+              border: "1px solid",
+              borderColor: "divider",
+              "&:hover": {
+                backgroundColor: "action.hover",
+              },
+            }}
           >
             <CloseIcon />
           </IconButton>

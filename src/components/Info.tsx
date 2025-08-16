@@ -72,6 +72,7 @@ export default function Info({
         <Button
           variant="contained"
           onClick={handleClose}
+          aria-label="Fermeture de la modale d'explication"
           sx={{ mt: 2, marginRight: 3 }}
         >
           J'ai compris
