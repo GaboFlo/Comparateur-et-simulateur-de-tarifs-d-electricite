@@ -1,4 +1,4 @@
-import { endOfDay, startOfDay, subYears } from "date-fns";
+import dayjs from "dayjs";
 import React, {
   createContext,
   ReactNode,
@@ -59,19 +59,58 @@ export const DEFAULT_FORM_STATE: FormState = {
   powerClass: 6,
   isGlobalLoading: false,
   analyzedDateRange: [
-    startOfDay(subYears(new Date(), 2)),
-    endOfDay(new Date()),
+    dayjs().subtract(2, "year").startOf("day").toDate(),
+    dayjs().endOf("day").toDate(),
   ],
   totalConsumption: 1,
   rowSummaries: [],
 };
 
 export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
-  const [formState, setFormState] = useState<FormState>(DEFAULT_FORM_STATE);
+  // Récupérer l'état initial depuis localStorage ou utiliser les valeurs par défaut
+  const getInitialState = (): FormState => {
+    try {
+      const saved = localStorage.getItem("formState");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Convertir les dates string en objets Date
+        if (parsed.analyzedDateRange) {
+          parsed.analyzedDateRange = [
+            new Date(parsed.analyzedDateRange[0]),
+            new Date(parsed.analyzedDateRange[1]),
+          ];
+        }
+        return { ...DEFAULT_FORM_STATE, ...parsed };
+      }
+    } catch (error) {
+      console.error("Erreur lors du chargement du state:", error);
+    }
+    return DEFAULT_FORM_STATE;
+  };
+
+  const [formState, setFormState] = useState<FormState>(getInitialState);
+
+  // Sauvegarder dans localStorage à chaque changement
+  const setFormStateWithPersistence = React.useCallback(
+    (newState: FormState | ((prev: FormState) => FormState)) => {
+      setFormState((prevState) => {
+        const nextState =
+          typeof newState === "function" ? newState(prevState) : newState;
+
+        try {
+          localStorage.setItem("formState", JSON.stringify(nextState));
+        } catch (error) {
+          console.error("Erreur lors de la sauvegarde du state:", error);
+        }
+        return nextState;
+      });
+    },
+    []
+  );
 
   const contextValue = useMemo(
-    () => ({ formState, setFormState }),
-    [formState]
+    () => ({ formState, setFormState: setFormStateWithPersistence }),
+    [formState, setFormStateWithPersistence]
   );
 
   return (

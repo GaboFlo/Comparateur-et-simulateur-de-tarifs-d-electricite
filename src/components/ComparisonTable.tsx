@@ -1,7 +1,13 @@
 import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
-import { CircularProgress, Link, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Link,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -10,19 +16,16 @@ import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { format } from "date-fns";
+import dayjs from "dayjs";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
 
-import { calculateRowSummary } from "../scripts/calculators";
-import allOffersFile from "../statics/price_mapping.json";
-import { ComparisonTableInterfaceRow, PriceMappingFile } from "../types";
-
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    fontWeight: 600,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -37,12 +40,19 @@ const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
   ({ theme, highlight }) => ({
     backgroundColor:
       highlight === "true" ? theme.palette.primary.light : "inherit",
+    transition: "background-color 0.2s ease-in-out",
+    "&:hover": {
+      backgroundColor:
+        highlight === "true"
+          ? theme.palette.primary.main
+          : theme.palette.action.hover,
+      cursor: "pointer",
+    },
   })
 );
 
 export function ComparisonTable() {
-  const { formState, setFormState } = useFormContext();
-  const allOffers = allOffersFile as PriceMappingFile;
+  const { formState } = useFormContext();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -58,47 +68,18 @@ export function ComparisonTable() {
       return;
     }
 
-    setFormState((prevState) => ({
-      ...prevState,
-      isGlobalLoading: true,
-    }));
-
-    const newRowSummaries: ComparisonTableInterfaceRow[] = [];
-
-    if (!formState.parsedData || !formState.hpHcConfig) return;
-
-    for (const option of allOffers) {
-      const costForOption = calculateRowSummary({
-        data: formState.parsedData,
-        dateRange,
-        powerClass: formState.powerClass,
-        optionKey: option.optionKey,
-        offerType: option.offerType,
-        optionName: option.optionName,
-        provider: option.provider,
-        lastUpdate: option.lastUpdate,
-        link: option.link,
-        hpHcData: formState.hpHcConfig,
-        overridingHpHcKey: option.overridingHpHcKey,
-      });
-
-      if (
-        !formState.rowSummaries.some(
-          (summary) => summary.optionKey === costForOption.optionKey
-        )
-      ) {
-        newRowSummaries.push(costForOption);
-      }
+    // Les calculs sont maintenant pré-calculés dans DataImport
+    // On vérifie juste que les données sont présentes
+    if (!formState.rowSummaries || formState.rowSummaries.length === 0) {
+      return;
     }
-
-    setFormState((prevState) => ({
-      ...prevState,
-      rowSummaries: prevState.rowSummaries.concat(newRowSummaries),
-      isGlobalLoading: false,
-    }));
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allOffers, formState.analyzedDateRange, formState.parsedData]);
+  }, [
+    formState.analyzedDateRange,
+    formState.hpHcConfig,
+    formState.parsedData,
+    formState.rowSummaries,
+    navigate,
+  ]);
 
   const currentOfferTotal =
     formState.rowSummaries.find(
@@ -120,8 +101,26 @@ export function ComparisonTable() {
 
   return (
     <TableContainer component={Paper} sx={{ my: 3 }}>
-      {formState.isGlobalLoading || !formState.rowSummaries ? (
-        <CircularProgress thickness={8} size={60} />
+      {formState.isGlobalLoading ||
+      !formState.rowSummaries ||
+      formState.rowSummaries.length === 0 ? (
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            p: 6,
+            minHeight: 300,
+          }}
+        >
+          <CircularProgress thickness={8} size={60} />
+          <Typography sx={{ mt: 2, textAlign: "center" }}>
+            {formState.isGlobalLoading
+              ? "Calcul des simulations en cours..."
+              : "Aucune donnée de simulation disponible"}
+          </Typography>
+        </Box>
       ) : (
         <Table sx={{ minWidth: 700 }} aria-label="customized table">
           <TableHead>
@@ -177,10 +176,9 @@ export function ComparisonTable() {
                   >
                     <Typography variant="body1" m={1}>
                       <Tooltip
-                        title={`Tarification mise à jour le ${format(
-                          row.lastUpdate,
-                          "dd/MM/yyyy"
-                        )}`}
+                        title={`Tarification mise à jour le ${dayjs(
+                          row.lastUpdate
+                        ).format("DD/MM/YYYY")}`}
                         arrow
                       >
                         <span

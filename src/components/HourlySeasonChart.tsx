@@ -1,4 +1,4 @@
-import { CircularProgress, Divider, Paper } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { pieArcLabelClasses, PieChart } from "@mui/x-charts";
 import { BarChart } from "@mui/x-charts/BarChart";
@@ -35,10 +35,7 @@ export default function HourlySeasonChart() {
   };
 
   return (
-    <Paper sx={{ padding: 2 }}>
-      <Typography component="h2" gutterBottom variant="h6">
-        Répartition de la consommation par heure et par saison
-      </Typography>
+    <>
       {!formState.seasonHourlyAnalysis ? (
         <Typography>
           Aucune donnée à afficher. Veuillez importer un fichier EDF.
@@ -85,13 +82,15 @@ export default function HourlySeasonChart() {
             }}
             {...chartSetting}
           />
-          <Typography component="h3" gutterBottom variant="body2">
+          <Typography
+            component="h3"
+            gutterBottom
+            variant="body2"
+            sx={{ textAlign: "center" }}
+          >
             Heure
           </Typography>
-          <Divider sx={{ m: 2 }} />
-          <Typography component="h2" gutterBottom variant="h6">
-            Répartition de la consommation par saison
-          </Typography>
+
           <PieChart
             series={[
               {
@@ -120,6 +119,6 @@ export default function HourlySeasonChart() {
           />
         </>
       )}
-    </Paper>
+    </>
   );
 }

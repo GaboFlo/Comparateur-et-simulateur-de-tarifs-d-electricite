@@ -97,14 +97,35 @@ export default defineConfig({
     outDir: "build",
     sourcemap: false,
     assetsInlineLimit: 4096,
+    target: "es2015",
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        pure_funcs: ["console.log", "console.info", "console.debug"],
+        passes: 2,
+        toplevel: true,
+        unsafe: true,
+        unsafe_comps: true,
+      },
+      mangle: {
+        safari10: true,
+        toplevel: true,
+      },
+      format: {
+        comments: false,
+      },
+    },
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ["react", "react-dom"],
           mui: ["@mui/material", "@mui/icons-material", "@mui/system"],
           charts: ["@mui/x-charts"],
-          utils: ["axios", "date-fns", "jszip"],
+          utils: ["axios", "jszip"],
           datePickers: ["@mui/x-date-pickers", "@mui/x-date-pickers-pro"],
+          matomo: ["@jonkoops/matomo-tracker-react"],
         },
         assetFileNames: (assetInfo) => {
           const name = assetInfo.name;
@@ -124,23 +145,12 @@ export default defineConfig({
       },
     },
     chunkSizeWarningLimit: 1000,
-    minify: "terser",
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-        pure_funcs: ["console.log", "console.info", "console.debug"],
-        passes: 2,
-      },
-      mangle: {
-        safari10: true,
-      },
-    },
   },
   define: {
     "process.env": {},
   },
   optimizeDeps: {
     include: ["react", "react-dom", "@mui/material", "@mui/icons-material"],
+    exclude: ["@jonkoops/matomo-tracker-react"],
   },
 });

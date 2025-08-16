@@ -27,7 +27,7 @@ export default defineConfig({
           vendor: ["react", "react-dom"],
           mui: ["@mui/material", "@mui/icons-material", "@mui/system"],
           charts: ["@mui/x-charts"],
-          utils: ["axios", "date-fns", "jszip"],
+          utils: ["axios", "jszip"],
         },
       },
     },
