@@ -104,11 +104,20 @@ export function ComparisonTable() {
       {formState.isGlobalLoading ||
       !formState.rowSummaries ||
       formState.rowSummaries.length === 0 ? (
-        <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            p: 6,
+            minHeight: 300,
+          }}
+        >
           <CircularProgress thickness={8} size={60} />
-          <Typography sx={{ ml: 2, alignSelf: "center" }}>
+          <Typography sx={{ mt: 2, textAlign: "center" }}>
             {formState.isGlobalLoading
-              ? "Calcul des simulations..."
+              ? "Calcul des simulations en cours..."
               : "Aucune donnée de simulation disponible"}
           </Typography>
         </Box>

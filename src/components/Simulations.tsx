@@ -1,5 +1,5 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
-import { Button, Chip, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/system";
 import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
 import dayjs from "dayjs";
@@ -7,9 +7,13 @@ import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
 import { OfferType, OptionKey } from "../types";
 
+import { calculateRowSummary } from "../scripts/calculators";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
+import allOffersFile from "../statics/price_mapping.json";
+import { ComparisonTableInterfaceRow, PriceMappingFile } from "../types";
 import { ComparisonTable } from "./ComparisonTable";
 import HpHcSlotSelector from "./HpHcSelector";
+import PeriodChips from "./PeriodChips";
 
 export default function Simulations() {
   const { formState, setFormState } = useFormContext();
@@ -50,8 +54,6 @@ export default function Simulations() {
       return;
     }
 
-    if (!formState.parsedData) return;
-
     const seasonData = analyseHourByHourBySeason({
       data: formState.parsedData,
       dateRange: range,
@@ -61,11 +63,34 @@ export default function Simulations() {
       0
     );
 
+    // Recalculer les simulations avec la nouvelle période
+    const allOffers = allOffersFile as PriceMappingFile;
+    const newRowSummaries: ComparisonTableInterfaceRow[] = [];
+
+    for (const option of allOffers) {
+      const costForOption = calculateRowSummary({
+        data: formState.parsedData,
+        dateRange: range,
+        powerClass: formState.powerClass,
+        optionKey: option.optionKey,
+        offerType: option.offerType,
+        optionName: option.optionName,
+        provider: option.provider,
+        lastUpdate: option.lastUpdate,
+        link: option.link,
+        hpHcData: formState.hpHcConfig ?? [],
+        overridingHpHcKey: option.overridingHpHcKey,
+      });
+
+      newRowSummaries.push(costForOption);
+    }
+
     setFormState((prevState) => ({
       ...prevState,
       seasonHourlyAnalysis: seasonData,
       analyzedDateRange: range,
       totalConsumption: totalConsumption,
+      rowSummaries: newRowSummaries,
       isGlobalLoading: false,
     }));
   };
@@ -167,54 +192,12 @@ export default function Simulations() {
             toolbarTitle: "",
           }}
         />
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 1,
-            flexWrap: "wrap",
-          }}
-        >
-          <Chip
-            label="6 derniers mois"
-            onClick={handleLast6Months}
-            color="primary"
-            variant="outlined"
-            size="small"
-            sx={{
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "primary.50",
-              },
-            }}
-          />
-          <Chip
-            label="12 derniers mois"
-            onClick={handleLast12Months}
-            color="primary"
-            variant="outlined"
-            size="small"
-            sx={{
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "primary.50",
-              },
-            }}
-          />
-          <Chip
-            label="24 derniers mois"
-            onClick={handleLast24Months}
-            color="primary"
-            variant="outlined"
-            size="small"
-            sx={{
-              cursor: "pointer",
-              "&:hover": {
-                backgroundColor: "primary.50",
-              },
-            }}
-          />
-        </Box>
+        <PeriodChips
+          onLast6Months={handleLast6Months}
+          onLast12Months={handleLast12Months}
+          onLast24Months={handleLast24Months}
+          isLoading={formState.isGlobalLoading}
+        />
       </Box>
 
       <Typography variant="h5" sx={{ mt: 2 }}>

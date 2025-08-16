@@ -9,7 +9,6 @@ import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import {
   Alert,
   Box,
-  Chip,
   CircularProgress,
   IconButton,
   Stack,
@@ -38,6 +37,7 @@ import ActionButton from "./ActionButton";
 import FormCard from "./FormCard";
 import HourlySeasonChart from "./HourlySeasonChart";
 import HpHcSeasonChart from "./HpHcSeasonChart";
+import PeriodChips from "./PeriodChips";
 import TooltipModal from "./TooltipModal";
 
 interface Props {
@@ -584,54 +584,12 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                   toolbarTitle: "",
                 }}
               />
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: 1,
-                  flexWrap: "wrap",
-                }}
-              >
-                <Chip
-                  label="6 derniers mois"
-                  onClick={handleLast6Months}
-                  color="primary"
-                  variant="outlined"
-                  size="small"
-                  sx={{
-                    cursor: "pointer",
-                    "&:hover": {
-                      backgroundColor: "primary.50",
-                    },
-                  }}
-                />
-                <Chip
-                  label="12 derniers mois"
-                  onClick={handleLast12Months}
-                  color="primary"
-                  variant="outlined"
-                  size="small"
-                  sx={{
-                    cursor: "pointer",
-                    "&:hover": {
-                      backgroundColor: "primary.50",
-                    },
-                  }}
-                />
-                <Chip
-                  label="24 derniers mois"
-                  onClick={handleLast24Months}
-                  color="primary"
-                  variant="outlined"
-                  size="small"
-                  sx={{
-                    cursor: "pointer",
-                    "&:hover": {
-                      backgroundColor: "primary.50",
-                    },
-                  }}
-                />
-              </Box>
+              <PeriodChips
+                onLast6Months={handleLast6Months}
+                onLast12Months={handleLast12Months}
+                onLast24Months={handleLast24Months}
+                isLoading={formState.isGlobalLoading}
+              />
             </Box>
           </FormCard>
 
