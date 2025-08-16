@@ -9,7 +9,7 @@
     "deadcode:all": "ts-prune",
     "deadcode:ci": "ts-prune | (! grep -v 'used in module') | (! grep -v 'migration') | (! grep -v 'd.ts') | (! grep -v 'themePrimitives.ts') | (! grep -v 'vite.config.ts')",
     "depcheck": "depcheck --ignores=node-fetch,@types/jest,sort-package-json,ts-jest,typescript,@typescript-eslint/eslint-plugin",
-    "depcheck:ci": "depcheck --ignores=node-fetch,@types/jest,sort-package-json,eslint-config-react-app,ts-jest,typescript,@typescript-eslint/eslint-plugin | (! grep -v 'No depcheck issue') ",
+    "depcheck:ci": "depcheck --ignores=node-fetch,@types/jest,sort-package-json,ts-jest,typescript,@typescript-eslint/eslint-plugin | (! grep -v 'No depcheck issue') ",
     "fetch-and-update-tempo-data": "cd services && tsx run-tempo.ts",
     "lint": "eslint --ext .js,.ts .",
     "lint:ci": "eslint --ext .js,.ts . --max-warnings 0",
@@ -29,12 +29,6 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
     ]
   },
   "dependencies": {
