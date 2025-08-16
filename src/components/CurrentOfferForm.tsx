@@ -165,8 +165,9 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
         <Typography
           variant="body1"
           sx={{
-            color: "text.secondary",
+            color: "text.primary",
             mx: "auto",
+            opacity: 0.9,
           }}
         >
           Configurez votre contrat actuel pour obtenir une simulation précise de

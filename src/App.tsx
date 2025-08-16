@@ -39,10 +39,12 @@ export default function App() {
   const [activeStep, setActiveStep] = React.useState(
     stepParam ? parseInt(stepParam) : 0
   );
-  // Vérifier si c'est la première visite
+  // Vérifier si c'est la première visite et si ce n'est pas un bot
   React.useEffect(() => {
     const hasVisitedBefore = localStorage.getItem("hasVisitedBefore");
-    if (!hasVisitedBefore) {
+    const isBot = /bot|crawler|spider|crawling/i.test(navigator.userAgent);
+
+    if (!hasVisitedBefore && !isBot) {
       setOpenHelpDrawer(true);
       localStorage.setItem("hasVisitedBefore", "true");
     }
@@ -221,8 +223,6 @@ export default function App() {
               display: "flex",
               flexDirection: "column",
               width: "100%",
-              maxWidth: "1200px",
-              mx: "auto",
             }}
           >
             <MyStepper
@@ -265,7 +265,18 @@ export default function App() {
           </Typography>
           <IconButton
             onClick={handleHelpClose}
-            sx={{ position: "absolute", right: 8, top: 8 }}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: "text.primary",
+              backgroundColor: "background.paper",
+              border: "1px solid",
+              borderColor: "divider",
+              "&:hover": {
+                backgroundColor: "action.hover",
+              },
+            }}
           >
             <CloseIcon />
           </IconButton>
