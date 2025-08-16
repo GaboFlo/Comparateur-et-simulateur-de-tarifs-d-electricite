@@ -8,6 +8,7 @@ interface FormCardProps {
   children: React.ReactNode;
   icon?: React.ReactNode;
   variant?: "default" | "highlighted";
+  [key: string]: any; // Permettre les props supplémentaires
 }
 
 const MotionCard = motion.create(Card);
@@ -18,9 +19,11 @@ export default function FormCard({
   children,
   icon,
   variant = "default",
+  ...props
 }: FormCardProps) {
   return (
     <MotionCard
+      {...props}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: "easeOut" }}

@@ -9,8 +9,14 @@ import { Stack } from "@mui/system";
 import * as React from "react";
 import Info from "./Info";
 
-export default function InfoMobile() {
-  const [open, setOpen] = React.useState(false);
+interface InfoMobileProps {
+  showOnFirstVisit?: boolean;
+}
+
+export default function InfoMobile({
+  showOnFirstVisit = false,
+}: InfoMobileProps) {
+  const [open, setOpen] = React.useState(showOnFirstVisit);
   const { trackEvent } = useMatomo();
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -51,6 +57,7 @@ export default function InfoMobile() {
       <Button
         variant="text"
         onClick={toggleDrawer(true)}
+        data-help-button
         sx={(theme) => ({
           borderRadius: theme.shape.borderRadius,
           border: "1px solid",

@@ -134,7 +134,7 @@ export default function CurrentOfferForm({ handleNext }: Readonly<Props>) {
     formState.offerType
   ).map((option) => ({
     value: option.optionKey,
-    label: option.optionKey,
+    label: option.optionName,
   }));
 
   const powerClassOptions = powerClasses.map((power) => ({

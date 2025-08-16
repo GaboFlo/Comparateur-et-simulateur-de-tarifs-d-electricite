@@ -299,7 +299,6 @@ const HpHcSlotSelector = ({ readOnly = false }: Readonly<Props>) => {
                         label="Heures creuses"
                         color="success"
                         sx={{
-                          maxWidth: "140px",
                           background:
                             "linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%)",
                           color: "white",
@@ -316,7 +315,6 @@ const HpHcSlotSelector = ({ readOnly = false }: Readonly<Props>) => {
                         icon={<LightModeIcon />}
                         label="Heures pleines"
                         sx={{
-                          maxWidth: "140px",
                           background:
                             "linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%)",
                           color: "text.primary",

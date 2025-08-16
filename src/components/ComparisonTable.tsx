@@ -23,8 +23,9 @@ import { useFormContext } from "../context/FormContext";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    fontWeight: 600,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -39,6 +40,14 @@ const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
   ({ theme, highlight }) => ({
     backgroundColor:
       highlight === "true" ? theme.palette.primary.light : "inherit",
+    transition: "background-color 0.2s ease-in-out",
+    "&:hover": {
+      backgroundColor:
+        highlight === "true"
+          ? theme.palette.primary.main
+          : theme.palette.action.hover,
+      cursor: "pointer",
+    },
   })
 );
 

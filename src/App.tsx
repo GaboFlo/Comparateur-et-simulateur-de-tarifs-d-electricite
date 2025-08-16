@@ -1,18 +1,28 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
-import { useColorScheme } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { Typography, useColorScheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
+import Drawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
+import IconButton from "@mui/material/IconButton";
 import * as React from "react";
 import { lazy } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CurrentOfferForm from "./components/CurrentOfferForm";
 import DataImport from "./components/DataImport";
 import Footer from "./components/Footer";
-import InfoMobile from "./components/InfoMobile";
+import Info from "./components/Info";
+import MyStepper from "./components/Stepper";
 import { useFormContext } from "./context/FormContext";
 import { APP_VERSION, OfferType, OptionKey } from "./types";
-import MyStepper from "./components/Stepper";
+
+// Fonction utilitaire pour scroll vers le haut
+const scrollToTop = () => {
+  setTimeout(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, 100);
+};
 
 const Simulations = lazy(() => import("./components/Simulations"));
 
@@ -29,6 +39,14 @@ export default function App() {
   const [activeStep, setActiveStep] = React.useState(
     stepParam ? parseInt(stepParam) : 0
   );
+  // Vérifier si c'est la première visite
+  React.useEffect(() => {
+    const hasVisitedBefore = localStorage.getItem("hasVisitedBefore");
+    if (!hasVisitedBefore) {
+      setOpenHelpDrawer(true);
+      localStorage.setItem("hasVisitedBefore", "true");
+    }
+  }, []);
 
   React.useEffect(() => {
     if (stepParam && parseInt(stepParam) !== activeStep) {
@@ -55,11 +73,13 @@ export default function App() {
 
   // Scroll vers le haut à chaque changement d'étape
   React.useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    scrollToTop();
   }, [activeStep]);
 
   const handleStepChange = (step: number) => {
     navigate(`?step=${step}`);
+    // Scroll immédiat pour les changements programmatiques
+    scrollToTop();
   };
 
   const handleStepClick = (stepIndex: number) => {
@@ -104,6 +124,21 @@ export default function App() {
       action: "powerClass",
       name: formState.powerClass.toString(),
     });
+  };
+
+  const [openHelpDrawer, setOpenHelpDrawer] = React.useState(false);
+
+  const handleHelpClick = () => {
+    setOpenHelpDrawer(true);
+    trackEvent({
+      category: "help",
+      action: "open",
+      name: "manual",
+    });
+  };
+
+  const handleHelpClose = () => {
+    setOpenHelpDrawer(false);
   };
 
   React.useEffect(() => {
@@ -155,17 +190,6 @@ export default function App() {
     <>
       <CssBaseline enableColorScheme />
 
-      <Box
-        sx={{
-          position: "fixed",
-          top: "1rem",
-          right: "1rem",
-          zIndex: 12,
-        }}
-      >
-        <InfoMobile />
-      </Box>
-
       <Grid
         container
         sx={{
@@ -205,6 +229,7 @@ export default function App() {
               activeStep={activeStep}
               steps={steps}
               onStepClick={handleStepClick}
+              onHelpClick={handleHelpClick}
             />
 
             <Box
@@ -221,7 +246,32 @@ export default function App() {
         </Grid>
       </Grid>
 
-      <Footer />
+      <Footer onHelpClick={handleHelpClick} />
+
+      <Drawer open={openHelpDrawer} anchor="top" onClose={handleHelpClose}>
+        <Box
+          sx={{
+            width: "auto",
+            px: 3,
+            pb: 3,
+            pt: 8,
+          }}
+        >
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: "bold", mb: 2, textAlign: "center" }}
+          >
+            ℹ️ Comment ça marche ?
+          </Typography>
+          <IconButton
+            onClick={handleHelpClose}
+            sx={{ position: "absolute", right: 8, top: 8 }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Info handleClose={handleHelpClose} />
+        </Box>
+      </Drawer>
     </>
   );
 }

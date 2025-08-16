@@ -55,11 +55,7 @@ export default function HpHcSeasonChart() {
   );
 
   return (
-    <Paper sx={{ padding: 2 }}>
-      <Typography component="h2" gutterBottom variant="h6">
-        Répartition de la consommation Heures Pleines/Heures Creuses par saison
-      </Typography>
-
+    <>
       {!isChartReady ? (
         <div
           style={{
@@ -114,6 +110,6 @@ export default function HpHcSeasonChart() {
           {...chartSetting}
         />
       )}
-    </Paper>
+    </>
   );
 }

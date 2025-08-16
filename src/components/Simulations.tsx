@@ -1,5 +1,5 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
-import { Alert, Button, Chip, Divider, Typography } from "@mui/material";
+import { Button, Chip, Typography } from "@mui/material";
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/system";
 import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
 import dayjs from "dayjs";
@@ -8,10 +8,7 @@ import { useFormContext } from "../context/FormContext";
 import { OfferType, OptionKey } from "../types";
 
 import { analyseHourByHourBySeason } from "../scripts/statistics";
-import { formatKWhLarge } from "../scripts/utils";
 import { ComparisonTable } from "./ComparisonTable";
-import HourlySeasonChart from "./HourlySeasonChart";
-import HpHcSeasonChart from "./HpHcSeasonChart";
 import HpHcSlotSelector from "./HpHcSelector";
 
 export default function Simulations() {
@@ -139,8 +136,6 @@ export default function Simulations() {
     setRange([startDate, endDate]);
   };
 
-  const diffDays = dayjs(safeDateRange[1]).diff(dayjs(safeDateRange[0]), "day");
-
   return (
     <Stack textAlign={"center"}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -221,20 +216,7 @@ export default function Simulations() {
           />
         </Box>
       </Box>
-      <Alert severity="info" sx={{ m: 1, textAlign: "justify" }}>
-        Vous avez consommé <b>{formatKWhLarge(formState.totalConsumption)} </b>
-        sur la période analysée (du{" "}
-        {dayjs(safeDateRange[0]).format("DD/MM/YYYY")} au{" "}
-        {dayjs(safeDateRange[1]).format("DD/MM/YYYY")}), soit une{" "}
-        <b>
-          moyenne de {formatKWhLarge(formState.totalConsumption / diffDays)} par
-          jour
-        </b>{" "}
-      </Alert>
-      <HourlySeasonChart />
-      <Divider sx={{ marginX: 2, mt: 2 }} />
-      <HpHcSeasonChart />
-      <Divider sx={{ marginX: 2, mt: 2 }} />
+
       <Typography variant="h5" sx={{ mt: 2 }}>
         Combien auriez-vous gagné en changeant d'offre ?
       </Typography>

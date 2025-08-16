@@ -1,7 +1,12 @@
-import { Box, Link } from "@mui/material";
+import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import { Box, Button, Link } from "@mui/material";
 import { APP_VERSION } from "../types";
 
-export default function Footer() {
+interface FooterProps {
+  onHelpClick?: () => void;
+}
+
+export default function Footer({ onHelpClick }: FooterProps) {
   return (
     <Box component="footer" sx={{ m: 1, textAlign: "center", width: "100%" }}>
       <p
@@ -49,6 +54,22 @@ export default function Footer() {
           />
           {APP_VERSION}
         </button>
+        {onHelpClick && (
+          <Button
+            variant="text"
+            onClick={onHelpClick}
+            startIcon={<HelpOutlineIcon />}
+            sx={{
+              textTransform: "none",
+              color: "text.secondary",
+              "&:hover": {
+                color: "primary.main",
+              },
+            }}
+          >
+            Aide
+          </Button>
+        )}
         <Link
           href="https://buymeacoffee.com/gaboflo"
           underline="hover"
