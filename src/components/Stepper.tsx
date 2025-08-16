@@ -18,6 +18,19 @@ interface StepperProps {
 
 const MotionBox = motion.create(Box);
 
+const getStepIconBackgroundColor = (
+  completed: boolean,
+  active: boolean
+): string => {
+  if (completed) {
+    return "success.main";
+  }
+  if (active) {
+    return "primary.main";
+  }
+  return "grey.300";
+};
+
 export default function MyStepper({
   activeStep,
   steps,
@@ -127,11 +140,10 @@ export default function MyStepper({
                   : {},
               }}
               StepIconComponent={({ active, completed, icon }) => {
-                const backgroundColor = completed
-                  ? "success.main"
-                  : active
-                  ? "primary.main"
-                  : "grey.300";
+                const backgroundColor = getStepIconBackgroundColor(
+                  completed ?? false,
+                  active ?? false
+                );
 
                 return (
                   <MotionBox

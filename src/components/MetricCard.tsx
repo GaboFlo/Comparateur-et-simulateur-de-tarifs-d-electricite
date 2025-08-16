@@ -26,7 +26,7 @@ export default function MetricCard({
   trend,
   variant = "default",
   onClick,
-}: MetricCardProps) {
+}: Readonly<MetricCardProps>) {
   const getVariantStyles = () => {
     switch (variant) {
       case "highlighted":

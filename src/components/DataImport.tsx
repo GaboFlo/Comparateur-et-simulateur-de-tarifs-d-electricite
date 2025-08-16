@@ -405,126 +405,141 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
         >
           <input {...getInputProps()} />
 
-          {isProcessing ? (
-            <Stack spacing={2} alignItems="center">
-              <CircularProgress size={48} />
-              <Typography variant="h6" color="primary">
-                Traitement en cours...
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Analyse de vos données de consommation
-              </Typography>
-            </Stack>
-          ) : isCalculating ? (
-            <Stack spacing={2} alignItems="center">
-              <CircularProgress size={48} />
-              <Typography variant="h6" color="primary">
-                Calculs en cours...
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Préparation des simulations
-              </Typography>
-            </Stack>
-          ) : isDataProcessed ? (
-            <Stack spacing={2} alignItems="center">
-              <Box
-                sx={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: "50%",
-                  backgroundColor: "success.50",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "success.main",
-                  fontSize: "1.5rem",
-                }}
-              >
-                <CheckCircleIcon sx={{ fontSize: "inherit" }} />
-              </Box>
+          {(() => {
+            if (isProcessing) {
+              return (
+                <Stack spacing={2} alignItems="center">
+                  <CircularProgress size={48} />
+                  <Typography variant="h6" color="primary">
+                    Traitement en cours...
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Analyse de vos données de consommation
+                  </Typography>
+                </Stack>
+              );
+            }
 
-              <Typography variant="h6" color="text.primary">
-                Données traitées avec succès
-              </Typography>
+            if (isCalculating) {
+              return (
+                <Stack spacing={2} alignItems="center">
+                  <CircularProgress size={48} />
+                  <Typography variant="h6" color="primary">
+                    Calculs en cours...
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Préparation des simulations
+                  </Typography>
+                </Stack>
+              );
+            }
 
-              <Typography variant="body2" color="text.secondary">
-                Vos données de consommation ont été analysées
-              </Typography>
+            if (isDataProcessed) {
+              return (
+                <Stack spacing={2} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 60,
+                      height: 60,
+                      borderRadius: "50%",
+                      backgroundColor: "success.50",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "success.main",
+                      fontSize: "1.5rem",
+                    }}
+                  >
+                    <CheckCircleIcon sx={{ fontSize: "inherit" }} />
+                  </Box>
 
-              <Typography
-                variant="h6"
-                color="success.main"
-                sx={{ fontWeight: 600 }}
-              >
-                {formState.totalConsumption && formState.totalConsumption > 0
-                  ? `${formState.totalConsumption.toLocaleString(
-                      "fr-FR"
-                    )} kWh analysés`
-                  : "Données analysées"}
-              </Typography>
+                  <Typography variant="h6" color="text.primary">
+                    Données traitées avec succès
+                  </Typography>
 
-              <ActionButton
-                variant="outline"
-                onClick={() => {
-                  setIsDataProcessed(false);
-                  setFormState((prev) => ({
-                    ...prev,
-                    seasonHourlyAnalysis: undefined,
-                    parsedData: undefined,
-                    totalConsumption: 0,
-                    rowSummaries: [],
-                  }));
-                }}
-                sx={{
-                  background: "rgba(25, 118, 210, 0.05)",
-                  borderColor: "primary.main",
-                  color: "primary.main",
-                }}
-              >
-                Changer de fichier
-              </ActionButton>
-            </Stack>
-          ) : (
-            <Stack spacing={2} alignItems="center">
-              <Box
-                sx={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: "50%",
-                  backgroundColor: "primary.50",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  color: "primary.main",
-                  fontSize: "1.5rem",
-                }}
-              >
-                <CloudUploadIcon sx={{ fontSize: "inherit" }} />
-              </Box>
+                  <Typography variant="body2" color="text.secondary">
+                    Vos données de consommation ont été analysées
+                  </Typography>
 
-              <Typography variant="h6" color="text.primary">
-                {isDragActive
-                  ? "Déposez le fichier ici"
-                  : "Sélectionnez votre fichier ZIP"}
-              </Typography>
+                  <Typography
+                    variant="h6"
+                    color="success.main"
+                    sx={{ fontWeight: 600 }}
+                  >
+                    {formState.totalConsumption &&
+                    formState.totalConsumption > 0
+                      ? `${formState.totalConsumption.toLocaleString(
+                          "fr-FR"
+                        )} kWh analysés`
+                      : "Données analysées"}
+                  </Typography>
 
-              <Typography variant="body2" color="text.secondary">
-                Format accepté : fichier ZIP directement issu du téléchargement
-                EDF
-              </Typography>
+                  <ActionButton
+                    variant="outline"
+                    onClick={() => {
+                      setIsDataProcessed(false);
+                      setFormState((prev) => ({
+                        ...prev,
+                        seasonHourlyAnalysis: undefined,
+                        parsedData: undefined,
+                        totalConsumption: 0,
+                        rowSummaries: [],
+                      }));
+                    }}
+                    sx={{
+                      background: "rgba(25, 118, 210, 0.05)",
+                      borderColor: "primary.main",
+                      color: "primary.main",
+                    }}
+                  >
+                    Changer de fichier
+                  </ActionButton>
+                </Stack>
+              );
+            }
 
-              <ActionButton
-                variant="outline"
-                sx={{
-                  background: "rgba(25, 118, 210, 0.05)",
-                  borderColor: "primary.main",
-                  color: "primary.main",
-                }}
-              >
-                Choisir un fichier
-              </ActionButton>
-            </Stack>
-          )}
+            return (
+              <Stack spacing={2} alignItems="center">
+                <Box
+                  sx={{
+                    width: 60,
+                    height: 60,
+                    borderRadius: "50%",
+                    backgroundColor: "primary.50",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "primary.main",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  <CloudUploadIcon sx={{ fontSize: "inherit" }} />
+                </Box>
+
+                <Typography variant="h6" color="text.primary">
+                  {isDragActive
+                    ? "Déposez le fichier ici"
+                    : "Sélectionnez votre fichier ZIP"}
+                </Typography>
+
+                <Typography variant="body2" color="text.secondary">
+                  Format accepté : fichier ZIP directement issu du
+                  téléchargement EDF
+                </Typography>
+
+                <ActionButton
+                  variant="outline"
+                  sx={{
+                    background: "rgba(25, 118, 210, 0.05)",
+                    borderColor: "primary.main",
+                    color: "primary.main",
+                  }}
+                >
+                  Choisir un fichier
+                </ActionButton>
+              </Stack>
+            );
+          })()}
         </Box>
       </FormCard>
 

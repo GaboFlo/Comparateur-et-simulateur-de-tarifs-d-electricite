@@ -9,7 +9,7 @@ const Colors = {
     300: "#7dd3fc",
     400: "#38bdf8",
     500: "#0ea5e9",
-    600: "#0284c7", // Contraste suffisant pour le texte
+    600: "#0284c7",
     700: "#0369a1",
     800: "#075985",
     900: "#0c4a6e",
@@ -21,10 +21,10 @@ const Colors = {
     300: "#d4d4d4",
     400: "#a3a3a3",
     500: "#737373",
-    600: "#525252", // Contraste suffisant pour le texte secondaire
+    600: "#525252",
     700: "#404040",
     800: "#262626",
-    900: "#171717", // Contraste excellent pour le texte principal
+    900: "#171717",
   },
   success: {
     50: "#f0fdf4",
@@ -33,7 +33,7 @@ const Colors = {
     300: "#86efac",
     400: "#4ade80",
     500: "#22c55e",
-    600: "#16a34a", // Contraste suffisant
+    600: "#16a34a",
     700: "#15803d",
     800: "#166534",
     900: "#14532d",
@@ -45,7 +45,7 @@ const Colors = {
     300: "#fcd34d",
     400: "#fbbf24",
     500: "#f59e0b",
-    600: "#d97706", // Contraste suffisant
+    600: "#d97706",
     700: "#b45309",
     800: "#92400e",
     900: "#78350f",
@@ -57,7 +57,7 @@ const Colors = {
     300: "#fca5a5",
     400: "#f87171",
     500: "#ef4444",
-    600: "#dc2626", // Contraste suffisant
+    600: "#dc2626",
     700: "#b91c1c",
     800: "#991b1b",
     900: "#7f1d1d",
@@ -71,7 +71,7 @@ export const Theme = createTheme({
       main: Colors.primary[600],
       light: Colors.primary[400],
       dark: Colors.primary[800],
-      contrastText: "#ffffff", // Contraste excellent
+      contrastText: "#ffffff",
     },
     secondary: {
       main: Colors.neutral[600],
@@ -103,8 +103,8 @@ export const Theme = createTheme({
       paper: "#ffffff",
     },
     text: {
-      primary: Colors.neutral[900], // Contraste excellent
-      secondary: Colors.neutral[600], // Contraste suffisant
+      primary: Colors.neutral[900],
+      secondary: Colors.neutral[600],
     },
     divider: Colors.neutral[200],
   },
@@ -151,12 +151,12 @@ export const Theme = createTheme({
     body1: {
       fontSize: "1rem",
       lineHeight: 1.6,
-      color: Colors.neutral[700], // Contraste suffisant
+      color: Colors.neutral[700],
     },
     body2: {
       fontSize: "0.875rem",
       lineHeight: 1.6,
-      color: Colors.neutral[600], // Contraste suffisant
+      color: Colors.neutral[600],
     },
     button: {
       fontSize: "0.875rem",

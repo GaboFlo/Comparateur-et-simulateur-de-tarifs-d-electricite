@@ -87,7 +87,7 @@ export default function ActionButton({
     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
       <Button
         variant="contained"
-        disabled={disabled || loading}
+        disabled={disabled ?? loading}
         sx={{
           borderRadius: 2,
           padding: "12px 24px",
