@@ -1,11 +1,13 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import AnalyticsIcon from "@mui/icons-material/Analytics";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import ErrorIcon from "@mui/icons-material/Error";
-import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
+import {
+  AccessTime as AccessTimeIcon,
+  Analytics as AnalyticsIcon,
+  Assignment as AssignmentIcon,
+  CheckCircle as CheckCircleIcon,
+  CloudUpload as CloudUploadIcon,
+  Error as ErrorIcon,
+  HelpOutline as HelpOutlineIcon,
+} from "@mui/icons-material";
 import {
   Alert,
   Box,
@@ -35,10 +37,12 @@ import {
 } from "../types";
 import ActionButton from "./ActionButton";
 import FormCard from "./FormCard";
-import HourlySeasonChart from "./HourlySeasonChart";
-import HpHcSeasonChart from "./HpHcSeasonChart";
 import PeriodChips from "./PeriodChips";
 import TooltipModal from "./TooltipModal";
+
+// Lazy loading des composants volumineux
+const HourlySeasonChart = React.lazy(() => import("./HourlySeasonChart"));
+const HpHcSeasonChart = React.lazy(() => import("./HpHcSeasonChart"));
 
 interface Props {
   handleNext: () => void;
@@ -345,12 +349,12 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Stack spacing={4} sx={{ width: "100%" }}>
+      <Stack spacing={4} sx={{ width: "100%", maxWidth: "100%" }}>
         <FormCard
           title="Instructions d'import"
           subtitle="Suivez ces étapes pour récupérer vos données"
           icon={<AssignmentIcon />}
-          sx={{ width: "100%" }}
+          sx={{ width: "100%", maxWidth: "100%" }}
         >
           <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
             <Box sx={{ flex: 1 }}>
@@ -386,7 +390,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
           title="Zone de dépôt"
           subtitle="Glissez-déposez votre fichier ZIP ou cliquez pour sélectionner"
           icon={<CloudUploadIcon />}
-          sx={{ width: "100%" }}
+          sx={{ width: "100%", maxWidth: "100%" }}
         >
           <Box
             {...getRootProps()}
@@ -565,7 +569,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
               subtitle="Sélectionnez la période à analyser"
               icon={<AccessTimeIcon />}
               data-section="period-analysis"
-              sx={{ width: "100%" }}
+              sx={{ width: "100%", maxWidth: "100%" }}
             >
               <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                 <MobileDateRangePicker
@@ -617,16 +621,20 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
               title="Répartition de la consommation par heure et par saison"
               subtitle="Analyse détaillée de vos habitudes de consommation"
               icon={<AnalyticsIcon />}
-              sx={{ width: "100%" }}
+              sx={{ width: "100%", maxWidth: "100%" }}
             >
-              <HourlySeasonChart />
+              <React.Suspense fallback={<CircularProgress />}>
+                <HourlySeasonChart />
+              </React.Suspense>
             </FormCard>
             <FormCard
               title="Répartition de la consommation heure pleine / heure creuse"
               icon={<AccessTimeIcon />}
-              sx={{ width: "100%" }}
+              sx={{ width: "100%", maxWidth: "100%" }}
             >
-              <HpHcSeasonChart />
+              <React.Suspense fallback={<CircularProgress />}>
+                <HpHcSeasonChart />
+              </React.Suspense>
             </FormCard>
 
             <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>

@@ -119,13 +119,47 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ["react", "react-dom"],
-          mui: ["@mui/material", "@mui/icons-material", "@mui/system"],
-          charts: ["@mui/x-charts"],
-          utils: ["axios", "jszip"],
-          datePickers: ["@mui/x-date-pickers", "@mui/x-date-pickers-pro"],
-          matomo: ["@jonkoops/matomo-tracker-react"],
+        manualChunks: (id) => {
+          // Chunk pour React et React DOM
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'react-vendor';
+          }
+          
+          // Chunk pour Material-UI
+          if (id.includes('node_modules/@mui/material') || 
+              id.includes('node_modules/@mui/icons-material') || 
+              id.includes('node_modules/@mui/system') ||
+              id.includes('node_modules/@emotion')) {
+            return 'mui-vendor';
+          }
+          
+          // Chunk pour les charts
+          if (id.includes('node_modules/@mui/x-charts')) {
+            return 'charts-vendor';
+          }
+          
+          // Chunk pour les date pickers
+          if (id.includes('node_modules/@mui/x-date-pickers')) {
+            return 'date-pickers-vendor';
+          }
+          
+          // Chunk pour les utilitaires
+          if (id.includes('node_modules/axios') || 
+              id.includes('node_modules/jszip') ||
+              id.includes('node_modules/dayjs') ||
+              id.includes('node_modules/date-holidays')) {
+            return 'utils-vendor';
+          }
+          
+          // Chunk pour Matomo
+          if (id.includes('node_modules/@jonkoops/matomo-tracker')) {
+            return 'matomo-vendor';
+          }
+          
+          // Chunk pour les autres dépendances
+          if (id.includes('node_modules')) {
+            return 'other-vendor';
+          }
         },
         assetFileNames: (assetInfo) => {
           const name = assetInfo.name;

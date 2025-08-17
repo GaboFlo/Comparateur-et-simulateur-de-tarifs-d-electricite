@@ -7,15 +7,45 @@ import Drawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import * as React from "react";
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CurrentOfferForm from "./components/CurrentOfferForm";
-import DataImport from "./components/DataImport";
-import Footer from "./components/Footer";
-import Info from "./components/Info";
 import MyStepper from "./components/Stepper";
 import { useFormContext } from "./context/FormContext";
 import { APP_VERSION, OfferType, OptionKey } from "./types";
+
+// Lazy loading des composants volumineux
+const DataImport = lazy(() => import("./components/DataImport"));
+const Footer = lazy(() => import("./components/Footer"));
+const Info = lazy(() => import("./components/Info"));
+const Simulations = lazy(() => import("./components/Simulations"));
+
+// Composant de chargement
+const LoadingSpinner = () => (
+  <Box
+    sx={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      minHeight: "200px",
+    }}
+  >
+    <Box
+      sx={{
+        width: 40,
+        height: 40,
+        border: "4px solid #f3f3f3",
+        borderTop: "4px solid #1976d2",
+        borderRadius: "50%",
+        animation: "spin 1s linear infinite",
+        "@keyframes spin": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+      }}
+    />
+  </Box>
+);
 
 // Fonction utilitaire pour scroll vers le haut
 const scrollToTop = () => {
@@ -23,8 +53,6 @@ const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, 100);
 };
-
-const Simulations = lazy(() => import("./components/Simulations"));
 
 const steps = ["Votre offre actuelle", "Votre consommation", "Simulations"];
 
@@ -63,13 +91,6 @@ export default function App() {
       if (activeStep === 2) {
         handleStepChange(0);
       }
-    }
-
-    if (activeStep === 0) {
-      import("./components/DataImport");
-    }
-    if (activeStep === 1) {
-      import("./components/Simulations");
     }
   }, [activeStep, stepParam, formState.seasonHourlyAnalysis]);
 
@@ -180,11 +201,23 @@ export default function App() {
       case 0:
         return <CurrentOfferForm handleNext={handleNextAndTrack} />;
       case 1:
-        return <DataImport handleNext={handleNext} />;
+        return (
+          <Suspense fallback={<LoadingSpinner />}>
+            <DataImport handleNext={handleNext} />
+          </Suspense>
+        );
       case 2:
-        return <Simulations />;
+        return (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Simulations />
+          </Suspense>
+        );
       default:
-        return <CurrentOfferForm handleNext={handleNextAndTrack} />;
+        return (
+          <Suspense fallback={<LoadingSpinner />}>
+            <CurrentOfferForm handleNext={handleNextAndTrack} />
+          </Suspense>
+        );
     }
   };
 
@@ -216,6 +249,7 @@ export default function App() {
             pt: { xs: 0, sm: 6 },
             px: { xs: 2, sm: 6 },
             gap: { xs: 4, md: 4 },
+            minWidth: 0,
           }}
         >
           <Box
@@ -236,8 +270,10 @@ export default function App() {
               sx={{
                 flex: 1,
                 width: "100%",
+                maxWidth: "100%",
                 display: "flex",
                 flexDirection: "column",
+                minWidth: 0,
               }}
             >
               {renderStepContent()}
@@ -246,7 +282,9 @@ export default function App() {
         </Grid>
       </Grid>
 
-      <Footer onHelpClick={handleHelpClick} />
+      <Suspense fallback={<LoadingSpinner />}>
+        <Footer onHelpClick={handleHelpClick} />
+      </Suspense>
 
       <Drawer open={openHelpDrawer} anchor="top" onClose={handleHelpClose}>
         <Box
@@ -280,7 +318,9 @@ export default function App() {
           >
             <CloseIcon />
           </IconButton>
-          <Info handleClose={handleHelpClose} />
+          <Suspense fallback={<LoadingSpinner />}>
+            <Info handleClose={handleHelpClose} />
+          </Suspense>
         </Box>
       </Drawer>
     </>

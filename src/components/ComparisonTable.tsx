@@ -1,6 +1,7 @@
-import AccessTimeFilledIcon from "@mui/icons-material/AccessTimeFilled";
-import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-
+import {
+  AccessTimeFilled as AccessTimeFilledIcon,
+  OpenInNew as OpenInNewIcon,
+} from "@mui/icons-material";
 import {
   Box,
   CircularProgress,
