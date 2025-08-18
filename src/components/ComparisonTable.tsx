@@ -53,27 +53,35 @@ const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
 );
 
 function ComparisonTable() {
-  let formState;
-  let navigate;
-
-  try {
-    const context = useFormContext();
-    formState = context.formState;
-    navigate = useNavigate();
-  } catch (error) {
-    // Si le contexte n'est pas disponible, afficher un message d'erreur
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", p: 6 }}>
-        <Typography>Erreur de chargement du contexte</Typography>
-      </Box>
-    );
-  }
+  const { formState } = useFormContext();
+  const navigate = useNavigate();
 
   // Protection contre les données invalides
   if (!formState || typeof formState !== "object") {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", p: 6 }}>
         <Typography>Erreur de chargement des données</Typography>
+      </Box>
+    );
+  }
+
+  // Validation de sécurité des données critiques
+  if (!formState.rowSummaries || !Array.isArray(formState.rowSummaries)) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", p: 6 }}>
+        <Typography>Données de comparaison invalides</Typography>
+      </Box>
+    );
+  }
+
+  // Limitation du nombre de lignes pour éviter les problèmes de performance
+  const MAX_ROWS = 1000;
+  if (formState.rowSummaries.length > MAX_ROWS) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", p: 6 }}>
+        <Typography>
+          Trop de données à afficher (maximum {MAX_ROWS} lignes)
+        </Typography>
       </Box>
     );
   }

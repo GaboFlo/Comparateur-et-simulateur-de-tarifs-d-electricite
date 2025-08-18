@@ -42,19 +42,38 @@ interface Props {
 }
 
 const processFileData = async (file: File) => {
+  // Validation de sécurité pour les fichiers
+  const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error("Le fichier est trop volumineux (maximum 50MB)");
+  }
+
   const zip = new JSZip();
   const zipContent = await zip.loadAsync(file);
 
-  const csvFile = Object.values(zipContent.files).find(
+  // Validation du contenu ZIP
+  const csvFiles = Object.values(zipContent.files).filter(
     (f) =>
       f.name.includes("puissances-atteintes-30min") && f.name.endsWith(".csv")
   );
 
-  if (!csvFile) {
+  if (csvFiles.length === 0) {
     throw new Error("Aucun fichier CSV trouvé dans le ZIP");
   }
 
+  if (csvFiles.length > 1) {
+    throw new Error("Plusieurs fichiers CSV trouvés, un seul attendu");
+  }
+
+  const csvFile = csvFiles[0];
+
+  // Validation de la taille du contenu CSV
   const csvContent = await csvFile.async("string");
+  if (csvContent.length > 10 * 1024 * 1024) {
+    // 10MB
+    throw new Error("Le contenu CSV est trop volumineux");
+  }
+
   const parsedData = parseCsvToConsumptionLoadCurveData(csvContent);
   const analyzedDateRange = findFirstAndLastDate(parsedData);
   const seasonData = analyseHourByHourBySeason({
@@ -94,50 +113,101 @@ const scrollToBottom = () => {
 };
 
 export default function DataImport({ handleNext }: Readonly<Props>) {
-  let formState;
-  let setFormState;
-  let trackEvent;
-
-  try {
-    const context = useFormContext();
-    formState = context.formState;
-    setFormState = context.setFormState;
-    const matomoContext = useMatomo();
-    trackEvent = matomoContext.trackEvent;
-  } catch (error) {
-    // Si le contexte n'est pas disponible, afficher un message d'erreur
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", p: 6 }}>
-        <Typography>Erreur de chargement du contexte</Typography>
-      </Box>
-    );
-  }
   const [isProcessing, setIsProcessing] = React.useState(false);
   const [openTooltipCsv, setOpenTooltipCsv] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [isDataProcessed, setIsDataProcessed] = React.useState(false);
   const [isCalculating, setIsCalculating] = React.useState(false);
 
-  const updateFormState = (
-    seasonData: SeasonHourlyAnalysis[],
-    analyzedDateRange: [Date, Date],
-    totalConsumption: number,
-    parsedData: ConsumptionLoadCurveData[]
-  ) => {
-    const defaultHpHc = hphc_data as HpHcSlot[];
-    setFormState((prevState) => ({
-      ...prevState,
-      seasonHourlyAnalysis: seasonData,
-      analyzedDateRange: analyzedDateRange,
-      totalConsumption: totalConsumption,
-      parsedData: parsedData,
-      // Préserver la configuration HP/HC existante si elle existe, sinon utiliser la configuration par défaut
-      hpHcConfig:
-        prevState.hpHcConfig && prevState.hpHcConfig.length > 0
-          ? prevState.hpHcConfig
-          : defaultHpHc,
-    }));
-  };
+  const { formState, setFormState } = useFormContext();
+  const { trackEvent } = useMatomo();
+
+  const updateFormState = React.useCallback(
+    (
+      seasonData: SeasonHourlyAnalysis[],
+      analyzedDateRange: [Date, Date],
+      totalConsumption: number,
+      parsedData: ConsumptionLoadCurveData[]
+    ) => {
+      const defaultHpHc = hphc_data as HpHcSlot[];
+      setFormState((prevState) => ({
+        ...prevState,
+        seasonHourlyAnalysis: seasonData,
+        analyzedDateRange: analyzedDateRange,
+        totalConsumption: totalConsumption,
+        parsedData: parsedData,
+        // Préserver la configuration HP/HC existante si elle existe, sinon utiliser la configuration par défaut
+        hpHcConfig:
+          prevState.hpHcConfig && prevState.hpHcConfig.length > 0
+            ? prevState.hpHcConfig
+            : defaultHpHc,
+      }));
+    },
+    [setFormState]
+  );
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: {
+      "application/zip": [".zip"],
+    },
+    maxFiles: 1,
+    disabled: isProcessing || isCalculating,
+    onDrop: React.useCallback(
+      (acceptedFiles: File[]) => {
+        if (acceptedFiles.length === 0) return;
+
+        setIsProcessing(true);
+        setError(null);
+        setIsDataProcessed(false);
+        const file = acceptedFiles[0];
+
+        processFileData(file)
+          .then(
+            ({
+              parsedData,
+              analyzedDateRange,
+              seasonData,
+              totalConsumption,
+            }) => {
+              updateFormState(
+                seasonData,
+                analyzedDateRange,
+                totalConsumption,
+                parsedData
+              );
+              setIsDataProcessed(true);
+              setError(null);
+
+              scrollToBottom();
+
+              trackEvent({
+                category: "data-import",
+                action: "success",
+                name: file.name,
+              });
+            }
+          )
+          .catch((error) => {
+            console.error("Erreur lors du traitement du fichier:", error);
+            setError(
+              error instanceof Error
+                ? error.message
+                : "Erreur lors du traitement du fichier"
+            );
+            setIsDataProcessed(false);
+            trackEvent({
+              category: "data-import",
+              action: "error",
+              name: error instanceof Error ? error.message : "unknown",
+            });
+          })
+          .finally(() => {
+            setIsProcessing(false);
+          });
+      },
+      [trackEvent, updateFormState]
+    ),
+  });
 
   // Fonction de pré-calcul des simulations
   const preCalculateSimulations = React.useCallback(async () => {
@@ -184,6 +254,11 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
       scrollToPeriodAnalysis(isProcessing);
     } catch (error) {
       console.error("Erreur lors du pré-calcul des simulations:", error);
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Erreur lors du pré-calcul des simulations"
+      );
     } finally {
       setIsCalculating(false);
     }
@@ -237,67 +312,6 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
     handleNext,
     trackEvent,
   ]);
-
-  const onDrop = React.useCallback(
-    (acceptedFiles: File[]) => {
-      if (acceptedFiles.length === 0) return;
-
-      setIsProcessing(true);
-      setError(null);
-      setIsDataProcessed(false);
-      const file = acceptedFiles[0];
-
-      processFileData(file)
-        .then(
-          ({ parsedData, analyzedDateRange, seasonData, totalConsumption }) => {
-            updateFormState(
-              seasonData,
-              analyzedDateRange,
-              totalConsumption,
-              parsedData
-            );
-            setIsDataProcessed(true);
-            setError(null);
-
-            scrollToBottom();
-
-            trackEvent({
-              category: "data-import",
-              action: "success",
-              name: file.name,
-            });
-          }
-        )
-        .catch((error) => {
-          console.error("Erreur lors du traitement du fichier:", error);
-          setError(
-            error instanceof Error
-              ? error.message
-              : "Erreur lors du traitement du fichier"
-          );
-          setIsDataProcessed(false);
-          trackEvent({
-            category: "data-import",
-            action: "error",
-            name: error instanceof Error ? error.message : "Unknown error",
-          });
-        })
-        .finally(() => {
-          setIsProcessing(false);
-        });
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [handleNext, trackEvent]
-  );
-
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: {
-      "application/zip": [".zip"],
-    },
-    maxFiles: 1,
-    disabled: isProcessing || isCalculating,
-  });
 
   const handleTooltipCsvClose = () => {
     setOpenTooltipCsv(false);
