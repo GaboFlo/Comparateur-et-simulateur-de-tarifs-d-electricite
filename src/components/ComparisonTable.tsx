@@ -21,6 +21,7 @@ import dayjs from "dayjs";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
+import { ComparisonTableInterfaceRow } from "../types";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -52,9 +53,52 @@ const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
   })
 );
 
+// Fonction utilitaire pour traiter les données
+const processTableData = (rowSummaries: ComparisonTableInterfaceRow[]) => {
+  if (!Array.isArray(rowSummaries)) {
+    return [];
+  }
+
+  const filteredRows = rowSummaries.filter(
+    (row) =>
+      row?.total &&
+      typeof row.total === "number" &&
+      isFinite(row.total) &&
+      row.total > 0
+  );
+
+  return filteredRows.sort((a, b) => (a.total || 0) - (b.total || 0));
+};
+
 function ComparisonTable() {
   const { formState } = useFormContext();
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    const dateRange = formState.analyzedDateRange;
+
+    if (
+      !dateRange ||
+      !formState.parsedData ||
+      !formState.hpHcConfig ||
+      !formState.rowSummaries
+    ) {
+      navigate("?step=0");
+      return;
+    }
+
+    // Les calculs sont maintenant pré-calculés dans DataImport
+    // On vérifie juste que les données sont présentes
+    if (!formState.rowSummaries || formState.rowSummaries.length === 0) {
+      return;
+    }
+  }, [
+    formState.analyzedDateRange,
+    formState.hpHcConfig,
+    formState.parsedData,
+    formState.rowSummaries,
+    navigate,
+  ]);
 
   // Protection contre les données invalides
   if (!formState || typeof formState !== "object") {
@@ -85,32 +129,6 @@ function ComparisonTable() {
       </Box>
     );
   }
-
-  React.useEffect(() => {
-    const dateRange = formState.analyzedDateRange;
-
-    if (
-      !dateRange ||
-      !formState.parsedData ||
-      !formState.hpHcConfig ||
-      !formState.rowSummaries
-    ) {
-      navigate("?step=0");
-      return;
-    }
-
-    // Les calculs sont maintenant pré-calculés dans DataImport
-    // On vérifie juste que les données sont présentes
-    if (!formState.rowSummaries || formState.rowSummaries.length === 0) {
-      return;
-    }
-  }, [
-    formState.analyzedDateRange,
-    formState.hpHcConfig,
-    formState.parsedData,
-    formState.rowSummaries,
-    navigate,
-  ]);
 
   const currentOfferTotal = Array.isArray(formState.rowSummaries)
     ? formState.rowSummaries.find(
@@ -175,141 +193,130 @@ function ComparisonTable() {
           </TableHead>
           <TableBody>
             {Array.isArray(formState.rowSummaries)
-              ? formState.rowSummaries
-                  .sort((a, b) => {
-                    return (a.total || 0) - (b.total || 0);
-                  })
-                  .filter(
-                    (row) =>
-                      row?.total &&
-                      typeof row.total === "number" &&
-                      isFinite(row.total) &&
-                      row.total > 0
-                  )
-                  .map((row) => (
-                    <StyledTableRow
-                      key={`${row.provider}-${row.offerType}-${row.optionKey}`}
-                      highlight={(
-                        row.offerType === formState.offerType &&
-                        row.optionKey === formState.optionType
-                      ).toString()}
+              ? processTableData(formState.rowSummaries).map((row) => (
+                  <StyledTableRow
+                    key={`${row.provider}-${row.offerType}-${row.optionKey}`}
+                    highlight={(
+                      row.offerType === formState.offerType &&
+                      row.optionKey === formState.optionType
+                    ).toString()}
+                  >
+                    <StyledTableCell
+                      align="center"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
                     >
-                      <StyledTableCell
-                        align="center"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <img
-                          src={`/${row.provider}.png`}
-                          alt={row.provider}
-                          width="24"
-                          height="24"
-                        />{" "}
-                        <Typography variant="body1" m={1}>
-                          {row.provider}
-                        </Typography>
-                      </StyledTableCell>
-                      <StyledTableCell
-                        align="center"
-                        style={{
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Typography variant="body1" m={1}>
-                          <Tooltip
-                            title={`Tarification mise à jour le ${dayjs(
-                              row.lastUpdate
-                            ).format("DD/MM/YYYY")}`}
-                            arrow
+                      <img
+                        src={`/${row.provider}.png`}
+                        alt={row.provider}
+                        width="24"
+                        height="24"
+                      />{" "}
+                      <Typography variant="body1" m={1}>
+                        {row.provider}
+                      </Typography>
+                    </StyledTableCell>
+                    <StyledTableCell
+                      align="center"
+                      style={{
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Typography variant="body1" m={1}>
+                        <Tooltip
+                          title={`Tarification mise à jour le ${dayjs(
+                            row.lastUpdate
+                          ).format("DD/MM/YYYY")}`}
+                          arrow
+                        >
+                          <span
+                            style={{
+                              fontSize: "1rem",
+                              verticalAlign: "middle",
+                              cursor: "help",
+                            }}
                           >
-                            <span
-                              style={{
-                                fontSize: "1rem",
-                                verticalAlign: "middle",
-                                cursor: "help",
-                              }}
-                            >
-                              📅
-                            </span>
-                          </Tooltip>{" "}
-                          {row.offerType && `${row.offerType} - `}
-                          {row.optionName}{" "}
-                          {row.overridingHpHcKey && (
-                            <AccessTimeFilledIcon
-                              sx={{
-                                fontSize: "1rem",
-                                verticalAlign: "middle",
-                                color: "orange",
-                              }}
-                            />
-                          )}{" "}
-                          <Link
-                            href={row.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            underline="none"
-                          >
-                            <OpenInNewIcon
-                              sx={{
-                                fontSize: "1rem",
-                                verticalAlign: "text-top",
-                              }}
-                            />
-                          </Link>
-                        </Typography>
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {new Intl.NumberFormat("fr-FR").format(
-                          typeof row.fullSubscriptionCost === "number" &&
-                            isFinite(row.fullSubscriptionCost)
-                            ? row.fullSubscriptionCost
-                            : 0
-                        )}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {new Intl.NumberFormat("fr-FR").format(
-                          typeof row.totalConsumptionCost === "number" &&
-                            isFinite(row.totalConsumptionCost)
-                            ? row.totalConsumptionCost
-                            : 0
-                        )}
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        {new Intl.NumberFormat("fr-FR").format(
-                          typeof row.total === "number" && isFinite(row.total)
-                            ? row.total
-                            : 0
-                        )}
-                      </StyledTableCell>
-                      <StyledTableCell
-                        align="center"
-                        style={{
-                          color: getColorForPercentage(
-                            row.total && row.total > 0
-                              ? (100 * (row.total - safeCurrentOfferTotal)) /
-                                  row.total
-                              : 0
-                          ),
-                        }}
-                      >
-                        {(() => {
-                          const percentage =
-                            row.total && row.total > 0
-                              ? (100 * (row.total - safeCurrentOfferTotal)) /
+                            📅
+                          </span>
+                        </Tooltip>{" "}
+                        {row.offerType && `${row.offerType} - `}
+                        {row.optionName}{" "}
+                        {row.overridingHpHcKey && (
+                          <AccessTimeFilledIcon
+                            sx={{
+                              fontSize: "1rem",
+                              verticalAlign: "middle",
+                              color: "orange",
+                            }}
+                          />
+                        )}{" "}
+                        <Link
+                          href={row.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          underline="none"
+                        >
+                          <OpenInNewIcon
+                            sx={{
+                              fontSize: "1rem",
+                              verticalAlign: "text-top",
+                            }}
+                          />
+                        </Link>
+                      </Typography>
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {new Intl.NumberFormat("fr-FR").format(
+                        typeof row.fullSubscriptionCost === "number" &&
+                          isFinite(row.fullSubscriptionCost)
+                          ? row.fullSubscriptionCost
+                          : 0
+                      )}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {new Intl.NumberFormat("fr-FR").format(
+                        typeof row.totalConsumptionCost === "number" &&
+                          isFinite(row.totalConsumptionCost)
+                          ? row.totalConsumptionCost
+                          : 0
+                      )}
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      {new Intl.NumberFormat("fr-FR").format(
+                        typeof row.total === "number" && isFinite(row.total)
+                          ? row.total
+                          : 0
+                      )}
+                    </StyledTableCell>
+                    <StyledTableCell
+                      align="center"
+                      style={{
+                        color: getColorForPercentage(
+                          row.total && row.total > 0
+                            ? (100 * (row.total - safeCurrentOfferTotal)) /
                                 row.total
-                              : 0;
-                          const roundedPercentage = Math.round(percentage);
-                          return `${
-                            roundedPercentage > 0 ? "+" : ""
-                          }${roundedPercentage} %`;
-                        })()}
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))
+                            : 0
+                        ),
+                      }}
+                    >
+                      {(() => {
+                        const percentage =
+                          row.total && row.total > 0
+                            ? (100 * (row.total - safeCurrentOfferTotal)) /
+                              row.total
+                            : 0;
+                        const roundedPercentage = Math.round(percentage);
+                        return `${
+                          roundedPercentage > 0 ? "+" : ""
+                        }${roundedPercentage} %`;
+                      })()}
+                    </StyledTableCell>
+                  </StyledTableRow>
+                ))
               : null}
           </TableBody>
         </Table>

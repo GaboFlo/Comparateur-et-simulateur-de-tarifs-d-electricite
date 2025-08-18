@@ -100,7 +100,7 @@ export function getSeason(date: Date) {
       (month === season.endMonth && day <= season.endDay) ||
       (month > season.startMonth && month < season.endMonth)
     ) {
-      return season.name as Season;
+      return season.name;
     }
   }
   throw new Error(`Season not found for date: ${date}`);
@@ -154,13 +154,10 @@ export const findFirstAndLastDate = (
 
   const validDates = data
     .map((item) => {
-      if (!item || !item.recordedAt || typeof item.recordedAt !== "string") {
-        return null;
-      }
-      const date = new Date(item.recordedAt);
+      const date = new Date(item?.recordedAt);
       return isNaN(date.getTime()) ? null : date.getTime();
     })
-    .filter((time) => time !== null) as number[];
+    .filter((time): time is number => time !== null);
 
   if (validDates.length === 0) {
     // Retourner des dates par défaut si aucune date valide
