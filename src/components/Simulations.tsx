@@ -3,6 +3,7 @@ import { Button, Typography } from "@mui/material";
 import { Box, Stack, useMediaQuery, useTheme } from "@mui/system";
 import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
 import dayjs from "dayjs";
+import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { useFormContext } from "../context/FormContext";
 import {
@@ -15,9 +16,11 @@ import {
 import { calculateRowSummary } from "../scripts/calculators";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
 import allOffersFile from "../statics/price_mapping.json";
-import { ComparisonTable } from "./ComparisonTable";
 import HpHcSlotSelector from "./HpHcSelector";
 import PeriodChips from "./PeriodChips";
+
+// Lazy loading du composant volumineux
+const ComparisonTable = React.lazy(() => import("./ComparisonTable"));
 
 export default function Simulations() {
   const { formState, setFormState } = useFormContext();
@@ -41,7 +44,12 @@ export default function Simulations() {
     return dateRange;
   };
 
-  const safeDateRange = validateDateRange(formState.analyzedDateRange);
+  const safeDateRange = validateDateRange(
+    formState.analyzedDateRange || [
+      new Date(new Date().getFullYear() - 1, 0, 1),
+      new Date(),
+    ]
+  );
 
   const setRange = (range: [Date, Date]) => {
     setFormState((prevState) => ({
@@ -165,6 +173,26 @@ export default function Simulations() {
     setRange([startDate, endDate]);
   };
 
+  // Vérifier si les données nécessaires sont disponibles
+  if (
+    !formState.seasonHourlyAnalysis ||
+    formState.seasonHourlyAnalysis.length === 0
+  ) {
+    return (
+      <Stack textAlign={"center"} spacing={2}>
+        <Typography variant="h6" color="warning.main">
+          Aucune donnée de simulation disponible
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Veuillez d'abord importer vos données de consommation.
+        </Typography>
+        <Button variant="outlined" color="primary" onClick={handleRestart}>
+          Recommencer
+        </Button>
+      </Stack>
+    );
+  }
+
   return (
     <Stack textAlign={"center"}>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -213,7 +241,13 @@ export default function Simulations() {
         Ils peuvent différer de vos factures car la simulation est réalisée sur
         la base des tarifs actuels des fournisseurs.
       </Typography>
-      <ComparisonTable />
+      <React.Suspense fallback={<div>Chargement des données...</div>}>
+        {formState && typeof formState === "object" ? (
+          <ComparisonTable />
+        ) : (
+          <div>Erreur de chargement des données</div>
+        )}
+      </React.Suspense>
       {isDesktop && <HpHcSlotSelector readOnly />}
       <Box sx={{ display: "flex", gap: 2, justifyContent: "center", mt: 2 }}>
         <Button variant="contained" color="secondary" onClick={handlePrint}>

@@ -1,6 +1,5 @@
-import dayjs from "dayjs";
-
 import Holidays from "date-holidays";
+import dayjs from "dayjs";
 import allHolidays from "../assets/holidays.json";
 import tempoFile from "../statics/hp_hc-BLEU_TEMPO.json";
 import flexFile from "../statics/hp_hc-ZEN_FLEX.json";
@@ -72,8 +71,18 @@ export const isHpOrHcSlot = (endOfRecordedPeriod: Date, grids: HpHcSlot[]) => {
 };
 
 export function getSeason(date: Date) {
+  // Validation de sécurité de la date
+  if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+    throw new Error("Date invalide");
+  }
+
   const month = dayjs(date).month(); // Get the month (0-indexed)
   const day = dayjs(date).date(); // Get the day of the month
+
+  // Validation des valeurs de mois et jour
+  if (month < 0 || month > 11 || day < 1 || day > 31) {
+    throw new Error("Date invalide (mois ou jour hors limites)");
+  }
 
   // Define season start and end dates (adjust as needed for your specific definition)
   const seasons = [
@@ -91,7 +100,7 @@ export function getSeason(date: Date) {
       (month === season.endMonth && day <= season.endDay) ||
       (month > season.startMonth && month < season.endMonth)
     ) {
-      return season.name as Season;
+      return season.name;
     }
   }
   throw new Error(`Season not found for date: ${date}`);
@@ -125,19 +134,30 @@ export function findMonthlySubscriptionCost(
 export const findFirstAndLastDate = (
   data: ConsumptionLoadCurveData[]
 ): [Date, Date] => {
-  if (!data || data.length === 0) {
+  // Validation de sécurité des données d'entrée
+  if (!data || !Array.isArray(data)) {
+    throw new Error("Données invalides");
+  }
+
+  if (data.length === 0) {
     // Retourner des dates par défaut si aucune donnée
     const defaultStart = dayjs().subtract(1, "year").startOf("day").toDate();
     const defaultEnd = dayjs().endOf("day").toDate();
     return [defaultStart, defaultEnd];
   }
 
+  // Limitation du nombre d'éléments pour éviter les attaques par déni de service
+  const MAX_DATA_SIZE = 100000; // 100k éléments maximum
+  if (data.length > MAX_DATA_SIZE) {
+    throw new Error(`Trop de données (${data.length} > ${MAX_DATA_SIZE})`);
+  }
+
   const validDates = data
     .map((item) => {
-      const date = new Date(item.recordedAt);
+      const date = new Date(item?.recordedAt);
       return isNaN(date.getTime()) ? null : date.getTime();
     })
-    .filter((time) => time !== null) as number[];
+    .filter((time): time is number => time !== null);
 
   if (validDates.length === 0) {
     // Retourner des dates par défaut si aucune date valide
@@ -148,6 +168,12 @@ export const findFirstAndLastDate = (
 
   const firstDate = Math.min(...validDates);
   const lastDate = Math.max(...validDates);
+
+  // Validation de la plage de dates
+  if (lastDate - firstDate > 10 * 365 * 24 * 60 * 60 * 1000) {
+    // 10 ans maximum
+    throw new Error("Plage de dates trop importante (maximum 10 ans)");
+  }
 
   return [new Date(firstDate), new Date(lastDate)];
 };
