@@ -70,6 +70,172 @@ const processTableData = (rowSummaries: ComparisonTableInterfaceRow[]) => {
   return filteredRows.sort((a, b) => (a.total || 0) - (b.total || 0));
 };
 
+// Composant pour l'affichage du fournisseur
+const ProviderCell = ({ provider }: { provider: string }) => (
+  <StyledTableCell
+    align="center"
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <img src={`/${provider}.png`} alt={provider} width="24" height="24" />{" "}
+    <Typography variant="body1" m={1}>
+      {provider}
+    </Typography>
+  </StyledTableCell>
+);
+
+// Composant pour l'affichage de l'offre
+const OfferCell = ({ row }: { row: ComparisonTableInterfaceRow }) => (
+  <StyledTableCell
+    align="center"
+    style={{
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+  >
+    <Typography variant="body1" m={1}>
+      <Tooltip
+        title={`Tarification mise à jour le ${dayjs(row.lastUpdate).format(
+          "DD/MM/YYYY"
+        )}`}
+        arrow
+      >
+        <span
+          style={{
+            fontSize: "1rem",
+            verticalAlign: "middle",
+            cursor: "help",
+          }}
+        >
+          📅
+        </span>
+      </Tooltip>{" "}
+      {row.offerType && `${row.offerType} - `}
+      {row.optionName}{" "}
+      {row.overridingHpHcKey && (
+        <AccessTimeFilledIcon
+          sx={{
+            fontSize: "1rem",
+            verticalAlign: "middle",
+            color: "orange",
+          }}
+        />
+      )}{" "}
+      <Link
+        href={row.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        underline="none"
+      >
+        <OpenInNewIcon
+          sx={{
+            fontSize: "1rem",
+            verticalAlign: "text-top",
+          }}
+        />
+      </Link>
+    </Typography>
+  </StyledTableCell>
+);
+
+// Composant pour l'affichage des coûts
+const CostCell = ({ value }: { value: number }) => (
+  <StyledTableCell align="center">
+    {new Intl.NumberFormat("fr-FR").format(
+      typeof value === "number" && isFinite(value) ? value : 0
+    )}
+  </StyledTableCell>
+);
+
+// Composant pour l'affichage du pourcentage
+const PercentageCell = ({
+  row,
+  safeCurrentOfferTotal,
+}: {
+  row: ComparisonTableInterfaceRow;
+  safeCurrentOfferTotal: number;
+}) => {
+  const getColorForPercentage = (percentage: number) => {
+    if (percentage === 0 || isNaN(percentage) || !isFinite(percentage)) {
+      return "inherit";
+    }
+    return percentage >= 0 ? "red" : "green";
+  };
+
+  const calculatePercentage = () => {
+    if (!row.total || row.total <= 0) return 0;
+    return (100 * (row.total - safeCurrentOfferTotal)) / row.total;
+  };
+
+  const percentage = calculatePercentage();
+  const roundedPercentage = Math.round(percentage);
+
+  return (
+    <StyledTableCell
+      align="center"
+      style={{
+        color: getColorForPercentage(percentage),
+      }}
+    >
+      {`${roundedPercentage > 0 ? "+" : ""}${roundedPercentage} %`}
+    </StyledTableCell>
+  );
+};
+
+// Composant pour une ligne du tableau
+const TableRowComponent = ({
+  row,
+  formState,
+  safeCurrentOfferTotal,
+}: {
+  row: ComparisonTableInterfaceRow;
+  formState: ReturnType<typeof useFormContext>["formState"];
+  safeCurrentOfferTotal: number;
+}) => (
+  <StyledTableRow
+    key={`${row.provider}-${row.offerType}-${row.optionKey}`}
+    highlight={(
+      row.offerType === formState.offerType &&
+      row.optionKey === formState.optionType
+    ).toString()}
+  >
+    <ProviderCell provider={row.provider} />
+    <OfferCell row={row} />
+    <CostCell value={row.fullSubscriptionCost} />
+    <CostCell value={row.totalConsumptionCost} />
+    <CostCell value={row.total} />
+    <PercentageCell row={row} safeCurrentOfferTotal={safeCurrentOfferTotal} />
+  </StyledTableRow>
+);
+
+// Composant pour l'état de chargement
+const LoadingState = ({
+  formState,
+}: {
+  formState: ReturnType<typeof useFormContext>["formState"];
+}) => (
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      p: 6,
+      minHeight: 300,
+    }}
+  >
+    <CircularProgress thickness={8} size={60} />
+    <Typography sx={{ mt: 2, textAlign: "center" }}>
+      {formState.isGlobalLoading
+        ? "Calcul des simulations en cours..."
+        : "Aucune donnée de simulation disponible"}
+    </Typography>
+  </Box>
+);
+
 function ComparisonTable() {
   const { formState } = useFormContext();
   const navigate = useNavigate();
@@ -144,183 +310,50 @@ function ComparisonTable() {
       ? currentOfferTotal
       : 0;
 
-  const getColorForPercentage = (percentage: number) => {
-    if (percentage === 0 || isNaN(percentage) || !isFinite(percentage)) {
-      return "inherit";
+  const shouldShowLoading = () => {
+    return (
+      formState.isGlobalLoading ||
+      !Array.isArray(formState.rowSummaries) ||
+      formState.rowSummaries.length === 0
+    );
+  };
+
+  const renderTableContent = () => {
+    if (shouldShowLoading()) {
+      return <LoadingState formState={formState} />;
     }
-    if (percentage >= 0) {
-      return "red";
-    } else {
-      return "green";
-    }
+
+    return (
+      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell align="center">Fournisseur </StyledTableCell>
+            <StyledTableCell align="center">Offre - Option </StyledTableCell>
+            <StyledTableCell align="center">Abonnements (€)</StyledTableCell>
+            <StyledTableCell align="center">
+              Coût de votre consommation (€)
+            </StyledTableCell>
+            <StyledTableCell align="center">Total simulé (€)</StyledTableCell>
+            <StyledTableCell align="center">% de différence</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {processTableData(formState.rowSummaries).map((row) => (
+            <TableRowComponent
+              key={`${row.provider}-${row.offerType}-${row.optionKey}`}
+              row={row}
+              formState={formState}
+              safeCurrentOfferTotal={safeCurrentOfferTotal}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    );
   };
 
   return (
     <TableContainer component={Paper} sx={{ my: 3 }}>
-      {formState.isGlobalLoading ||
-      !Array.isArray(formState.rowSummaries) ||
-      formState.rowSummaries.length === 0 ? (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            p: 6,
-            minHeight: 300,
-          }}
-        >
-          <CircularProgress thickness={8} size={60} />
-          <Typography sx={{ mt: 2, textAlign: "center" }}>
-            {formState.isGlobalLoading
-              ? "Calcul des simulations en cours..."
-              : "Aucune donnée de simulation disponible"}
-          </Typography>
-        </Box>
-      ) : (
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center">Fournisseur </StyledTableCell>
-              <StyledTableCell align="center">Offre - Option </StyledTableCell>
-              <StyledTableCell align="center">Abonnements (€)</StyledTableCell>
-              <StyledTableCell align="center">
-                Coût de votre consommation (€)
-              </StyledTableCell>
-              <StyledTableCell align="center">Total simulé (€)</StyledTableCell>
-              <StyledTableCell align="center">% de différence</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {Array.isArray(formState.rowSummaries)
-              ? processTableData(formState.rowSummaries).map((row) => (
-                  <StyledTableRow
-                    key={`${row.provider}-${row.offerType}-${row.optionKey}`}
-                    highlight={(
-                      row.offerType === formState.offerType &&
-                      row.optionKey === formState.optionType
-                    ).toString()}
-                  >
-                    <StyledTableCell
-                      align="center"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <img
-                        src={`/${row.provider}.png`}
-                        alt={row.provider}
-                        width="24"
-                        height="24"
-                      />{" "}
-                      <Typography variant="body1" m={1}>
-                        {row.provider}
-                      </Typography>
-                    </StyledTableCell>
-                    <StyledTableCell
-                      align="center"
-                      style={{
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Typography variant="body1" m={1}>
-                        <Tooltip
-                          title={`Tarification mise à jour le ${dayjs(
-                            row.lastUpdate
-                          ).format("DD/MM/YYYY")}`}
-                          arrow
-                        >
-                          <span
-                            style={{
-                              fontSize: "1rem",
-                              verticalAlign: "middle",
-                              cursor: "help",
-                            }}
-                          >
-                            📅
-                          </span>
-                        </Tooltip>{" "}
-                        {row.offerType && `${row.offerType} - `}
-                        {row.optionName}{" "}
-                        {row.overridingHpHcKey && (
-                          <AccessTimeFilledIcon
-                            sx={{
-                              fontSize: "1rem",
-                              verticalAlign: "middle",
-                              color: "orange",
-                            }}
-                          />
-                        )}{" "}
-                        <Link
-                          href={row.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          underline="none"
-                        >
-                          <OpenInNewIcon
-                            sx={{
-                              fontSize: "1rem",
-                              verticalAlign: "text-top",
-                            }}
-                          />
-                        </Link>
-                      </Typography>
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {new Intl.NumberFormat("fr-FR").format(
-                        typeof row.fullSubscriptionCost === "number" &&
-                          isFinite(row.fullSubscriptionCost)
-                          ? row.fullSubscriptionCost
-                          : 0
-                      )}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {new Intl.NumberFormat("fr-FR").format(
-                        typeof row.totalConsumptionCost === "number" &&
-                          isFinite(row.totalConsumptionCost)
-                          ? row.totalConsumptionCost
-                          : 0
-                      )}
-                    </StyledTableCell>
-                    <StyledTableCell align="center">
-                      {new Intl.NumberFormat("fr-FR").format(
-                        typeof row.total === "number" && isFinite(row.total)
-                          ? row.total
-                          : 0
-                      )}
-                    </StyledTableCell>
-                    <StyledTableCell
-                      align="center"
-                      style={{
-                        color: getColorForPercentage(
-                          row.total && row.total > 0
-                            ? (100 * (row.total - safeCurrentOfferTotal)) /
-                                row.total
-                            : 0
-                        ),
-                      }}
-                    >
-                      {(() => {
-                        const percentage =
-                          row.total && row.total > 0
-                            ? (100 * (row.total - safeCurrentOfferTotal)) /
-                              row.total
-                            : 0;
-                        const roundedPercentage = Math.round(percentage);
-                        return `${
-                          roundedPercentage > 0 ? "+" : ""
-                        }${roundedPercentage} %`;
-                      })()}
-                    </StyledTableCell>
-                  </StyledTableRow>
-                ))
-              : null}
-          </TableBody>
-        </Table>
-      )}
+      {renderTableContent()}
     </TableContainer>
   );
 }
