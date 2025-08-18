@@ -7,46 +7,19 @@ import Drawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import * as React from "react";
-import { lazy, Suspense } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CurrentOfferForm from "./components/CurrentOfferForm";
 import MyStepper from "./components/Stepper";
 import { useFormContext } from "./context/FormContext";
 import { APP_VERSION, OfferType, OptionKey } from "./types";
 
-// Lazy loading des composants volumineux
-const DataImport = lazy(() => import("./components/DataImport"));
-const Analyses = lazy(() => import("./components/Analyses"));
-const Footer = lazy(() => import("./components/Footer"));
-const Info = lazy(() => import("./components/Info"));
-const Simulations = lazy(() => import("./components/Simulations"));
+import Analyses from "./components/Analyses";
+import DataImport from "./components/DataImport";
+import Footer from "./components/Footer";
+import Info from "./components/Info";
+import Simulations from "./components/Simulations";
 
-// Composant de chargement
-const LoadingSpinner = () => (
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      minHeight: "200px",
-    }}
-  >
-    <Box
-      sx={{
-        width: 40,
-        height: 40,
-        border: "4px solid #f3f3f3",
-        borderTop: "4px solid #1976d2",
-        borderRadius: "50%",
-        animation: "spin 1s linear infinite",
-        "@keyframes spin": {
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(360deg)" },
-        },
-      }}
-    />
-  </Box>
-);
+//
 
 // Fonction utilitaire pour scroll vers le haut
 const scrollToTop = () => {
@@ -213,29 +186,13 @@ export default function App() {
       case 0:
         return <CurrentOfferForm handleNext={handleNextAndTrack} />;
       case 1:
-        return (
-          <Suspense fallback={<LoadingSpinner />}>
-            <DataImport handleNext={handleNext} />
-          </Suspense>
-        );
+        return <DataImport handleNext={handleNext} />;
       case 2:
-        return (
-          <Suspense fallback={<LoadingSpinner />}>
-            <Analyses handleNext={handleNext} />
-          </Suspense>
-        );
+        return <Analyses handleNext={handleNext} />;
       case 3:
-        return (
-          <Suspense fallback={<LoadingSpinner />}>
-            <Simulations />
-          </Suspense>
-        );
+        return <Simulations />;
       default:
-        return (
-          <Suspense fallback={<LoadingSpinner />}>
-            <CurrentOfferForm handleNext={handleNextAndTrack} />
-          </Suspense>
-        );
+        return <CurrentOfferForm handleNext={handleNextAndTrack} />;
     }
   };
 
@@ -300,9 +257,7 @@ export default function App() {
         </Grid>
       </Grid>
 
-      <Suspense fallback={<LoadingSpinner />}>
-        <Footer onHelpClick={handleHelpClick} />
-      </Suspense>
+      <Footer onHelpClick={handleHelpClick} />
 
       <Drawer open={openHelpDrawer} anchor="top" onClose={handleHelpClose}>
         <Box
@@ -336,9 +291,7 @@ export default function App() {
           >
             <CloseIcon />
           </IconButton>
-          <Suspense fallback={<LoadingSpinner />}>
-            <Info handleClose={handleHelpClose} />
-          </Suspense>
+          <Info handleClose={handleHelpClose} />
         </Box>
       </Drawer>
     </>

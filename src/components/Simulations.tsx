@@ -18,9 +18,7 @@ import { analyseHourByHourBySeason } from "../scripts/statistics";
 import allOffersFile from "../statics/price_mapping.json";
 import HpHcSlotSelector from "./HpHcSelector";
 import PeriodChips from "./PeriodChips";
-
-// Lazy loading du composant volumineux
-const ComparisonTable = React.lazy(() => import("./ComparisonTable"));
+import ComparisonTable from "./ComparisonTable";
 
 export default function Simulations() {
   const { formState, setFormState } = useFormContext();
@@ -241,13 +239,11 @@ export default function Simulations() {
         Ils peuvent différer de vos factures car la simulation est réalisée sur
         la base des tarifs actuels des fournisseurs.
       </Typography>
-      <React.Suspense fallback={<div>Chargement des données...</div>}>
-        {formState && typeof formState === "object" ? (
-          <ComparisonTable />
-        ) : (
-          <div>Erreur de chargement des données</div>
-        )}
-      </React.Suspense>
+             {formState && typeof formState === "object" ? (
+         <ComparisonTable />
+       ) : (
+         <div>Erreur de chargement des données</div>
+       )}
       {isDesktop && <HpHcSlotSelector readOnly />}
       <Box sx={{ display: "flex", gap: 2, justifyContent: "center", mt: 2 }}>
         <Button variant="contained" color="secondary" onClick={handlePrint}>
