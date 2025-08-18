@@ -14,9 +14,8 @@ import { OfferType, OptionKey, SeasonHourlyAnalysis } from "../types";
 import FormCard from "./FormCard";
 import PeriodChips from "./PeriodChips";
 
-// Lazy loading des composants volumineux
-const HourlySeasonChart = React.lazy(() => import("./HourlySeasonChart"));
-const HpHcSeasonChart = React.lazy(() => import("./HpHcSeasonChart"));
+import HourlySeasonChart from "./HourlySeasonChart";
+import HpHcSeasonChart from "./HpHcSeasonChart";
 
 interface Props {
   handleNext: () => void;
@@ -169,9 +168,7 @@ export default function Analyses({ handleNext }: Readonly<Props>) {
           icon={<AnalyticsIcon />}
           sx={{ width: "100%", maxWidth: "100%" }}
         >
-          <React.Suspense fallback={<CircularProgress />}>
-            <HourlySeasonChart />
-          </React.Suspense>
+          <HourlySeasonChart />
         </FormCard>
 
         <FormCard
@@ -179,9 +176,7 @@ export default function Analyses({ handleNext }: Readonly<Props>) {
           icon={<AccessTimeIcon />}
           sx={{ width: "100%", maxWidth: "100%" }}
         >
-          <React.Suspense fallback={<CircularProgress />}>
-            <HpHcSeasonChart />
-          </React.Suspense>
+          <HpHcSeasonChart />
         </FormCard>
 
         <Box sx={{ display: "flex", gap: 2, justifyContent: "center", mt: 4 }}>
