@@ -281,7 +281,7 @@ export function calculateRowSummary({
   }
 
   // Validation de la plage de dates (maximum 2 ans)
-  const maxDateRange = 2 * 365 * 24 * 60 * 60 * 1000; // 2 ans en millisecondes
+  const maxDateRange = 2 * 368 * 24 * 60 * 60 * 1000; // 2 ans en millisecondes
   if (dateRange[1].getTime() - dateRange[0].getTime() > maxDateRange) {
     throw new Error("Plage de dates trop importante (maximum 2 ans)");
   }

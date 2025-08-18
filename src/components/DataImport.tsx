@@ -324,7 +324,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Stack spacing={4} sx={{ width: "100%", maxWidth: "100%" }}>
+      <Stack spacing={4} sx={{ width: "100%", maxWidth: 1200, mx: "auto" }}>
         <FormCard
           title="Instructions d'import"
           subtitle="Suivez ces étapes pour récupérer vos données"
