@@ -52,9 +52,31 @@ const StyledTableRow = styled(TableRow)<StyledTableRowProps>(
   })
 );
 
-export function ComparisonTable() {
-  const { formState } = useFormContext();
-  const navigate = useNavigate();
+function ComparisonTable() {
+  let formState;
+  let navigate;
+
+  try {
+    const context = useFormContext();
+    formState = context.formState;
+    navigate = useNavigate();
+  } catch (error) {
+    // Si le contexte n'est pas disponible, afficher un message d'erreur
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", p: 6 }}>
+        <Typography>Erreur de chargement du contexte</Typography>
+      </Box>
+    );
+  }
+
+  // Protection contre les données invalides
+  if (!formState || typeof formState !== "object") {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", p: 6 }}>
+        <Typography>Erreur de chargement des données</Typography>
+      </Box>
+    );
+  }
 
   React.useEffect(() => {
     const dateRange = formState.analyzedDateRange;
@@ -82,15 +104,22 @@ export function ComparisonTable() {
     navigate,
   ]);
 
-  const currentOfferTotal =
-    formState.rowSummaries.find(
-      (row) =>
-        row.offerType === formState.offerType &&
-        row.optionKey === formState.optionType
-    )?.total ?? 0;
+  const currentOfferTotal = Array.isArray(formState.rowSummaries)
+    ? formState.rowSummaries.find(
+        (row) =>
+          row.offerType === formState.offerType &&
+          row.optionKey === formState.optionType
+      )?.total ?? 0
+    : 0;
+
+  // S'assurer que currentOfferTotal est un nombre valide
+  const safeCurrentOfferTotal =
+    typeof currentOfferTotal === "number" && isFinite(currentOfferTotal)
+      ? currentOfferTotal
+      : 0;
 
   const getColorForPercentage = (percentage: number) => {
-    if (percentage === 0) {
+    if (percentage === 0 || isNaN(percentage) || !isFinite(percentage)) {
       return "inherit";
     }
     if (percentage >= 0) {
@@ -103,7 +132,7 @@ export function ComparisonTable() {
   return (
     <TableContainer component={Paper} sx={{ my: 3 }}>
       {formState.isGlobalLoading ||
-      !formState.rowSummaries ||
+      !Array.isArray(formState.rowSummaries) ||
       formState.rowSummaries.length === 0 ? (
         <Box
           sx={{
@@ -137,120 +166,148 @@ export function ComparisonTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {formState.rowSummaries
-              .sort((a, b) => {
-                return a.total - b.total;
-              })
-              .filter((row) => row?.total > 0)
-              .map((row) => (
-                <StyledTableRow
-                  key={`${row.provider}-${row.offerType}-${row.optionKey}`}
-                  highlight={(
-                    row.offerType === formState.offerType &&
-                    row.optionKey === formState.optionType
-                  ).toString()}
-                >
-                  <StyledTableCell
-                    align="center"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <img
-                      src={`/${row.provider}.png`}
-                      alt={row.provider}
-                      width="24"
-                      height="24"
-                    />{" "}
-                    <Typography variant="body1" m={1}>
-                      {row.provider}
-                    </Typography>
-                  </StyledTableCell>
-                  <StyledTableCell
-                    align="center"
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Typography variant="body1" m={1}>
-                      <Tooltip
-                        title={`Tarification mise à jour le ${dayjs(
-                          row.lastUpdate
-                        ).format("DD/MM/YYYY")}`}
-                        arrow
+            {Array.isArray(formState.rowSummaries)
+              ? formState.rowSummaries
+                  .sort((a, b) => {
+                    return (a.total || 0) - (b.total || 0);
+                  })
+                  .filter(
+                    (row) =>
+                      row?.total &&
+                      typeof row.total === "number" &&
+                      isFinite(row.total) &&
+                      row.total > 0
+                  )
+                  .map((row) => (
+                    <StyledTableRow
+                      key={`${row.provider}-${row.offerType}-${row.optionKey}`}
+                      highlight={(
+                        row.offerType === formState.offerType &&
+                        row.optionKey === formState.optionType
+                      ).toString()}
+                    >
+                      <StyledTableCell
+                        align="center"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
                       >
-                        <span
-                          style={{
-                            fontSize: "1rem",
-                            verticalAlign: "middle",
-                            cursor: "help",
-                          }}
-                        >
-                          📅
-                        </span>
-                      </Tooltip>{" "}
-                      {row.offerType && `${row.offerType} - `}
-                      {row.optionName}{" "}
-                      {row.overridingHpHcKey && (
-                        <AccessTimeFilledIcon
-                          sx={{
-                            fontSize: "1rem",
-                            verticalAlign: "middle",
-                            color: "orange",
-                          }}
-                        />
-                      )}{" "}
-                      <Link
-                        href={row.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        underline="none"
+                        <img
+                          src={`/${row.provider}.png`}
+                          alt={row.provider}
+                          width="24"
+                          height="24"
+                        />{" "}
+                        <Typography variant="body1" m={1}>
+                          {row.provider}
+                        </Typography>
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="center"
+                        style={{
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
                       >
-                        <OpenInNewIcon
-                          sx={{ fontSize: "1rem", verticalAlign: "text-top" }}
-                        />
-                      </Link>
-                    </Typography>
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {new Intl.NumberFormat("fr-FR").format(
-                      row.fullSubscriptionCost
-                    )}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {new Intl.NumberFormat("fr-FR").format(
-                      row.totalConsumptionCost
-                    )}
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    {new Intl.NumberFormat("fr-FR").format(row.total)}
-                  </StyledTableCell>
-                  <StyledTableCell
-                    align="center"
-                    style={{
-                      color: getColorForPercentage(
-                        (100 * (row.total - currentOfferTotal)) / row.total
-                      ),
-                    }}
-                  >
-                    {Math.round(
-                      (100 * (row.total - currentOfferTotal)) / row.total
-                    ) > 0
-                      ? "+"
-                      : ""}
-                    {Math.round(
-                      (100 * (row.total - currentOfferTotal)) / row.total
-                    )}{" "}
-                    %
-                  </StyledTableCell>
-                </StyledTableRow>
-              ))}
+                        <Typography variant="body1" m={1}>
+                          <Tooltip
+                            title={`Tarification mise à jour le ${dayjs(
+                              row.lastUpdate
+                            ).format("DD/MM/YYYY")}`}
+                            arrow
+                          >
+                            <span
+                              style={{
+                                fontSize: "1rem",
+                                verticalAlign: "middle",
+                                cursor: "help",
+                              }}
+                            >
+                              📅
+                            </span>
+                          </Tooltip>{" "}
+                          {row.offerType && `${row.offerType} - `}
+                          {row.optionName}{" "}
+                          {row.overridingHpHcKey && (
+                            <AccessTimeFilledIcon
+                              sx={{
+                                fontSize: "1rem",
+                                verticalAlign: "middle",
+                                color: "orange",
+                              }}
+                            />
+                          )}{" "}
+                          <Link
+                            href={row.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            underline="none"
+                          >
+                            <OpenInNewIcon
+                              sx={{
+                                fontSize: "1rem",
+                                verticalAlign: "text-top",
+                              }}
+                            />
+                          </Link>
+                        </Typography>
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {new Intl.NumberFormat("fr-FR").format(
+                          typeof row.fullSubscriptionCost === "number" &&
+                            isFinite(row.fullSubscriptionCost)
+                            ? row.fullSubscriptionCost
+                            : 0
+                        )}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {new Intl.NumberFormat("fr-FR").format(
+                          typeof row.totalConsumptionCost === "number" &&
+                            isFinite(row.totalConsumptionCost)
+                            ? row.totalConsumptionCost
+                            : 0
+                        )}
+                      </StyledTableCell>
+                      <StyledTableCell align="center">
+                        {new Intl.NumberFormat("fr-FR").format(
+                          typeof row.total === "number" && isFinite(row.total)
+                            ? row.total
+                            : 0
+                        )}
+                      </StyledTableCell>
+                      <StyledTableCell
+                        align="center"
+                        style={{
+                          color: getColorForPercentage(
+                            row.total && row.total > 0
+                              ? (100 * (row.total - safeCurrentOfferTotal)) /
+                                  row.total
+                              : 0
+                          ),
+                        }}
+                      >
+                        {(() => {
+                          const percentage =
+                            row.total && row.total > 0
+                              ? (100 * (row.total - safeCurrentOfferTotal)) /
+                                row.total
+                              : 0;
+                          const roundedPercentage = Math.round(percentage);
+                          return `${
+                            roundedPercentage > 0 ? "+" : ""
+                          }${roundedPercentage} %`;
+                        })()}
+                      </StyledTableCell>
+                    </StyledTableRow>
+                  ))
+              : null}
           </TableBody>
         </Table>
       )}
     </TableContainer>
   );
 }
+
+export default ComparisonTable;

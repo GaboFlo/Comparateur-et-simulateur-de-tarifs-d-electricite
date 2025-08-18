@@ -16,6 +16,7 @@ import { APP_VERSION, OfferType, OptionKey } from "./types";
 
 // Lazy loading des composants volumineux
 const DataImport = lazy(() => import("./components/DataImport"));
+const Analyses = lazy(() => import("./components/Analyses"));
 const Footer = lazy(() => import("./components/Footer"));
 const Info = lazy(() => import("./components/Info"));
 const Simulations = lazy(() => import("./components/Simulations"));
@@ -54,10 +55,14 @@ const scrollToTop = () => {
   }, 100);
 };
 
-const steps = ["Votre offre actuelle", "Votre consommation", "Simulations"];
+const steps = [
+  "Votre offre actuelle",
+  "Import de votre consommation",
+  "Analyses",
+  "Simulations",
+];
 
 export default function App() {
-  const { formState, setFormState } = useFormContext();
   const { mode, systemMode } = useColorScheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -67,6 +72,8 @@ export default function App() {
   const [activeStep, setActiveStep] = React.useState(
     stepParam ? parseInt(stepParam) : 0
   );
+  const [openHelpDrawer, setOpenHelpDrawer] = React.useState(false);
+
   // Vérifier si c'est la première visite et si ce n'est pas un bot
   React.useEffect(() => {
     const hasVisitedBefore = localStorage.getItem("hasVisitedBefore");
@@ -78,26 +85,48 @@ export default function App() {
     }
   }, []);
 
-  React.useEffect(() => {
-    if (stepParam && parseInt(stepParam) !== activeStep) {
-      setActiveStep(parseInt(stepParam));
-    }
-
-    // Vérifier si les données de consommation sont disponibles pour l'étape 3
-    if (
-      !formState.seasonHourlyAnalysis ||
-      formState.seasonHourlyAnalysis.length === 0
-    ) {
-      if (activeStep === 2) {
-        handleStepChange(0);
-      }
-    }
-  }, [activeStep, stepParam, formState.seasonHourlyAnalysis]);
-
   // Scroll vers le haut à chaque changement d'étape
   React.useEffect(() => {
     scrollToTop();
   }, [activeStep]);
+
+  const { formState, setFormState } = useFormContext();
+
+  React.useEffect(() => {
+    switch (activeStep) {
+      case 1:
+        document.title =
+          "Import de votre consommation - Simulateur et comparateur de tarifs d'électricité";
+        break;
+      case 2:
+        document.title =
+          "Analyses - Simulateur et comparateur de tarifs d'électricité";
+        break;
+      case 3:
+        document.title =
+          "Simulations - Simulateur et comparateur de tarifs d'électricité";
+        break;
+      default:
+        document.title =
+          "Simulateur et comparateur de tarifs d'électricité selon vos consommations passées, gratuit, immédiat, sans inscription";
+    }
+  }, [activeStep]);
+
+  React.useEffect(() => {
+    mode &&
+      trackPageView({
+        customDimensions: [
+          {
+            id: 1,
+            value: APP_VERSION,
+          },
+          {
+            id: 2,
+            value: systemMode ?? mode,
+          },
+        ],
+      });
+  }, [activeStep, mode, trackPageView, systemMode]);
 
   const handleStepChange = (step: number) => {
     navigate(`?step=${step}`);
@@ -149,8 +178,6 @@ export default function App() {
     });
   };
 
-  const [openHelpDrawer, setOpenHelpDrawer] = React.useState(false);
-
   const handleHelpClick = () => {
     setOpenHelpDrawer(true);
     trackEvent({
@@ -164,37 +191,22 @@ export default function App() {
     setOpenHelpDrawer(false);
   };
 
+  // useEffect pour gérer les changements d'étape et les données
   React.useEffect(() => {
-    switch (activeStep) {
-      case 1:
-        document.title =
-          "Données de consommation - Simulateur et comparateur de tarifs d'électricité";
-        break;
-      case 2:
-        document.title =
-          "Simulations - Simulateur et comparateur de tarifs d'électricité";
-        break;
-      default:
-        document.title =
-          "Simulateur et comparateur de tarifs d'électricité selon vos consommations passées, gratuit, immédiat, sans inscription";
+    if (stepParam && parseInt(stepParam) !== activeStep) {
+      setActiveStep(parseInt(stepParam));
     }
-  }, [activeStep]);
 
-  React.useEffect(() => {
-    mode &&
-      trackPageView({
-        customDimensions: [
-          {
-            id: 1,
-            value: APP_VERSION,
-          },
-          {
-            id: 2,
-            value: systemMode ?? mode,
-          },
-        ],
-      });
-  }, [activeStep, mode, trackPageView, systemMode]);
+    // Vérifier si les données de consommation sont disponibles pour les étapes 2 et 3
+    if (
+      !formState.seasonHourlyAnalysis ||
+      formState.seasonHourlyAnalysis.length === 0
+    ) {
+      if (activeStep === 2 || activeStep === 3) {
+        handleStepChange(0);
+      }
+    }
+  }, [activeStep, stepParam, formState.seasonHourlyAnalysis]);
 
   const renderStepContent = () => {
     switch (activeStep) {
@@ -207,6 +219,12 @@ export default function App() {
           </Suspense>
         );
       case 2:
+        return (
+          <Suspense fallback={<LoadingSpinner />}>
+            <Analyses handleNext={handleNext} />
+          </Suspense>
+        );
+      case 3:
         return (
           <Suspense fallback={<LoadingSpinner />}>
             <Simulations />

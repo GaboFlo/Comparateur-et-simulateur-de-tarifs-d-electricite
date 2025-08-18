@@ -1,9 +1,6 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
 import {
-  AccessTime as AccessTimeIcon,
-  Analytics as AnalyticsIcon,
   Assignment as AssignmentIcon,
-  CheckCircle as CheckCircleIcon,
   CloudUpload as CloudUploadIcon,
   Error as ErrorIcon,
   HelpOutline as HelpOutlineIcon,
@@ -16,8 +13,7 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
-import dayjs from "dayjs";
+
 import JSZip from "jszip";
 import * as React from "react";
 import { useDropzone } from "react-dropzone";
@@ -25,24 +21,21 @@ import { useFormContext } from "../context/FormContext";
 import { calculateRowSummary } from "../scripts/calculators";
 import { parseCsvToConsumptionLoadCurveData } from "../scripts/csvParser";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
-import { findFirstAndLastDate, formatKWhLarge } from "../scripts/utils";
+import { findFirstAndLastDate } from "../scripts/utils";
 import hphc_data from "../statics/hp_hc.json";
 import allOffersFile from "../statics/price_mapping.json";
 import {
   ComparisonTableInterfaceRow,
   ConsumptionLoadCurveData,
   HpHcSlot,
+  OfferType,
+  OptionKey,
   PriceMappingFile,
   SeasonHourlyAnalysis,
 } from "../types";
 import ActionButton from "./ActionButton";
 import FormCard from "./FormCard";
-import PeriodChips from "./PeriodChips";
 import TooltipModal from "./TooltipModal";
-
-// Lazy loading des composants volumineux
-const HourlySeasonChart = React.lazy(() => import("./HourlySeasonChart"));
-const HpHcSeasonChart = React.lazy(() => import("./HpHcSeasonChart"));
 
 interface Props {
   handleNext: () => void;
@@ -100,27 +93,25 @@ const scrollToBottom = () => {
   }, 500);
 };
 
-const createDateRangeHandlers = (setRange: (range: [Date, Date]) => void) => ({
-  handleLast6Months: () => {
-    const endDate = dayjs().endOf("day").toDate();
-    const startDate = dayjs().subtract(6, "month").startOf("day").toDate();
-    setRange([startDate, endDate]);
-  },
-  handleLast12Months: () => {
-    const endDate = dayjs().endOf("day").toDate();
-    const startDate = dayjs().subtract(1, "year").startOf("day").toDate();
-    setRange([startDate, endDate]);
-  },
-  handleLast24Months: () => {
-    const endDate = dayjs().endOf("day").toDate();
-    const startDate = dayjs().subtract(2, "year").startOf("day").toDate();
-    setRange([startDate, endDate]);
-  },
-});
-
 export default function DataImport({ handleNext }: Readonly<Props>) {
-  const { formState, setFormState } = useFormContext();
-  const { trackEvent } = useMatomo();
+  let formState;
+  let setFormState;
+  let trackEvent;
+
+  try {
+    const context = useFormContext();
+    formState = context.formState;
+    setFormState = context.setFormState;
+    const matomoContext = useMatomo();
+    trackEvent = matomoContext.trackEvent;
+  } catch (error) {
+    // Si le contexte n'est pas disponible, afficher un message d'erreur
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", p: 6 }}>
+        <Typography>Erreur de chargement du contexte</Typography>
+      </Box>
+    );
+  }
   const [isProcessing, setIsProcessing] = React.useState(false);
   const [openTooltipCsv, setOpenTooltipCsv] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
@@ -223,6 +214,30 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
     preCalculateSimulations,
   ]);
 
+  // Redirection automatique vers l'étape Analyses quand les calculs sont terminés
+  React.useEffect(() => {
+    if (
+      isDataProcessed &&
+      formState.seasonHourlyAnalysis &&
+      !isCalculating &&
+      formState.rowSummaries.length > 0
+    ) {
+      trackEvent({
+        category: "navigation",
+        action: "auto-next-step",
+        name: "data-import-to-analyses",
+      });
+      handleNext();
+    }
+  }, [
+    isDataProcessed,
+    formState.seasonHourlyAnalysis,
+    isCalculating,
+    formState.rowSummaries.length,
+    handleNext,
+    trackEvent,
+  ]);
+
   const onDrop = React.useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length === 0) return;
@@ -292,60 +307,6 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
     setOpenTooltipCsv(true);
     trackEvent({ category: "info-upload-data", action: "open" });
   };
-
-  // Validation des dates pour éviter les erreurs "Invalid time value"
-  const validateDateRange = (dateRange: [Date, Date]): [Date, Date] => {
-    const [start, end] = dateRange;
-
-    // Vérifier si les dates sont valides
-    if (!start || !end || isNaN(start.getTime()) || isNaN(end.getTime())) {
-      // Retourner des dates par défaut si invalides
-      const defaultStart = dayjs().subtract(1, "year").startOf("day").toDate();
-      const defaultEnd = dayjs().endOf("day").toDate();
-      return [defaultStart, defaultEnd];
-    }
-
-    return dateRange;
-  };
-
-  const safeDateRange = validateDateRange(formState.analyzedDateRange);
-  const diffDays = dayjs(safeDateRange[1]).diff(dayjs(safeDateRange[0]), "day");
-
-  const setRange = (range: [Date, Date]) => {
-    setFormState((prevState) => ({
-      ...prevState,
-      dateRange: range,
-      isGlobalLoading: true,
-    }));
-
-    if (!formState.parsedData) {
-      setFormState((prevState) => ({
-        ...prevState,
-        isGlobalLoading: false,
-      }));
-      return;
-    }
-
-    const seasonData = analyseHourByHourBySeason({
-      data: formState.parsedData,
-      dateRange: range,
-    });
-    const totalConsumption = seasonData.reduce(
-      (acc, cur) => acc + cur.seasonTotalSum,
-      0
-    );
-
-    setFormState((prevState) => ({
-      ...prevState,
-      seasonHourlyAnalysis: seasonData,
-      analyzedDateRange: range,
-      totalConsumption: totalConsumption,
-      isGlobalLoading: false,
-    }));
-  };
-
-  const { handleLast6Months, handleLast12Months, handleLast24Months } =
-    createDateRangeHandlers(setRange);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -444,63 +405,13 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
               if (isDataProcessed) {
                 return (
                   <Stack spacing={2} alignItems="center">
-                    <Box
-                      sx={{
-                        width: 60,
-                        height: 60,
-                        borderRadius: "50%",
-                        backgroundColor: "success.50",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "success.main",
-                        fontSize: "1.5rem",
-                      }}
-                    >
-                      <CheckCircleIcon sx={{ fontSize: "inherit" }} />
-                    </Box>
-
-                    <Typography variant="h6" color="text.primary">
-                      Données traitées avec succès
+                    <CircularProgress size={48} />
+                    <Typography variant="h6" color="primary">
+                      Finalisation en cours...
                     </Typography>
-
                     <Typography variant="body2" color="text.secondary">
-                      Vos données de consommation ont été analysées
+                      Préparation de votre analyse
                     </Typography>
-
-                    <Typography
-                      variant="h6"
-                      color="success.main"
-                      sx={{ fontWeight: 600 }}
-                    >
-                      {formState.totalConsumption &&
-                      formState.totalConsumption > 0
-                        ? `${formState.totalConsumption.toLocaleString(
-                            "fr-FR"
-                          )} kWh analysés`
-                        : "Données analysées"}
-                    </Typography>
-
-                    <ActionButton
-                      variant="outline"
-                      onClick={() => {
-                        setIsDataProcessed(false);
-                        setFormState((prev) => ({
-                          ...prev,
-                          seasonHourlyAnalysis: undefined,
-                          parsedData: undefined,
-                          totalConsumption: 0,
-                          rowSummaries: [],
-                        }));
-                      }}
-                      sx={{
-                        background: "rgba(25, 118, 210, 0.05)",
-                        borderColor: "primary.main",
-                        color: "primary.main",
-                      }}
-                    >
-                      Changer de fichier
-                    </ActionButton>
                   </Stack>
                 );
               }
@@ -562,99 +473,6 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
           </FormCard>
         )}
 
-        {isDataProcessed && formState.seasonHourlyAnalysis && (
-          <>
-            <FormCard
-              title="Période d'analyse"
-              subtitle="Sélectionnez la période à analyser"
-              icon={<AccessTimeIcon />}
-              data-section="period-analysis"
-              sx={{ width: "100%", maxWidth: "100%" }}
-            >
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <MobileDateRangePicker
-                  value={[dayjs(safeDateRange[0]), dayjs(safeDateRange[1])]}
-                  loading={formState.isGlobalLoading}
-                  onAccept={(newValue) => {
-                    const start = dayjs(newValue[0] ?? new Date())
-                      .startOf("day")
-                      .toDate();
-                    const end = dayjs(newValue[1] ?? new Date())
-                      .endOf("day")
-                      .toDate();
-                    setRange([start, end]);
-                  }}
-                  disableFuture
-                  localeText={{
-                    start: "Début d'analyse",
-                    end: "Fin d'analyse",
-                    cancelButtonLabel: "Annuler",
-                    toolbarTitle: "",
-                  }}
-                />
-                <PeriodChips
-                  onLast6Months={handleLast6Months}
-                  onLast12Months={handleLast12Months}
-                  onLast24Months={handleLast24Months}
-                  isLoading={formState.isGlobalLoading}
-                />
-              </Box>
-            </FormCard>
-
-            <Alert severity="info" sx={{ m: 1, textAlign: "justify" }}>
-              Vous avez consommé{" "}
-              <b>{formatKWhLarge(formState.totalConsumption)} </b>
-              sur la période analysée (du{" "}
-              {dayjs(safeDateRange[0]).format("DD/MM/YYYY")} au{" "}
-              {dayjs(safeDateRange[1]).format("DD/MM/YYYY")}), soit une{" "}
-              <b>
-                moyenne de{" "}
-                {formatKWhLarge(formState.totalConsumption / diffDays)} par jour
-              </b>{" "}
-            </Alert>
-          </>
-        )}
-
-        {isDataProcessed && formState.seasonHourlyAnalysis && (
-          <>
-            <FormCard
-              title="Répartition de la consommation par heure et par saison"
-              subtitle="Analyse détaillée de vos habitudes de consommation"
-              icon={<AnalyticsIcon />}
-              sx={{ width: "100%", maxWidth: "100%" }}
-            >
-              <React.Suspense fallback={<CircularProgress />}>
-                <HourlySeasonChart />
-              </React.Suspense>
-            </FormCard>
-            <FormCard
-              title="Répartition de la consommation heure pleine / heure creuse"
-              icon={<AccessTimeIcon />}
-              sx={{ width: "100%", maxWidth: "100%" }}
-            >
-              <React.Suspense fallback={<CircularProgress />}>
-                <HpHcSeasonChart />
-              </React.Suspense>
-            </FormCard>
-
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-              <ActionButton
-                variant="primary"
-                onClick={() => {
-                  // Désactiver temporairement le scroll automatique
-                  setIsProcessing(true);
-                  setTimeout(() => {
-                    handleNext();
-                  }, 100);
-                }}
-                sx={{ minWidth: 250, py: 1.5, px: 3 }}
-              >
-                Continuer vers les simulations
-              </ActionButton>
-            </Box>
-          </>
-        )}
-
         <TooltipModal
           title="Comment télécharger votre consommation ?"
           description="Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/><br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."
@@ -663,6 +481,35 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
           imgPath="/edf-download.png"
           imgDescription="Page de téléchargement de la consommation"
         />
+
+        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+          <ActionButton
+            variant="outline"
+            onClick={() => {
+              setFormState({
+                provider: "EDF",
+                offerType: OfferType.BLEU,
+                optionType: OptionKey.BASE,
+                powerClass: 6,
+                isGlobalLoading: false,
+                analyzedDateRange: [
+                  new Date(new Date().getFullYear() - 2, 0, 1),
+                  new Date(),
+                ],
+                totalConsumption: 1,
+                rowSummaries: [],
+              });
+              window.location.href = "?step=0";
+            }}
+            sx={{
+              background: "rgba(25, 118, 210, 0.05)",
+              borderColor: "primary.main",
+              color: "primary.main",
+            }}
+          >
+            Recommencer
+          </ActionButton>
+        </Box>
       </Stack>
     </Box>
   );
