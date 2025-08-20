@@ -6,6 +6,7 @@
   "scripts": {
     "build": "vite build",
     "build:analyze": "vite build --config vite.config.analyze.ts",
+    "build:serve": "vite build && npx serve build -s -l 3001",
     "deadcode:all": "ts-prune",
     "deadcode:ci": "ts-prune | (! grep -v 'used in module') | (! grep -v 'migration') | (! grep -v 'd.ts') | (! grep -v 'themePrimitives.ts') | (! grep -v 'vite.config.ts')",
     "depcheck": "depcheck --ignores=node-fetch,@types/jest,sort-package-json,ts-jest,typescript,@typescript-eslint/eslint-plugin",

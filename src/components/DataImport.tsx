@@ -323,208 +323,203 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Stack spacing={4} sx={{ width: "100%", maxWidth: 1200, mx: "auto" }}>
-        <FormCard
-          title="Instructions d'import"
-          subtitle="Suivez ces étapes pour récupérer vos données"
-          icon={<AssignmentIcon />}
-          sx={{ width: "100%", maxWidth: "100%" }}
-        >
-          <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="body2" sx={{ mb: 1 }}>
-                1. Connectez-vous à votre espace EDF sur{" "}
-                <a
-                  href="https://suiviconso.edf.fr/comprendre"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  suiviconso.edf.fr
-                </a>
-              </Typography>
-              <Typography variant="body2" sx={{ mb: 1 }}>
-                2. Téléchargez votre consommation par pallier de 30 minutes
-                (format ZIP)
-              </Typography>
-              <Typography variant="body2">
-                3. Importez directement le fichier ZIP téléchargé ci-dessous
-              </Typography>
-            </Box>
-            <IconButton
-              onClick={handleTooltipCsvOpen}
-              size="small"
-              sx={{ mt: 0.5 }}
-            >
-              <HelpOutlineIcon />
-            </IconButton>
+    <Stack spacing={4}>
+      <FormCard
+        title="Instructions d'import"
+        subtitle="Suivez ces étapes pour récupérer vos données"
+        icon={<AssignmentIcon />}
+      >
+        <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
+          <Box sx={{ flex: 1 }}>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              1. Connectez-vous à votre espace EDF sur{" "}
+              <a
+                href="https://suiviconso.edf.fr/comprendre"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                suiviconso.edf.fr
+              </a>
+            </Typography>
+            <Typography variant="body2" sx={{ mb: 1 }}>
+              2. Téléchargez votre consommation par pallier de 30 minutes
+              (format ZIP)
+            </Typography>
+            <Typography variant="body2">
+              3. Importez directement le fichier ZIP téléchargé ci-dessous
+            </Typography>
           </Box>
-        </FormCard>
-
-        <FormCard
-          title="Zone de dépôt"
-          subtitle="Glissez-déposez votre fichier ZIP ou cliquez pour sélectionner"
-          icon={<CloudUploadIcon />}
-          sx={{ width: "100%", maxWidth: "100%" }}
-        >
-          <Box
-            {...getRootProps()}
-            sx={{
-              border: "2px dashed",
-              borderColor: isDragActive ? "primary.main" : "divider",
-              borderRadius: 3,
-              p: 4,
-              textAlign: "center",
-              cursor: "pointer",
-              transition: "all 0.2s ease-in-out",
-              backgroundColor: isDragActive ? "primary.50" : "background.paper",
-              minHeight: 250,
-              "&:hover": {
-                borderColor: "primary.main",
-                backgroundColor: "primary.50",
-              },
-            }}
+          <IconButton
+            onClick={handleTooltipCsvOpen}
+            size="small"
+            sx={{ mt: 0.5 }}
           >
-            <input {...getInputProps()} />
+            <HelpOutlineIcon />
+          </IconButton>
+        </Box>
+      </FormCard>
 
-            {(() => {
-              if (isProcessing) {
-                return (
-                  <Stack spacing={2} alignItems="center">
-                    <CircularProgress size={48} />
-                    <Typography variant="h6" color="primary">
-                      Traitement en cours...
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Analyse de vos données de consommation
-                    </Typography>
-                  </Stack>
-                );
-              }
+      <FormCard
+        title="Zone de dépôt"
+        subtitle="Glissez-déposez votre fichier ZIP ou cliquez pour sélectionner"
+        icon={<CloudUploadIcon />}
+      >
+        <Box
+          {...getRootProps()}
+          sx={{
+            border: "2px dashed",
+            borderColor: isDragActive ? "primary.main" : "divider",
+            borderRadius: 3,
+            p: 4,
+            textAlign: "center",
+            cursor: "pointer",
+            transition: "all 0.2s ease-in-out",
+            backgroundColor: isDragActive ? "primary.50" : "background.paper",
+            minHeight: 250,
+            "&:hover": {
+              borderColor: "primary.main",
+              backgroundColor: "primary.50",
+            },
+          }}
+        >
+          <input {...getInputProps()} />
 
-              if (isCalculating) {
-                return (
-                  <Stack spacing={2} alignItems="center">
-                    <CircularProgress size={48} />
-                    <Typography variant="h6" color="primary">
-                      Calculs en cours...
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Préparation des simulations
-                    </Typography>
-                  </Stack>
-                );
-              }
-
-              if (isDataProcessed) {
-                return (
-                  <Stack spacing={2} alignItems="center">
-                    <CircularProgress size={48} />
-                    <Typography variant="h6" color="primary">
-                      Finalisation en cours...
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Préparation de votre analyse
-                    </Typography>
-                  </Stack>
-                );
-              }
-
+          {(() => {
+            if (isProcessing) {
               return (
                 <Stack spacing={2} alignItems="center">
-                  <Box
-                    sx={{
-                      width: 60,
-                      height: 60,
-                      borderRadius: "50%",
-                      backgroundColor: "primary.50",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "primary.main",
-                      fontSize: "1.5rem",
-                    }}
-                  >
-                    <CloudUploadIcon sx={{ fontSize: "inherit" }} />
-                  </Box>
-
-                  <Typography variant="h6" color="text.primary">
-                    {isDragActive
-                      ? "Déposez le fichier ici"
-                      : "Sélectionnez votre fichier ZIP"}
+                  <CircularProgress size={48} />
+                  <Typography variant="h6" color="primary">
+                    Traitement en cours...
                   </Typography>
-
                   <Typography variant="body2" color="text.secondary">
-                    Format accepté : fichier ZIP directement issu du
-                    téléchargement EDF
+                    Analyse de vos données de consommation
                   </Typography>
-
-                  <ActionButton
-                    variant="outline"
-                    sx={{
-                      background: "rgba(25, 118, 210, 0.05)",
-                      borderColor: "primary.main",
-                      color: "primary.main",
-                    }}
-                  >
-                    Choisir un fichier
-                  </ActionButton>
                 </Stack>
               );
-            })()}
-          </Box>
-        </FormCard>
+            }
 
-        {error && (
-          <FormCard
-            title="Erreur de traitement"
-            subtitle="Une erreur s'est produite lors du traitement de votre fichier"
-            icon={<ErrorIcon />}
-          >
-            <Alert severity="error" variant="outlined" sx={{ borderRadius: 2 }}>
-              <Typography variant="body2">{error}</Typography>
-            </Alert>
-          </FormCard>
-        )}
+            if (isCalculating) {
+              return (
+                <Stack spacing={2} alignItems="center">
+                  <CircularProgress size={48} />
+                  <Typography variant="h6" color="primary">
+                    Calculs en cours...
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Préparation des simulations
+                  </Typography>
+                </Stack>
+              );
+            }
 
-        <TooltipModal
-          title="Comment télécharger votre consommation ?"
-          description="Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/><br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."
-          open={openTooltipCsv}
-          handleClose={handleTooltipCsvClose}
-          imgPath="/edf-download.png"
-          imgDescription="Page de téléchargement de la consommation"
-        />
+            if (isDataProcessed) {
+              return (
+                <Stack spacing={2} alignItems="center">
+                  <CircularProgress size={48} />
+                  <Typography variant="h6" color="primary">
+                    Finalisation en cours...
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Préparation de votre analyse
+                  </Typography>
+                </Stack>
+              );
+            }
 
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
-          <ActionButton
-            variant="outline"
-            onClick={() => {
-              setFormState({
-                provider: "EDF",
-                offerType: OfferType.BLEU,
-                optionType: OptionKey.BASE,
-                powerClass: 6,
-                isGlobalLoading: false,
-                analyzedDateRange: [
-                  new Date(new Date().getFullYear() - 2, 0, 1),
-                  new Date(),
-                ],
-                totalConsumption: 1,
-                rowSummaries: [],
-              });
-              window.location.href = "?step=0";
-            }}
-            sx={{
-              background: "rgba(25, 118, 210, 0.05)",
-              borderColor: "primary.main",
-              color: "primary.main",
-            }}
-          >
-            Recommencer
-          </ActionButton>
+            return (
+              <Stack spacing={2} alignItems="center">
+                <Box
+                  sx={{
+                    height: 60,
+                    borderRadius: "50%",
+                    backgroundColor: "primary.50",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "primary.main",
+                    fontSize: "1.5rem",
+                  }}
+                >
+                  <CloudUploadIcon sx={{ fontSize: "inherit" }} />
+                </Box>
+
+                <Typography variant="h6" color="text.primary">
+                  {isDragActive
+                    ? "Déposez le fichier ici"
+                    : "Sélectionnez votre fichier ZIP"}
+                </Typography>
+
+                <Typography variant="body2" color="text.secondary">
+                  Format accepté : fichier ZIP directement issu du
+                  téléchargement EDF
+                </Typography>
+
+                <ActionButton
+                  variant="outline"
+                  sx={{
+                    background: "rgba(25, 118, 210, 0.05)",
+                    borderColor: "primary.main",
+                    color: "primary.main",
+                  }}
+                >
+                  Choisir un fichier
+                </ActionButton>
+              </Stack>
+            );
+          })()}
         </Box>
-      </Stack>
-    </Box>
+      </FormCard>
+
+      {error && (
+        <FormCard
+          title="Erreur de traitement"
+          subtitle="Une erreur s'est produite lors du traitement de votre fichier"
+          icon={<ErrorIcon />}
+        >
+          <Alert severity="error" variant="outlined" sx={{ borderRadius: 2 }}>
+            <Typography variant="body2">{error}</Typography>
+          </Alert>
+        </FormCard>
+      )}
+
+      <TooltipModal
+        title="Comment télécharger votre consommation ?"
+        description="Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/><br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."
+        open={openTooltipCsv}
+        handleClose={handleTooltipCsvClose}
+        imgPath="/edf-download.png"
+        imgDescription="Page de téléchargement de la consommation"
+      />
+
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <ActionButton
+          variant="outline"
+          onClick={() => {
+            setFormState({
+              provider: "EDF",
+              offerType: OfferType.BLEU,
+              optionType: OptionKey.BASE,
+              powerClass: 6,
+              isGlobalLoading: false,
+              analyzedDateRange: [
+                new Date(new Date().getFullYear() - 2, 0, 1),
+                new Date(),
+              ],
+              totalConsumption: 1,
+              rowSummaries: [],
+            });
+            window.location.href = "?step=0";
+          }}
+          sx={{
+            background: "rgba(25, 118, 210, 0.05)",
+            borderColor: "primary.main",
+            color: "primary.main",
+          }}
+        >
+          Recommencer
+        </ActionButton>
+      </Box>
+    </Stack>
   );
 }
