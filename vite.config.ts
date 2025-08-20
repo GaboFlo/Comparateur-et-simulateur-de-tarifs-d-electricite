@@ -98,20 +98,21 @@ export default defineConfig({
     sourcemap: false,
     assetsInlineLimit: 4096,
     target: "es2015",
+    cssCodeSplit: true, // Garder le CSS séparé
     minify: "terser",
     terserOptions: {
       compress: {
         drop_console: true,
         drop_debugger: true,
         pure_funcs: ["console.log", "console.info", "console.debug"],
-        passes: 2,
-        toplevel: true,
-        unsafe: true,
-        unsafe_comps: true,
+        passes: 1, // Réduire les passes
+        toplevel: false, // Désactiver les optimisations de haut niveau
+        unsafe: false, // Désactiver les optimisations unsafe
+        unsafe_comps: false, // Désactiver les comparaisons unsafe
       },
       mangle: {
         safari10: true,
-        toplevel: true,
+        toplevel: false, // Désactiver le mangling de haut niveau
       },
       format: {
         comments: false,
