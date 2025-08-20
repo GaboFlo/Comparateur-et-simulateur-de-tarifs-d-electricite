@@ -6,6 +6,8 @@ Importez votre consommation passée et obtenez vos simulations selon votre conso
 
 Lien 🔗 : https://comparateur-electricite.gaboflo.fr
 
+NB : avant de continuer votre lecture, le site officiel du médiateur de l'énergie répond aussi aux besoins que ce projet tente de résoudre : https://comparateur-offres.energie-info.fr/ ...
+
 ---
 
 [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
