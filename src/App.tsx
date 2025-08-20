@@ -7,15 +7,19 @@ import Drawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import * as React from "react";
-import { lazy } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CurrentOfferForm from "./components/CurrentOfferForm";
-import DataImport from "./components/DataImport";
-import Footer from "./components/Footer";
-import Info from "./components/Info";
 import MyStepper from "./components/Stepper";
 import { useFormContext } from "./context/FormContext";
 import { APP_VERSION, OfferType, OptionKey } from "./types";
+
+import Analyses from "./components/Analyses";
+import DataImport from "./components/DataImport";
+import Footer from "./components/Footer";
+import Info from "./components/Info";
+import Simulations from "./components/Simulations";
+
+//
 
 // Fonction utilitaire pour scroll vers le haut
 const scrollToTop = () => {
@@ -24,12 +28,14 @@ const scrollToTop = () => {
   }, 100);
 };
 
-const Simulations = lazy(() => import("./components/Simulations"));
-
-const steps = ["Votre offre actuelle", "Votre consommation", "Simulations"];
+const steps = [
+  "Votre offre actuelle",
+  "Import de votre consommation",
+  "Analyses",
+  "Simulations",
+];
 
 export default function App() {
-  const { formState, setFormState } = useFormContext();
   const { mode, systemMode } = useColorScheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,6 +45,8 @@ export default function App() {
   const [activeStep, setActiveStep] = React.useState(
     stepParam ? parseInt(stepParam) : 0
   );
+  const [openHelpDrawer, setOpenHelpDrawer] = React.useState(false);
+
   // Vérifier si c'est la première visite et si ce n'est pas un bot
   React.useEffect(() => {
     const hasVisitedBefore = localStorage.getItem("hasVisitedBefore");
@@ -50,33 +58,48 @@ export default function App() {
     }
   }, []);
 
-  React.useEffect(() => {
-    if (stepParam && parseInt(stepParam) !== activeStep) {
-      setActiveStep(parseInt(stepParam));
-    }
-
-    // Vérifier si les données de consommation sont disponibles pour l'étape 3
-    if (
-      !formState.seasonHourlyAnalysis ||
-      formState.seasonHourlyAnalysis.length === 0
-    ) {
-      if (activeStep === 2) {
-        handleStepChange(0);
-      }
-    }
-
-    if (activeStep === 0) {
-      import("./components/DataImport");
-    }
-    if (activeStep === 1) {
-      import("./components/Simulations");
-    }
-  }, [activeStep, stepParam, formState.seasonHourlyAnalysis]);
-
   // Scroll vers le haut à chaque changement d'étape
   React.useEffect(() => {
     scrollToTop();
   }, [activeStep]);
+
+  const { formState, setFormState } = useFormContext();
+
+  React.useEffect(() => {
+    switch (activeStep) {
+      case 1:
+        document.title =
+          "Import de votre consommation - Simulateur et comparateur de tarifs d'électricité";
+        break;
+      case 2:
+        document.title =
+          "Analyses - Simulateur et comparateur de tarifs d'électricité";
+        break;
+      case 3:
+        document.title =
+          "Simulations - Simulateur et comparateur de tarifs d'électricité";
+        break;
+      default:
+        document.title =
+          "Simulateur et comparateur de tarifs d'électricité selon vos consommations passées, gratuit, immédiat, sans inscription";
+    }
+  }, [activeStep]);
+
+  React.useEffect(() => {
+    mode &&
+      trackPageView({
+        customDimensions: [
+          {
+            id: 1,
+            value: APP_VERSION,
+          },
+          {
+            id: 2,
+            value: systemMode ?? mode,
+          },
+        ],
+      });
+  }, [activeStep, mode, trackPageView, systemMode]);
 
   const handleStepChange = (step: number) => {
     navigate(`?step=${step}`);
@@ -128,8 +151,6 @@ export default function App() {
     });
   };
 
-  const [openHelpDrawer, setOpenHelpDrawer] = React.useState(false);
-
   const handleHelpClick = () => {
     setOpenHelpDrawer(true);
     trackEvent({
@@ -143,37 +164,22 @@ export default function App() {
     setOpenHelpDrawer(false);
   };
 
+  // useEffect pour gérer les changements d'étape et les données
   React.useEffect(() => {
-    switch (activeStep) {
-      case 1:
-        document.title =
-          "Données de consommation - Simulateur et comparateur de tarifs d'électricité";
-        break;
-      case 2:
-        document.title =
-          "Simulations - Simulateur et comparateur de tarifs d'électricité";
-        break;
-      default:
-        document.title =
-          "Simulateur et comparateur de tarifs d'électricité selon vos consommations passées, gratuit, immédiat, sans inscription";
+    if (stepParam && parseInt(stepParam) !== activeStep) {
+      setActiveStep(parseInt(stepParam));
     }
-  }, [activeStep]);
 
-  React.useEffect(() => {
-    mode &&
-      trackPageView({
-        customDimensions: [
-          {
-            id: 1,
-            value: APP_VERSION,
-          },
-          {
-            id: 2,
-            value: systemMode ?? mode,
-          },
-        ],
-      });
-  }, [activeStep, mode, trackPageView, systemMode]);
+    // Vérifier si les données de consommation sont disponibles pour les étapes 2 et 3
+    if (
+      !formState.seasonHourlyAnalysis ||
+      formState.seasonHourlyAnalysis.length === 0
+    ) {
+      if (activeStep === 2 || activeStep === 3) {
+        handleStepChange(0);
+      }
+    }
+  }, [activeStep, stepParam, formState.seasonHourlyAnalysis]);
 
   const renderStepContent = () => {
     switch (activeStep) {
@@ -182,6 +188,8 @@ export default function App() {
       case 1:
         return <DataImport handleNext={handleNext} />;
       case 2:
+        return <Analyses handleNext={handleNext} />;
+      case 3:
         return <Simulations />;
       default:
         return <CurrentOfferForm handleNext={handleNextAndTrack} />;
@@ -216,6 +224,7 @@ export default function App() {
             pt: { xs: 0, sm: 6 },
             px: { xs: 2, sm: 6 },
             gap: { xs: 4, md: 4 },
+            minWidth: 0,
           }}
         >
           <Box
@@ -236,8 +245,10 @@ export default function App() {
               sx={{
                 flex: 1,
                 width: "100%",
+                maxWidth: "100%",
                 display: "flex",
                 flexDirection: "column",
+                minWidth: 0,
               }}
             >
               {renderStepContent()}

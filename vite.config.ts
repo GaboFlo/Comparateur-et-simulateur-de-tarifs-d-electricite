@@ -99,20 +99,21 @@ export default defineConfig({
     sourcemap: false,
     assetsInlineLimit: 4096,
     target: "es2015",
+    cssCodeSplit: true, // Garder le CSS séparé
     minify: "terser",
     terserOptions: {
       compress: {
         drop_console: true,
         drop_debugger: true,
         pure_funcs: ["console.log", "console.info", "console.debug"],
-        passes: 2,
-        toplevel: true,
-        unsafe: true,
-        unsafe_comps: true,
+        passes: 1, // Réduire les passes
+        toplevel: false, // Désactiver les optimisations de haut niveau
+        unsafe: false, // Désactiver les optimisations unsafe
+        unsafe_comps: false, // Désactiver les comparaisons unsafe
       },
       mangle: {
         safari10: true,
-        toplevel: true,
+        toplevel: false, // Désactiver le mangling de haut niveau
       },
       format: {
         comments: false,
@@ -120,14 +121,6 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ["react", "react-dom"],
-          mui: ["@mui/material", "@mui/icons-material", "@mui/system"],
-          charts: ["@mui/x-charts"],
-          utils: ["axios", "jszip"],
-          datePickers: ["@mui/x-date-pickers", "@mui/x-date-pickers-pro"],
-          matomo: ["@jonkoops/matomo-tracker-react"],
-        },
         assetFileNames: (assetInfo) => {
           const name = assetInfo.name;
           if (!name) return "assets/[name]-[hash][extname]";
@@ -145,7 +138,7 @@ export default defineConfig({
         entryFileNames: "assets/js/[name]-[hash].js",
       },
     },
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 2000,
   },
   define: {
     "process.env": {},
