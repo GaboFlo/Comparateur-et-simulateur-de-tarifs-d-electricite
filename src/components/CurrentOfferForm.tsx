@@ -1,9 +1,11 @@
 import { useMatomo } from "@jonkoops/matomo-tracker-react";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import BusinessIcon from "@mui/icons-material/Business";
-import ElectricMeterIcon from "@mui/icons-material/ElectricMeter";
-import SettingsIcon from "@mui/icons-material/Settings";
+import {
+  AccessTime as AccessTimeIcon,
+  AccountBalance as AccountBalanceIcon,
+  Business as BusinessIcon,
+  ElectricMeter as ElectricMeterIcon,
+  Settings as SettingsIcon,
+} from "@mui/icons-material";
 import { Box, Grid, Stack, Typography } from "@mui/material";
 import { useFormContext } from "../context/FormContext";
 import allOffersFile from "../statics/price_mapping.json";

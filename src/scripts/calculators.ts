@@ -158,6 +158,21 @@ export function calculatePrices({
   hpHcData: HpHcSlot[];
   provider: ProviderType;
 }): FullCalculatedData {
+  // Validation de sécurité des données d'entrée
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    throw new Error("Données invalides ou vides");
+  }
+
+  if (!hpHcData || !Array.isArray(hpHcData) || hpHcData.length === 0) {
+    throw new Error("Configuration HP/HC invalide");
+  }
+
+  // Validation de la taille des données pour éviter les attaques par déni de service
+  const MAX_DATA_SIZE = 100000; // 100k enregistrements maximum
+  if (data.length > MAX_DATA_SIZE) {
+    throw new Error(`Trop de données (${data.length} > ${MAX_DATA_SIZE})`);
+  }
+
   const priceMappingData = price_mapping as PriceMappingFile;
   const option = priceMappingData.find(
     (item) =>
@@ -252,6 +267,25 @@ export function calculateRowSummary({
   provider,
   overridingHpHcKey,
 }: FullCalculatePricesInterface): ComparisonTableInterfaceRow {
+  // Validation de sécurité des paramètres
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    throw new Error("Données de consommation invalides");
+  }
+
+  if (!dateRange || !Array.isArray(dateRange) || dateRange.length !== 2) {
+    throw new Error("Plage de dates invalide");
+  }
+
+  if (!dateRange[0] || !dateRange[1] || dateRange[0] >= dateRange[1]) {
+    throw new Error("Plage de dates invalide (début >= fin)");
+  }
+
+  // Validation de la plage de dates (maximum 2 ans)
+  const maxDateRange = 2 * 368 * 24 * 60 * 60 * 1000; // 2 ans en millisecondes
+  if (dateRange[1].getTime() - dateRange[0].getTime() > maxDateRange) {
+    throw new Error("Plage de dates trop importante (maximum 2 ans)");
+  }
+
   const calculatedData = calculatePrices({
     data,
     offerType,
@@ -266,6 +300,11 @@ export function calculateRowSummary({
     optionKey,
     provider
   );
+
+  // Validation du coût mensuel
+  if (monthlyCost <= 0 || !isFinite(monthlyCost)) {
+    throw new Error("Coût mensuel invalide");
+  }
 
   const fullSubscriptionCost = Math.round(
     (monthlyCost *
