@@ -3,4 +3,3 @@ node_modules
 build/*
 src/assets/tempo.json
 .vscode/*
-build-test/*
