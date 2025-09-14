@@ -1,11 +1,5 @@
 import dayjs from "dayjs";
-import React, {
-  createContext,
-  ReactNode,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import React, { createContext, ReactNode, useMemo, useState } from "react";
 import {
   ComparisonTableInterfaceRow,
   ConsumptionLoadCurveData,
