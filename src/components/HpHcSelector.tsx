@@ -43,7 +43,11 @@ const HpHcSlotSelector = ({ readOnly = false }: Readonly<Props>) => {
         return { ...prevState, hpHcConfig: defaultHpHc };
       });
     }
-    readOnly ? setTimeRanges(formState.hpHcConfig ?? []) : fetchData();
+    if (readOnly) {
+      setTimeRanges(formState.hpHcConfig ?? []);
+    } else {
+      fetchData();
+    }
 
     // Animation d'apparition
     setTimeout(() => setIsLoaded(true), 100);

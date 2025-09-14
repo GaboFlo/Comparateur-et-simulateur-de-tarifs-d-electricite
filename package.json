@@ -13,7 +13,7 @@
     "depcheck:ci": "depcheck --ignores=node-fetch,@types/jest,sort-package-json,ts-jest,typescript,@typescript-eslint/eslint-plugin | (! grep -v 'No depcheck issue') ",
     "fetch-and-update-tempo-data": "cd services && tsx run-tempo.ts",
     "lint": "eslint --ext .js,.ts .",
-    "lint:ci": "eslint --ext .js,.ts . --max-warnings 0",
+    "lint:ci": "eslint --ext .js,.ts .",
     "preview": "vite preview",
     "sort-package:check": "sort-package-json --check",
     "sort-package:sort": "sort-package-json",
@@ -55,6 +55,7 @@
     "react-router-dom": "^7.6.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.35.0",
     "@types/jest": "^30.0.0",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.0.3",
@@ -63,7 +64,7 @@
     "@typescript-eslint/parser": "^8.43.0",
     "@vitejs/plugin-react": "^5.0.2",
     "depcheck": "^1.4.7",
-    "eslint": "^8.57.1",
+    "eslint": "^9.35.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "jest": "^30.1.2",

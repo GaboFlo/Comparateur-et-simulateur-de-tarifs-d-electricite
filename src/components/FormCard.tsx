@@ -8,7 +8,7 @@ interface FormCardProps {
   children: React.ReactNode;
   icon?: React.ReactNode;
   variant?: "default" | "highlighted";
-  [key: string]: any; // Permettre les props supplémentaires
+  [key: string]: unknown; // Permettre les props supplémentaires
 }
 
 const MotionCard = motion.create(Card);
