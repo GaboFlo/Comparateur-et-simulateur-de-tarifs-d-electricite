@@ -6,10 +6,9 @@ async function fetchTempoData() {
   try {
     const response = await axios
       .get(
-        "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023"
+        "https://www.api-couleur-tempo.fr/api/joursTempo?periode%5B%5D=2024-2025&periode%5B%5D=2023-2024&periode%5B%5D=2022-2023&periode%5B%5D=2025-2026"
       )
       .then((res) => res.data);
-
     return response as TempoDates;
   } catch {
     throw new Error("Error fetching tempo data");
