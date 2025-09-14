@@ -86,7 +86,7 @@ export default function App() {
   }, [activeStep]);
 
   React.useEffect(() => {
-    mode &&
+    if (mode) {
       trackPageView({
         customDimensions: [
           {
@@ -99,6 +99,7 @@ export default function App() {
           },
         ],
       });
+    }
   }, [activeStep, mode, trackPageView, systemMode]);
 
   const handleStepChange = (step: number) => {

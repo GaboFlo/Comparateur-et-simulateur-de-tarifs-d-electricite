@@ -1,6 +1,6 @@
 import { createTheme, Shadows } from "@mui/material/styles";
 
-declare module "@mui/material/styles/createPalette" {
+declare module "@mui/material/styles" {
   interface ColorRange {
     50: string;
     100: string;
@@ -13,8 +13,6 @@ declare module "@mui/material/styles/createPalette" {
     800: string;
     900: string;
   }
-
-  interface PaletteColor extends ColorRange {}
 
   interface Palette {
     baseShadow: string;
