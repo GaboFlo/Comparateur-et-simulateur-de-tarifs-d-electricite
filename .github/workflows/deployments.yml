@@ -46,7 +46,7 @@ jobs:
           node ./services/injectVersion.js $VERSION
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: frontend-build
           path: build
