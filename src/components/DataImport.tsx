@@ -19,7 +19,10 @@ import * as React from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "../context/FormContext";
 import { calculateRowSummary } from "../scripts/calculators";
-import { parseCsvToConsumptionLoadCurveData } from "../scripts/csvParser";
+import {
+  parseCsvToConsumptionLoadCurveData,
+  parseEnedisCsvToConsumptionLoadCurveData,
+} from "../scripts/csvParser";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
 import { findFirstAndLastDate } from "../scripts/utils";
 import hphc_data from "../statics/hp_hc.json";
@@ -35,15 +38,17 @@ import {
 } from "../types";
 import ActionButton from "./ActionButton";
 import FormCard from "./FormCard";
+import FormField from "./FormField";
 import TooltipModal from "./TooltipModal";
 
 interface Props {
   handleNext: () => void;
 }
 
-const processFileData = async (file: File) => {
-  // Validation de sécurité pour les fichiers
-  const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
+type ImportMode = "edf" | "enedis";
+
+const processEdfZipFile = async (file: File) => {
+  const MAX_FILE_SIZE = 50 * 1024 * 1024;
   if (file.size > MAX_FILE_SIZE) {
     throw new Error("Le fichier est trop volumineux (maximum 50MB)");
   }
@@ -51,7 +56,6 @@ const processFileData = async (file: File) => {
   const zip = new JSZip();
   const zipContent = await zip.loadAsync(file);
 
-  // Validation du contenu ZIP
   const csvFiles = Object.values(zipContent.files).filter(
     (f) =>
       f.name.includes("puissances-atteintes-30min") && f.name.endsWith(".csv")
@@ -67,14 +71,37 @@ const processFileData = async (file: File) => {
 
   const csvFile = csvFiles[0];
 
-  // Validation de la taille du contenu CSV
   const csvContent = await csvFile.async("string");
   if (csvContent.length > 10 * 1024 * 1024) {
-    // 10MB
     throw new Error("Le contenu CSV est trop volumineux");
   }
 
   const parsedData = parseCsvToConsumptionLoadCurveData(csvContent);
+  const analyzedDateRange = findFirstAndLastDate(parsedData);
+  const seasonData = analyseHourByHourBySeason({
+    data: parsedData,
+    dateRange: analyzedDateRange,
+  });
+  const totalConsumption = seasonData.reduce(
+    (acc, cur) => acc + cur.seasonTotalSum,
+    0
+  );
+
+  return { parsedData, analyzedDateRange, seasonData, totalConsumption };
+};
+
+const processEnedisCsvFile = async (file: File) => {
+  const MAX_FILE_SIZE = 50 * 1024 * 1024;
+  if (file.size > MAX_FILE_SIZE) {
+    throw new Error("Le fichier est trop volumineux (maximum 50MB)");
+  }
+
+  const csvContent = await file.text();
+  if (csvContent.length > 10 * 1024 * 1024) {
+    throw new Error("Le contenu CSV est trop volumineux");
+  }
+
+  const parsedData = parseEnedisCsvToConsumptionLoadCurveData(csvContent);
   const analyzedDateRange = findFirstAndLastDate(parsedData);
   const seasonData = analyseHourByHourBySeason({
     data: parsedData,
@@ -118,6 +145,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   const [error, setError] = React.useState<string | null>(null);
   const [isDataProcessed, setIsDataProcessed] = React.useState(false);
   const [isCalculating, setIsCalculating] = React.useState(false);
+  const [importMode, setImportMode] = React.useState<ImportMode>("edf");
 
   const { formState, setFormState } = useFormContext();
   const { trackEvent } = useMatomo();
@@ -147,9 +175,14 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: {
-      "application/zip": [".zip"],
-    },
+    accept:
+      importMode === "edf"
+        ? {
+            "application/zip": [".zip"],
+          }
+        : {
+            "text/csv": [".csv"],
+          },
     maxFiles: 1,
     disabled: isProcessing || isCalculating,
     onDrop: React.useCallback(
@@ -161,7 +194,10 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
         setIsDataProcessed(false);
         const file = acceptedFiles[0];
 
-        processFileData(file)
+        const processFile =
+          importMode === "edf" ? processEdfZipFile : processEnedisCsvFile;
+
+        processFile(file)
           .then(
             ({
               parsedData,
@@ -183,7 +219,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
               trackEvent({
                 category: "data-import",
                 action: "success",
-                name: file.name,
+                name: `${importMode}-${file.name}`,
               });
             }
           )
@@ -205,7 +241,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
             setIsProcessing(false);
           });
       },
-      [trackEvent, updateFormState]
+      [trackEvent, updateFormState, importMode]
     ),
   });
 
@@ -325,29 +361,106 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   return (
     <Stack spacing={4}>
       <FormCard
+        title="Méthode d'import"
+        subtitle="Sélectionnez la méthode d'import de vos données"
+        icon={<AssignmentIcon />}
+      >
+        <FormField
+          label="Méthode d'import"
+          type="select"
+          value={importMode}
+          onChange={(value) => {
+            setImportMode(value as ImportMode);
+            setError(null);
+            setIsDataProcessed(false);
+          }}
+          options={[
+            { value: "edf", label: "EDF (ZIP)" },
+            { value: "enedis", label: "Enedis (CSV)" },
+          ]}
+        />
+      </FormCard>
+
+      <FormCard
         title="Instructions d'import"
         subtitle="Suivez ces étapes pour récupérer vos données"
         icon={<AssignmentIcon />}
       >
         <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
           <Box sx={{ flex: 1 }}>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              1. Connectez-vous à votre espace EDF sur{" "}
-              <a
-                href="https://suiviconso.edf.fr/comprendre"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                suiviconso.edf.fr
-              </a>
-            </Typography>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              2. Téléchargez votre consommation par pallier de 30 minutes
-              (format ZIP)
-            </Typography>
-            <Typography variant="body2">
-              3. Importez directement le fichier ZIP téléchargé ci-dessous
-            </Typography>
+            {importMode === "edf" ? (
+              <>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  1. Connectez-vous à votre espace EDF sur{" "}
+                  <a
+                    href="https://suiviconso.edf.fr/comprendre"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    suiviconso.edf.fr
+                  </a>
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  2. Téléchargez votre consommation par pallier de 30 minutes
+                  (format ZIP)
+                </Typography>
+                <Typography variant="body2">
+                  3. Importez directement le fichier ZIP téléchargé ci-dessous
+                </Typography>
+              </>
+            ) : (
+              <>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  1. Installez{" "}
+                  <a
+                    href="https://chromewebstore.google.com/detail/conso-downloader/geldaniiglcfekimaghpdiiabjaflllp"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    l'extension Chrome
+                  </a>{" "}
+                  développée par{" "}
+                  <a
+                    href="https://github.com/bokub/conso-api"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Bokub
+                  </a>
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  2. Rendez-vous sur{" "}
+                  <a
+                    href="https://mon-compte-particulier.enedis.fr/visualiser-vos-mesures-consommation"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    votre espace client Enedis
+                  </a>
+                  , dans la section "Suivre ma consommation" :{" "}
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  3. Un nouveau bouton gris apparaît en bas à gauche de la page
+                  avec le texte <b>Télécharger tout mon historique</b>
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  4. Sélectionnez l'option "Heures", puis cliquez sur
+                  "Visualiser" pour afficher vos données horaires
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  5. Une fois les données horaires affichées, le bouton devient
+                  bleu et cliquable
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}>
+                  6. Cliquez dessus, patientez quelques secondes : votre fichier
+                  CSV contenant tout votre historique sera téléchargé
+                  automatiquement
+                </Typography>
+                <Typography variant="body2">
+                  7. Importez directement le fichier CSV téléchargé ci-dessous
+                </Typography>
+              </>
+            )}
           </Box>
           <IconButton
             onClick={handleTooltipCsvOpen}
@@ -361,7 +474,11 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
 
       <FormCard
         title="Zone de dépôt"
-        subtitle="Glissez-déposez votre fichier ZIP ou cliquez pour sélectionner"
+        subtitle={
+          importMode === "edf"
+            ? "Glissez-déposez votre fichier ZIP ou cliquez pour sélectionner"
+            : "Glissez-déposez votre fichier CSV ou cliquez pour sélectionner"
+        }
         icon={<CloudUploadIcon />}
       >
         <Box
@@ -447,12 +564,15 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                 <Typography variant="h6" color="text.primary">
                   {isDragActive
                     ? "Déposez le fichier ici"
-                    : "Sélectionnez votre fichier ZIP"}
+                    : importMode === "edf"
+                    ? "Sélectionnez votre fichier ZIP"
+                    : "Sélectionnez votre fichier CSV"}
                 </Typography>
 
                 <Typography variant="body2" color="text.secondary">
-                  Format accepté : fichier ZIP directement issu du
-                  téléchargement EDF
+                  {importMode === "edf"
+                    ? "Format accepté : fichier ZIP directement issu du téléchargement EDF"
+                    : "Format accepté : fichier CSV Enedis avec colonnes debut;fin;kW"}
                 </Typography>
 
                 <ActionButton
@@ -484,12 +604,26 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
       )}
 
       <TooltipModal
-        title="Comment télécharger votre consommation ?"
-        description="Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/><br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."
+        title={
+          importMode === "edf"
+            ? "Comment télécharger votre consommation EDF ?"
+            : "Comment télécharger votre consommation Enedis ?"
+        }
+        description={
+          importMode === "edf"
+            ? "Rendez-vous sur votre espace EDF et suivez les instructions pour télécharger votre consommation depuis https://suiviconso.edf.fr/comprendre .<br/><br/> Pensez à bien exporter la conso par heure, en kWh. <br/> Vous pouvez directement importer le fichier ZIP téléchargé."
+            : "Rendez-vous sur votre espace Enedis et téléchargez votre courbe de charge au format CSV.<br/><br/> Plus d'informations dans la documentation de l'extension Chrome : https://chromewebstore.google.com/detail/conso-downloader/geldaniiglcfekimaghpdiiabjaflllp"
+        }
         open={openTooltipCsv}
         handleClose={handleTooltipCsvClose}
-        imgPath="/edf-download.png"
-        imgDescription="Page de téléchargement de la consommation"
+        imgPath={
+          importMode === "edf" ? "/edf-download.png" : "/enedis-download.png"
+        }
+        imgDescription={
+          importMode === "edf"
+            ? "Page de téléchargement de la consommation"
+            : undefined
+        }
       />
 
       <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
