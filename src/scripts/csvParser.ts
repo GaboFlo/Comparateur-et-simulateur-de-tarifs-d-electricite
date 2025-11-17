@@ -109,6 +109,53 @@ export function parseCsvToConsumptionLoadCurveData(
   return allData;
 }
 
+function processEnedisDataLine(line: string): ConsumptionLoadCurveData | null {
+  const parts = line.split(";");
+  if (parts.length < 3) {
+    return null;
+  }
+
+  let debutStr = parts[0].trim();
+  const finStr = parts[1].trim();
+  let kwStr = parts[2].trim();
+
+  if (!debutStr || !finStr || !kwStr) {
+    return null;
+  }
+
+  debutStr = debutStr.replace(/(?:^")|(?:"$)/g, "");
+  kwStr = kwStr.replace(/(?:^")|(?:"$)/g, "");
+  const numericValueKwh = Number(kwStr.replace(",", "."));
+  if (
+    isNaN(numericValueKwh) ||
+    !isFinite(numericValueKwh) ||
+    numericValueKwh < 0
+  ) {
+    return null;
+  }
+  const numericValue = numericValueKwh * 1000;
+
+  const dateRegex = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})$/;
+  if (!dateRegex.test(debutStr)) {
+    return null;
+  }
+
+  const date = new Date(debutStr);
+  if (isNaN(date.getTime())) {
+    return null;
+  }
+
+  if (![0, 30].includes(date.getMinutes())) {
+    console.warn("date étrange", date);
+    return null;
+  }
+
+  return {
+    recordedAt: dayjs(date).format("YYYY-MM-DDTHH:mm:ssZ"),
+    value: numericValue,
+  };
+}
+
 export function parseEnedisCsvToConsumptionLoadCurveData(
   csvString: string
 ): ConsumptionLoadCurveData[] {
@@ -138,50 +185,10 @@ export function parseEnedisCsvToConsumptionLoadCurveData(
       continue;
     }
 
-    const parts = line.split(";");
-    if (parts.length < 3) {
-      continue;
+    const dataItem = processEnedisDataLine(line);
+    if (dataItem) {
+      allData.push(dataItem);
     }
-
-    let debutStr = parts[0].trim();
-    const finStr = parts[1].trim();
-    let kwStr = parts[2].trim();
-
-    if (!debutStr || !finStr || !kwStr) {
-      continue;
-    }
-
-    debutStr = debutStr.replace(/^"|"$/g, "");
-    kwStr = kwStr.replace(/^"|"$/g, "");
-    const numericValueKwh = Number(kwStr.replace(",", "."));
-    if (
-      isNaN(numericValueKwh) ||
-      !isFinite(numericValueKwh) ||
-      numericValueKwh < 0
-    ) {
-      continue;
-    }
-    const numericValue = numericValueKwh * 1000;
-
-    const dateRegex = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})$/;
-    if (!dateRegex.test(debutStr)) {
-      continue;
-    }
-
-    const date = new Date(debutStr);
-    if (isNaN(date.getTime())) {
-      continue;
-    }
-
-    if (![0, 30].includes(date.getMinutes())) {
-      console.warn("date étrange", date);
-      continue;
-    }
-
-    allData.push({
-      recordedAt: dayjs(date).format("YYYY-MM-DDTHH:mm:ssZ"),
-      value: numericValue,
-    });
   }
 
   if (allData.length === 0) {

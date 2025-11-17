@@ -174,15 +174,21 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
     [setFormState]
   );
 
+  const acceptTypes:
+    | { "application/zip": string[] }
+    | { "text/csv": string[] } = React.useMemo(() => {
+    if (importMode === "edf") {
+      return {
+        "application/zip": [".zip"],
+      };
+    }
+    return {
+      "text/csv": [".csv"],
+    };
+  }, [importMode]);
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept:
-      importMode === "edf"
-        ? {
-            "application/zip": [".zip"],
-          }
-        : {
-            "text/csv": [".csv"],
-          },
+    accept: acceptTypes,
     maxFiles: 1,
     disabled: isProcessing || isCalculating,
     onDrop: React.useCallback(
@@ -544,6 +550,15 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
               );
             }
 
+            const getUploadText = () => {
+              if (isDragActive) {
+                return "Déposez le fichier ici";
+              }
+              return importMode === "edf"
+                ? "Sélectionnez votre fichier ZIP"
+                : "Sélectionnez votre fichier CSV";
+            };
+
             return (
               <Stack spacing={2} alignItems="center">
                 <Box
@@ -562,11 +577,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                 </Box>
 
                 <Typography variant="h6" color="text.primary">
-                  {isDragActive
-                    ? "Déposez le fichier ici"
-                    : importMode === "edf"
-                    ? "Sélectionnez votre fichier ZIP"
-                    : "Sélectionnez votre fichier CSV"}
+                  {getUploadText()}
                 </Typography>
 
                 <Typography variant="body2" color="text.secondary">
