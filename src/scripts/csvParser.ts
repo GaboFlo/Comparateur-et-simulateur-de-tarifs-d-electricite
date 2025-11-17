@@ -195,7 +195,5 @@ export function parseEnedisCsvToConsumptionLoadCurveData(
     throw new Error("Aucune donnée valide trouvée dans le fichier CSV Enedis");
   }
 
-  console.log("allData", allData.pop());
-
   return allData;
 }
