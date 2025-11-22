@@ -38,7 +38,7 @@ export default function HourlySeasonChart() {
     <>
       {!formState.seasonHourlyAnalysis ? (
         <Typography>
-          Aucune donnée à afficher. Veuillez importer un fichier EDF.
+          Aucune donnée à afficher. Veuillez importer un fichier EDF ou Enedis.
         </Typography>
       ) : !isChartReady ? (
         <div
