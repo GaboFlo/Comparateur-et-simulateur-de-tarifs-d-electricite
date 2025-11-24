@@ -1,4 +1,8 @@
 import dayjs from "dayjs";
+import {
+  downloadConsumptionDataAsCsv,
+  downloadCsvString,
+} from "../utils/csvDownload";
 
 export interface ConsumptionLoadCurveData {
   recordedAt: string;
@@ -83,6 +87,9 @@ export function parseCsvToConsumptionLoadCurveData(
 ): ConsumptionLoadCurveData[] {
   validateCsvInput(csvString);
 
+  const timestamp = dayjs().format("YYYY-MM-DD_HH-mm-ss");
+  downloadCsvString(csvString, `edf-initial-${timestamp}.csv`);
+
   const lines = csvString.trim().split("\n");
   const dataLines = lines.slice(3);
   const allData: ConsumptionLoadCurveData[] = [];
@@ -105,6 +112,8 @@ export function parseCsvToConsumptionLoadCurveData(
       allData.push(dataItem);
     }
   }
+
+  downloadConsumptionDataAsCsv(allData, `edf-parsed-${timestamp}.csv`);
 
   return allData;
 }
@@ -161,6 +170,9 @@ export function parseEnedisCsvToConsumptionLoadCurveData(
 ): ConsumptionLoadCurveData[] {
   validateCsvInput(csvString);
 
+  const timestamp = dayjs().format("YYYY-MM-DD_HH-mm-ss");
+  downloadCsvString(csvString, `enedis-initial-${timestamp}.csv`);
+
   const lines = csvString.trim().split("\n");
   if (lines.length < 2) {
     throw new Error("Le fichier CSV Enedis est vide ou invalide");
@@ -194,6 +206,8 @@ export function parseEnedisCsvToConsumptionLoadCurveData(
   if (allData.length === 0) {
     throw new Error("Aucune donnée valide trouvée dans le fichier CSV Enedis");
   }
+
+  downloadConsumptionDataAsCsv(allData, `enedis-parsed-${timestamp}.csv`);
 
   return allData;
 }
