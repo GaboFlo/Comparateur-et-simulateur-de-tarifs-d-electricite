@@ -381,8 +381,8 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
             setIsDataProcessed(false);
           }}
           options={[
-            { value: "edf", label: "EDF (ZIP)" },
-            { value: "enedis", label: "Enedis (CSV)" },
+            { value: "edf", label: "EDF" },
+            { value: "enedis", label: "Enedis" },
           ]}
         />
       </FormCard>
