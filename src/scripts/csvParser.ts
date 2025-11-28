@@ -84,7 +84,7 @@ export function parseCsvToConsumptionLoadCurveData(
   validateCsvInput(csvString);
 
   const lines = csvString.trim().split("\n");
-  const dataLines = lines.slice(3); // Skip header lines
+  const dataLines = lines.slice(3);
   const allData: ConsumptionLoadCurveData[] = [];
   let currentDateString = "";
 
@@ -104,6 +104,95 @@ export function parseCsvToConsumptionLoadCurveData(
     if (dataItem) {
       allData.push(dataItem);
     }
+  }
+
+  return allData;
+}
+
+function processEnedisDataLine(line: string): ConsumptionLoadCurveData | null {
+  const parts = line.split(";");
+  if (parts.length < 3) {
+    return null;
+  }
+
+  let debutStr = parts[0].trim();
+  const finStr = parts[1].trim();
+  let kwStr = parts[2].trim();
+
+  if (!debutStr || !finStr || !kwStr) {
+    return null;
+  }
+
+  debutStr = debutStr.replace(/(?:^")|(?:"$)/g, "");
+  kwStr = kwStr.replace(/(?:^")|(?:"$)/g, "");
+  const numericValueKwh = Number(kwStr.replace(",", "."));
+  if (
+    isNaN(numericValueKwh) ||
+    !isFinite(numericValueKwh) ||
+    numericValueKwh < 0
+  ) {
+    return null;
+  }
+  const numericValue = numericValueKwh * 1000;
+
+  const dateRegex = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})$/;
+  if (!dateRegex.test(debutStr)) {
+    return null;
+  }
+
+  const date = new Date(debutStr);
+  if (isNaN(date.getTime())) {
+    return null;
+  }
+
+  if (![0, 30].includes(date.getMinutes())) {
+    console.warn("date étrange", date);
+    return null;
+  }
+
+  return {
+    recordedAt: dayjs(date).format("YYYY-MM-DDTHH:mm:ssZ"),
+    value: numericValue,
+  };
+}
+
+export function parseEnedisCsvToConsumptionLoadCurveData(
+  csvString: string
+): ConsumptionLoadCurveData[] {
+  validateCsvInput(csvString);
+
+  const lines = csvString.trim().split("\n");
+  if (lines.length < 2) {
+    throw new Error("Le fichier CSV Enedis est vide ou invalide");
+  }
+
+  const headerLine = lines[0].trim().toLowerCase();
+  if (
+    !headerLine.includes("debut") ||
+    !headerLine.includes("fin") ||
+    !headerLine.includes("kw")
+  ) {
+    throw new Error(
+      "Le format du fichier CSV Enedis est invalide. Colonnes attendues : debut;fin;kW"
+    );
+  }
+
+  const allData: ConsumptionLoadCurveData[] = [];
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) {
+      continue;
+    }
+
+    const dataItem = processEnedisDataLine(line);
+    if (dataItem) {
+      allData.push(dataItem);
+    }
+  }
+
+  if (allData.length === 0) {
+    throw new Error("Aucune donnée valide trouvée dans le fichier CSV Enedis");
   }
 
   return allData;
