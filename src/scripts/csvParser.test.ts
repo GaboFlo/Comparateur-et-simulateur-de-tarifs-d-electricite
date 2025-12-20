@@ -153,6 +153,259 @@ Date et heure de rel趥 par le distributeur;Puissance atteinte (W);Nature de la 
     const result = parseCsvToConsumptionLoadCurveData(csvString);
     expect(result).toEqual(expectedData);
   });
+  it("should parse a single day of data correctly - suspicious bug", () => {
+    const csvString = `R飡pitulatif de mes puissances atteintes en W
+
+Date et heure de rel趥 par le distributeur;Puissance atteinte (W);Nature de la donn饊
+07/11/2025;;
+00:00:00;588;R饬le
+23:30:00;420;R饬le
+23:00:00;1840;R饬le
+22:30:00;1084;R饬le
+22:00:00;754;R饬le
+21:30:00;936;R饬le
+21:00:00;2100;R饬le
+20:30:00;336;R饬le
+20:00:00;410;R饬le
+19:30:00;612;R饬le
+19:00:00;394;R饬le
+18:30:00;352;R饬le
+18:00:00;670;R饬le
+17:30:00;378;R饬le
+17:00:00;426;R饬le
+16:30:00;332;R饬le
+16:00:00;324;R饬le
+15:30:00;364;R饬le
+15:00:00;488;R饬le
+14:30:00;438;R饬le
+14:00:00;680;R饬le
+13:30:00;438;R饬le
+13:00:00;468;R饬le
+12:30:00;318;R饬le
+12:00:00;724;R饬le
+11:30:00;466;R饬le
+11:00:00;348;R饬le
+10:30:00;524;R饬le
+10:00:00;680;R饬le
+09:30:00;376;R饬le
+09:00:00;802;R饬le
+08:30:00;936;R饬le
+08:00:00;332;R饬le
+07:30:00;824;R饬le
+07:00:00;68;R饬le
+06:30:00;56;R饬le
+06:00:00;146;R饬le
+05:30:00;68;R饬le
+05:00:00;150;R饬le
+04:30:00;328;R饬le
+04:00:00;68;R饬le
+03:30:00;148;R饬le
+03:00:00;68;R饬le
+02:30:00;62;R饬le
+02:00:00;100;R饬le
+01:30:00;334;R饬le
+01:00:00;68;R饬le
+00:30:00;72;R饬le
+`;
+
+    const expectedData: ConsumptionLoadCurveData[] = [
+      {
+        recordedAt: "2025-11-07T00:00:00+01:00",
+        value: 588,
+      },
+      {
+        recordedAt: "2025-11-07T23:30:00+01:00",
+        value: 420,
+      },
+      {
+        recordedAt: "2025-11-07T23:00:00+01:00",
+        value: 1840,
+      },
+      {
+        recordedAt: "2025-11-07T22:30:00+01:00",
+        value: 1084,
+      },
+      {
+        recordedAt: "2025-11-07T22:00:00+01:00",
+        value: 754,
+      },
+      {
+        recordedAt: "2025-11-07T21:30:00+01:00",
+        value: 936,
+      },
+      {
+        recordedAt: "2025-11-07T21:00:00+01:00",
+        value: 2100,
+      },
+      {
+        recordedAt: "2025-11-07T20:30:00+01:00",
+        value: 336,
+      },
+      {
+        recordedAt: "2025-11-07T20:00:00+01:00",
+        value: 410,
+      },
+      {
+        recordedAt: "2025-11-07T19:30:00+01:00",
+        value: 612,
+      },
+      {
+        recordedAt: "2025-11-07T19:00:00+01:00",
+        value: 394,
+      },
+      {
+        recordedAt: "2025-11-07T18:30:00+01:00",
+        value: 352,
+      },
+      {
+        recordedAt: "2025-11-07T18:00:00+01:00",
+        value: 670,
+      },
+      {
+        recordedAt: "2025-11-07T17:30:00+01:00",
+        value: 378,
+      },
+      {
+        recordedAt: "2025-11-07T17:00:00+01:00",
+        value: 426,
+      },
+      {
+        recordedAt: "2025-11-07T16:30:00+01:00",
+        value: 332,
+      },
+      {
+        recordedAt: "2025-11-07T16:00:00+01:00",
+        value: 324,
+      },
+      {
+        recordedAt: "2025-11-07T15:30:00+01:00",
+        value: 364,
+      },
+      {
+        recordedAt: "2025-11-07T15:00:00+01:00",
+        value: 488,
+      },
+      {
+        recordedAt: "2025-11-07T14:30:00+01:00",
+        value: 438,
+      },
+      {
+        recordedAt: "2025-11-07T14:00:00+01:00",
+        value: 680,
+      },
+      {
+        recordedAt: "2025-11-07T13:30:00+01:00",
+        value: 438,
+      },
+      {
+        recordedAt: "2025-11-07T13:00:00+01:00",
+        value: 468,
+      },
+      {
+        recordedAt: "2025-11-07T12:30:00+01:00",
+        value: 318,
+      },
+      {
+        recordedAt: "2025-11-07T12:00:00+01:00",
+        value: 724,
+      },
+      {
+        recordedAt: "2025-11-07T11:30:00+01:00",
+        value: 466,
+      },
+      {
+        recordedAt: "2025-11-07T11:00:00+01:00",
+        value: 348,
+      },
+      {
+        recordedAt: "2025-11-07T10:30:00+01:00",
+        value: 524,
+      },
+      {
+        recordedAt: "2025-11-07T10:00:00+01:00",
+        value: 680,
+      },
+      {
+        recordedAt: "2025-11-07T09:30:00+01:00",
+        value: 376,
+      },
+      {
+        recordedAt: "2025-11-07T09:00:00+01:00",
+        value: 802,
+      },
+      {
+        recordedAt: "2025-11-07T08:30:00+01:00",
+        value: 936,
+      },
+      {
+        recordedAt: "2025-11-07T08:00:00+01:00",
+        value: 332,
+      },
+      {
+        recordedAt: "2025-11-07T07:30:00+01:00",
+        value: 824,
+      },
+      {
+        recordedAt: "2025-11-07T07:00:00+01:00",
+        value: 68,
+      },
+      {
+        recordedAt: "2025-11-07T06:30:00+01:00",
+        value: 56,
+      },
+      {
+        recordedAt: "2025-11-07T06:00:00+01:00",
+        value: 146,
+      },
+      {
+        recordedAt: "2025-11-07T05:30:00+01:00",
+        value: 68,
+      },
+      {
+        recordedAt: "2025-11-07T05:00:00+01:00",
+        value: 150,
+      },
+      {
+        recordedAt: "2025-11-07T04:30:00+01:00",
+        value: 328,
+      },
+      {
+        recordedAt: "2025-11-07T04:00:00+01:00",
+        value: 68,
+      },
+      {
+        recordedAt: "2025-11-07T03:30:00+01:00",
+        value: 148,
+      },
+      {
+        recordedAt: "2025-11-07T03:00:00+01:00",
+        value: 68,
+      },
+      {
+        recordedAt: "2025-11-07T02:30:00+01:00",
+        value: 62,
+      },
+      {
+        recordedAt: "2025-11-07T02:00:00+01:00",
+        value: 100,
+      },
+      {
+        recordedAt: "2025-11-07T01:30:00+01:00",
+        value: 334,
+      },
+      {
+        recordedAt: "2025-11-07T01:00:00+01:00",
+        value: 68,
+      },
+      {
+        recordedAt: "2025-11-07T00:30:00+01:00",
+        value: 72,
+      },
+    ];
+
+    const result = parseCsvToConsumptionLoadCurveData(csvString);
+    expect(result).toEqual(expectedData);
+  });
 });
 
 describe("parseEnedisCsvToConsumptionLoadCurveData", () => {
