@@ -42,8 +42,8 @@ export default function HpHcSeasonChart() {
           Répartition de la consommation HP/HC par saison
         </Typography>
         <Typography>
-          Aucune donnée à afficher. Veuillez importer un fichier EDF et
-          configurer les heures creuses/pleines.
+          Aucune donnée à afficher. Veuillez importer un fichier EDF ou Enedis
+          et configurer les heures creuses/pleines.
         </Typography>
       </Paper>
     );
