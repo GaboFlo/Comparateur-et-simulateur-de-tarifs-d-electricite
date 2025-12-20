@@ -5,6 +5,11 @@ export interface ConsumptionLoadCurveData {
   value: number;
 }
 
+export interface ParsedCsvResult {
+  data: ConsumptionLoadCurveData[];
+  missingDates: string[]; // dates in DD/MM/YYYY format
+}
+
 // Fonction utilitaire pour valider les données CSV
 function validateCsvInput(csvString: string): void {
   if (!csvString || typeof csvString !== "string") {
@@ -80,13 +85,15 @@ function processDataLine(
 
 export function parseCsvToConsumptionLoadCurveData(
   csvString: string
-): ConsumptionLoadCurveData[] {
+): ParsedCsvResult {
   validateCsvInput(csvString);
 
   const lines = csvString.trim().split("\n");
-  const dataLines = lines.slice(3); // Skip header lines
+  const dataLines = lines.slice(3);
   const allData: ConsumptionLoadCurveData[] = [];
   let currentDateString = "";
+  const datesFoundStrings = new Set<string>();
+  const datesFoundDays = new Set<number>();
 
   for (const line of dataLines) {
     if (line.trim() === "") {
@@ -97,14 +104,170 @@ export function parseCsvToConsumptionLoadCurveData(
     const extractedDate = extractDateFromLine(line);
     if (extractedDate) {
       currentDateString = extractedDate;
+      // keep track of dates present in the series (format DD/MM/YYYY)
+      datesFoundStrings.add(extractedDate);
+      const [day, month, year] = extractedDate.split("/");
+      const ms = dayjs(`${year}-${month}-${day}`).startOf("day").valueOf();
+      datesFoundDays.add(ms);
       continue;
     }
 
     const dataItem = processDataLine(line, currentDateString);
     if (dataItem) {
       allData.push(dataItem);
+      // also mark the current date as seen if data exists for it
+      if (currentDateString) {
+        datesFoundStrings.add(currentDateString);
+        const ms = dayjs(dataItem.recordedAt).startOf("day").valueOf();
+        datesFoundDays.add(ms);
+      }
     }
   }
 
-  return allData;
+  // detect missing calendar days between min and max dates present in the file
+  const missing: string[] = [];
+  if (datesFoundDays.size > 0) {
+    const parsedDates = Array.from(datesFoundDays)
+      .map((ms) => dayjs(ms))
+      .filter((d) => d.isValid())
+      .sort((a, b) => a.valueOf() - b.valueOf());
+
+    if (parsedDates.length > 1) {
+      let current = parsedDates[0].add(1, "day");
+      const end = parsedDates[parsedDates.length - 1];
+      while (current.isBefore(end) || current.isSame(end)) {
+        const formatted = current.format("DD/MM/YYYY");
+        if (!datesFoundStrings.has(formatted)) {
+          missing.push(formatted);
+        }
+        current = current.add(1, "day");
+      }
+
+      if (missing.length > 0) {
+        console.log(`Dates manquantes dans la série : ${missing.join(", ")}`);
+      }
+    }
+  }
+
+  return { data: allData, missingDates: missing };
+}
+
+function processEnedisDataLine(line: string): ConsumptionLoadCurveData | null {
+  const parts = line.split(";");
+  if (parts.length < 3) {
+    return null;
+  }
+
+  let debutStr = parts[0].trim();
+  const finStr = parts[1].trim();
+  let kwStr = parts[2].trim();
+
+  if (!debutStr || !finStr || !kwStr) {
+    return null;
+  }
+
+  debutStr = debutStr.replace(/(?:^")|(?:"$)/g, "");
+  kwStr = kwStr.replace(/(?:^")|(?:"$)/g, "");
+  const numericValueKwh = Number(kwStr.replace(",", "."));
+  if (
+    isNaN(numericValueKwh) ||
+    !isFinite(numericValueKwh) ||
+    numericValueKwh < 0
+  ) {
+    return null;
+  }
+  const numericValue = numericValueKwh * 1000;
+
+  const dateRegex = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})$/;
+  if (!dateRegex.test(debutStr)) {
+    return null;
+  }
+
+  const date = new Date(debutStr);
+  if (isNaN(date.getTime())) {
+    return null;
+  }
+
+  if (![0, 30].includes(date.getMinutes())) {
+    console.warn("date étrange", date);
+    return null;
+  }
+
+  return {
+    recordedAt: dayjs(date).format("YYYY-MM-DDTHH:mm:ssZ"),
+    value: numericValue,
+  };
+}
+
+export function parseEnedisCsvToConsumptionLoadCurveData(
+  csvString: string
+): ParsedCsvResult {
+  validateCsvInput(csvString);
+
+  const lines = csvString.trim().split("\n");
+  if (lines.length < 2) {
+    throw new Error("Le fichier CSV Enedis est vide ou invalide");
+  }
+
+  const headerLine = lines[0].trim().toLowerCase();
+  if (
+    !headerLine.includes("debut") ||
+    !headerLine.includes("fin") ||
+    !headerLine.includes("kw")
+  ) {
+    throw new Error(
+      "Le format du fichier CSV Enedis est invalide. Colonnes attendues : debut;fin;kW"
+    );
+  }
+
+  const allData: ConsumptionLoadCurveData[] = [];
+  const datesFoundStrings = new Set<string>();
+  const datesFoundDays = new Set<number>();
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) {
+      continue;
+    }
+
+    const dataItem = processEnedisDataLine(line);
+    if (dataItem) {
+      allData.push(dataItem);
+      // record the day (DD/MM/YYYY) for missing-day detection
+      const dayJs = dayjs(dataItem.recordedAt).startOf("day");
+      datesFoundStrings.add(dayJs.format("DD/MM/YYYY"));
+      datesFoundDays.add(dayJs.valueOf());
+    }
+  }
+
+  if (allData.length === 0) {
+    throw new Error("Aucune donnée valide trouvée dans le fichier CSV Enedis");
+  }
+
+  // detect missing calendar days between min and max dates present in the file
+  const missing: string[] = [];
+  if (datesFoundDays.size > 0) {
+    const parsedDates = Array.from(datesFoundDays)
+      .map((ms) => dayjs(ms))
+      .filter((d) => d.isValid())
+      .sort((a, b) => a.valueOf() - b.valueOf());
+
+    if (parsedDates.length > 1) {
+      let current = parsedDates[0].add(1, "day");
+      const end = parsedDates[parsedDates.length - 1];
+      while (current.isBefore(end) || current.isSame(end)) {
+        const formatted = current.format("DD/MM/YYYY");
+        if (!datesFoundStrings.has(formatted)) {
+          missing.push(formatted);
+        }
+        current = current.add(1, "day");
+      }
+
+      if (missing.length > 0) {
+        console.log(`Dates manquantes dans la série : ${missing.join(", ")}`);
+      }
+    }
+  }
+
+  return { data: allData, missingDates: missing };
 }

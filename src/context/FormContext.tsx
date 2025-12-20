@@ -1,5 +1,11 @@
 import dayjs from "dayjs";
-import React, { createContext, ReactNode, useContext, useMemo, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 import {
   ComparisonTableInterfaceRow,
   ConsumptionLoadCurveData,
@@ -17,6 +23,7 @@ interface FormState {
   optionType: OptionKey | "";
   powerClass: PowerClass;
   isGlobalLoading: boolean;
+  missingDates?: string[];
   seasonHourlyAnalysis?: SeasonHourlyAnalysis[];
   analyzedDateRange: [Date, Date];
   requestId?: string;
