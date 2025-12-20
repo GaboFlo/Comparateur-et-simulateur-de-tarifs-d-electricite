@@ -20,7 +20,7 @@ jobs:
           private-key: ${{ secrets.FETCH_APP_PRIVATE_KEY }}
 
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           token: ${{ steps.generate-token.outputs.token }}
           fetch-depth: 0
@@ -54,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
