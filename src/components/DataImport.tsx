@@ -45,7 +45,7 @@ interface Props {
   handleNext: () => void;
 }
 
-type ImportMode = "edf" | "enedis";
+type ImportMode = "enedis" | "edf";
 
 const processEdfZipFile = async (file: File) => {
   const MAX_FILE_SIZE = 50 * 1024 * 1024;
@@ -145,7 +145,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
   const [error, setError] = React.useState<string | null>(null);
   const [isDataProcessed, setIsDataProcessed] = React.useState(false);
   const [isCalculating, setIsCalculating] = React.useState(false);
-  const [importMode, setImportMode] = React.useState<ImportMode>("edf");
+  const [importMode, setImportMode] = React.useState<ImportMode>("enedis");
 
   const { formState, setFormState } = useFormContext();
   const { trackEvent } = useMatomo();
@@ -384,8 +384,8 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
             setIsDataProcessed(false);
           }}
           options={[
-            { value: "edf", label: "EDF" },
             { value: "enedis", label: "Enedis" },
+            { value: "edf", label: "EDF" },
           ]}
         />
       </FormCard>
@@ -586,7 +586,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                 <Typography variant="body2" color="text.secondary">
                   {importMode === "edf"
                     ? "Format accepté : fichier ZIP directement issu du téléchargement EDF"
-                    : "Format accepté : fichier CSV Enedis avec colonnes debut;fin;kW"}
+                    : "Format accepté : fichier CSV Enedis (avec les colonnes debut ; fin ; kW)"}
                 </Typography>
 
                 <ActionButton
@@ -655,7 +655,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                 new Date(),
               ],
               totalConsumption: 1,
-              rowSummaries: []
+              rowSummaries: [],
             });
             window.location.href = "?step=0";
           }}
