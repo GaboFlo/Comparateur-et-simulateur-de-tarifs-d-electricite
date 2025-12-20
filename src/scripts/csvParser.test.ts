@@ -151,7 +151,8 @@ Date et heure de rel趥 par le distributeur;Puissance atteinte (W);Nature de la 
     ];
 
     const result = parseCsvToConsumptionLoadCurveData(csvString);
-    expect(result).toEqual(expectedData);
+    expect(result.data).toEqual(expectedData);
+    expect(result.missingDates).toEqual([]);
   });
   it("should parse a single day of data correctly - suspicious bug", () => {
     const csvString = `R飡pitulatif de mes puissances atteintes en W
@@ -404,7 +405,37 @@ Date et heure de rel趥 par le distributeur;Puissance atteinte (W);Nature de la 
     ];
 
     const result = parseCsvToConsumptionLoadCurveData(csvString);
-    expect(result).toEqual(expectedData);
+    expect(result.data).toEqual(expectedData);
+    expect(result.missingDates).toEqual([]);
+  });
+
+  it("should detect and return missing dates between min and max days", () => {
+    const csvString = `R飡pitulatif de mes puissances atteintes en W
+
+Date et heure de rel趥 par le distributeur;Puissance atteinte (W);Nature de la donn饊
+07/11/2025;;
+00:00:00;100;R饬le
+
+08/11/2025;;
+00:00:00;100;R饬le
+
+15/11/2025;;
+00:00:00;100;R饬le
+
+16/11/2025;;
+00:00:00;100;R饬le
+`;
+
+    const result = parseCsvToConsumptionLoadCurveData(csvString);
+    expect(result.data).toHaveLength(4);
+    expect(result.missingDates).toEqual([
+      "09/11/2025",
+      "10/11/2025",
+      "11/11/2025",
+      "12/11/2025",
+      "13/11/2025",
+      "14/11/2025",
+    ]);
   });
 });
 
@@ -418,19 +449,39 @@ describe("parseEnedisCsvToConsumptionLoadCurveData", () => {
 
     const result = parseEnedisCsvToConsumptionLoadCurveData(csvString);
 
-    expect(result).toHaveLength(3);
-    expect(result[0]).toEqual({
+    expect(result.data).toHaveLength(3);
+    expect(result.data[0]).toEqual({
       recordedAt: expect.stringMatching(/^2023-12-12T00:00:00/),
       value: 696,
     });
-    expect(result[1]).toEqual({
+    expect(result.data[1]).toEqual({
       recordedAt: expect.stringMatching(/^2023-12-12T00:30:00/),
       value: 280,
     });
-    expect(result[2]).toEqual({
+    expect(result.data[2]).toEqual({
       recordedAt: expect.stringMatching(/^2023-12-12T01:00:00/),
       value: 656,
     });
+    expect(result.missingDates).toEqual([]);
+  });
+
+  it("should detect and return missing dates for Enedis CSV", () => {
+    const csvString = `debut;fin;kW
+2025-11-07T00:00;2025-11-07T00:30;"1,0"
+2025-11-08T00:00;2025-11-08T00:30;"1,0"
+2025-11-15T00:00;2025-11-15T00:30;"1,0"
+2025-11-16T00:00;2025-11-16T00:30;"1,0"`;
+
+    const result = parseEnedisCsvToConsumptionLoadCurveData(csvString);
+    expect(result.data).toHaveLength(4);
+    expect(result.missingDates).toEqual([
+      "09/11/2025",
+      "10/11/2025",
+      "11/11/2025",
+      "12/11/2025",
+      "13/11/2025",
+      "14/11/2025",
+    ]);
   });
 
   it("should convert kWh to Wh correctly", () => {
@@ -440,8 +491,9 @@ describe("parseEnedisCsvToConsumptionLoadCurveData", () => {
 
     const result = parseEnedisCsvToConsumptionLoadCurveData(csvString);
 
-    expect(result[0].value).toBe(1500);
-    expect(result[1].value).toBe(123);
+    expect(result.data[0].value).toBe(1500);
+    expect(result.data[1].value).toBe(123);
+    expect(result.missingDates).toEqual([]);
   });
 
   it("should handle values without quotes", () => {
@@ -451,9 +503,10 @@ describe("parseEnedisCsvToConsumptionLoadCurveData", () => {
 
     const result = parseEnedisCsvToConsumptionLoadCurveData(csvString);
 
-    expect(result).toHaveLength(2);
-    expect(result[0].value).toBe(696);
-    expect(result[1].value).toBe(280);
+    expect(result.data).toHaveLength(2);
+    expect(result.data[0].value).toBe(696);
+    expect(result.data[1].value).toBe(280);
+    expect(result.missingDates).toEqual([]);
   });
 
   it("should ignore empty lines", () => {
@@ -466,7 +519,8 @@ describe("parseEnedisCsvToConsumptionLoadCurveData", () => {
 
     const result = parseEnedisCsvToConsumptionLoadCurveData(csvString);
 
-    expect(result).toHaveLength(2);
+    expect(result.data).toHaveLength(2);
+    expect(result.missingDates).toEqual([]);
   });
 
   it("should ignore lines with invalid date format", () => {
@@ -477,7 +531,8 @@ invalid-date;2023-12-12T01:00;"0,28"
 
     const result = parseEnedisCsvToConsumptionLoadCurveData(csvString);
 
-    expect(result).toHaveLength(2);
+    expect(result.data).toHaveLength(2);
+    expect(result.missingDates).toEqual([]);
   });
 
   it("should ignore lines with dates not at 0 or 30 minutes", () => {
@@ -488,7 +543,8 @@ invalid-date;2023-12-12T01:00;"0,28"
 
     const result = parseEnedisCsvToConsumptionLoadCurveData(csvString);
 
-    expect(result).toHaveLength(2);
+    expect(result.data).toHaveLength(2);
+    expect(result.missingDates).toEqual([]);
   });
 
   it("should ignore lines with invalid numeric values", () => {
@@ -500,9 +556,10 @@ invalid-date;2023-12-12T01:00;"0,28"
 
     const result = parseEnedisCsvToConsumptionLoadCurveData(csvString);
 
-    expect(result).toHaveLength(2);
-    expect(result[0].value).toBe(696);
-    expect(result[1].value).toBe(656);
+    expect(result.data).toHaveLength(2);
+    expect(result.data[0].value).toBe(696);
+    expect(result.data[1].value).toBe(656);
+    expect(result.missingDates).toEqual([]);
   });
 
   it("should ignore lines with missing columns", () => {
@@ -513,7 +570,8 @@ invalid-date;2023-12-12T01:00;"0,28"
 
     const result = parseEnedisCsvToConsumptionLoadCurveData(csvString);
 
-    expect(result).toHaveLength(2);
+    expect(result.data).toHaveLength(2);
+    expect(result.missingDates).toEqual([]);
   });
 
   it("should throw error for empty file", () => {
@@ -558,8 +616,9 @@ invalid-date;invalid-date;"invalid"`;
 
     const result = parseEnedisCsvToConsumptionLoadCurveData(csvString);
 
-    expect(result).toHaveLength(1);
-    expect(result[0].value).toBe(696);
+    expect(result.data).toHaveLength(1);
+    expect(result.data[0].value).toBe(696);
+    expect(result.missingDates).toEqual([]);
   });
 
   it("should handle large values correctly", () => {
@@ -568,6 +627,7 @@ invalid-date;invalid-date;"invalid"`;
 
     const result = parseEnedisCsvToConsumptionLoadCurveData(csvString);
 
-    expect(result[0].value).toBe(123456);
+    expect(result.data[0].value).toBe(123456);
+    expect(result.missingDates).toEqual([]);
   });
 });

@@ -77,9 +77,9 @@ const processEdfZipFile = async (file: File) => {
   }
 
   const parsedData = parseCsvToConsumptionLoadCurveData(csvContent);
-  const analyzedDateRange = findFirstAndLastDate(parsedData);
+  const analyzedDateRange = findFirstAndLastDate(parsedData.data);
   const seasonData = analyseHourByHourBySeason({
-    data: parsedData,
+    data: parsedData.data,
     dateRange: analyzedDateRange,
   });
   const totalConsumption = seasonData.reduce(
@@ -102,9 +102,9 @@ const processEnedisCsvFile = async (file: File) => {
   }
 
   const parsedData = parseEnedisCsvToConsumptionLoadCurveData(csvContent);
-  const analyzedDateRange = findFirstAndLastDate(parsedData);
+  const analyzedDateRange = findFirstAndLastDate(parsedData.data);
   const seasonData = analyseHourByHourBySeason({
-    data: parsedData,
+    data: parsedData.data,
     dateRange: analyzedDateRange,
   });
   const totalConsumption = seasonData.reduce(
@@ -155,7 +155,8 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
       seasonData: SeasonHourlyAnalysis[],
       analyzedDateRange: [Date, Date],
       totalConsumption: number,
-      parsedData: ConsumptionLoadCurveData[]
+      parsedData: ConsumptionLoadCurveData[],
+      missingDates: string[]
     ) => {
       const defaultHpHc = hphc_data as HpHcSlot[];
       setFormState((prevState) => ({
@@ -164,6 +165,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
         analyzedDateRange: analyzedDateRange,
         totalConsumption: totalConsumption,
         parsedData: parsedData,
+        missingDates: missingDates,
         // Préserver la configuration HP/HC existante si elle existe, sinon utiliser la configuration par défaut
         hpHcConfig:
           prevState.hpHcConfig && prevState.hpHcConfig.length > 0
@@ -215,7 +217,8 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                 seasonData,
                 analyzedDateRange,
                 totalConsumption,
-                parsedData
+                parsedData.data,
+                parsedData.missingDates
               );
               setIsDataProcessed(true);
               setError(null);
@@ -652,7 +655,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
                 new Date(),
               ],
               totalConsumption: 1,
-              rowSummaries: [],
+              rowSummaries: []
             });
             window.location.href = "?step=0";
           }}
