@@ -6,7 +6,6 @@ import {
 import { Alert, Box, CircularProgress, Stack } from "@mui/material";
 import { MobileDateRangePicker } from "@mui/x-date-pickers-pro";
 import dayjs from "dayjs";
-import * as React from "react";
 import { useFormContext } from "../context/FormContext";
 import { analyseHourByHourBySeason } from "../scripts/statistics";
 import { formatKWhLarge } from "../scripts/utils";
@@ -120,6 +119,12 @@ export default function Analyses({ handleNext }: Readonly<Props>) {
           icon={<AccessTimeIcon />}
           sx={{ width: "100%", maxWidth: "100%" }}
         >
+          {formState.missingDates && formState.missingDates.length > 0 && (
+            <Alert severity="warning" sx={{ mb: 2 }}>
+              Attention : Certaines dates sont manquantes (
+              {formState.missingDates.slice(0, 9).join(", ")}, ...)
+            </Alert>
+          )}
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <MobileDateRangePicker
               value={[dayjs(safeDateRange[0]), dayjs(safeDateRange[1])]}

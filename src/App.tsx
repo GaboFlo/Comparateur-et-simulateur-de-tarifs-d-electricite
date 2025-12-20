@@ -123,7 +123,7 @@ export default function App() {
           new Date(),
         ],
         totalConsumption: 1,
-        rowSummaries: [],
+        rowSummaries: []
       });
     }
     handleStepChange(stepIndex);
