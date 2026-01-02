@@ -46,7 +46,7 @@ jobs:
           node ./services/injectVersion.js $VERSION
 
       - name: Upload build artifact
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: frontend-build
           path: build
@@ -54,7 +54,7 @@ jobs:
           retention-days: 1
 
       - name: Download build artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           name: frontend-build
           path: frontend_build
