@@ -64,7 +64,7 @@
     "@typescript-eslint/parser": "^8.51.0",
     "@vitejs/plugin-react": "^5.1.2",
     "depcheck": "^1.4.7",
-    "eslint": "^9.36.0",
+    "eslint": "^9.39.2",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "jest": "^30.1.2",
