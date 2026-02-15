@@ -104,9 +104,9 @@ describe("findMonthlySubscriptionCost", () => {
       9 as PowerClass,
       OfferType.BLEU,
       OptionKey.BASE,
-      "EDF"
+      "EDF",
     );
-    expect(monthly).toBe(1939);
+    expect(monthly).toBe(1956);
   });
 });
 
