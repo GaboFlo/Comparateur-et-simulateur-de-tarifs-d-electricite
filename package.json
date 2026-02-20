@@ -43,7 +43,7 @@
     "@mui/x-charts": "^7.29.1",
     "@mui/x-date-pickers": "^7.24.1",
     "@mui/x-date-pickers-pro": "^7.29.4",
-    "axios": "^1.8.2",
+    "axios": "^1.13.5",
     "date-holidays": "^3.24.0",
     "dayjs": "^1.11.13",
     "framer-motion": "^12.23.12",
