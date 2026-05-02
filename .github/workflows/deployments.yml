@@ -60,7 +60,7 @@ jobs:
           path: frontend_build
 
       - name: Deploy Frontend to FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_HOSTNAME }}
           username: ${{ secrets.FTP_USERNAME }}
