@@ -1,6 +1,6 @@
 name: SonarQube Scan
 
-on: push
+on: workflow_dispatch
 
 jobs:
   sonarqube-check:
