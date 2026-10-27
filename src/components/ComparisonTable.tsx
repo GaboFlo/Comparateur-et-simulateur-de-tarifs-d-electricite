@@ -1,5 +1,6 @@
 import {
   AccessTimeFilled as AccessTimeFilledIcon,
+  LocalOffer as LocalOfferIcon,
   OpenInNew as OpenInNewIcon,
 } from "@mui/icons-material";
 import {
@@ -123,6 +124,18 @@ const OfferCell = ({ row }: { row: ComparisonTableInterfaceRow }) => (
             color: "orange",
           }}
         />
+      )}{" "}
+      {row.promoNote && (
+        <Tooltip title={row.promoNote} arrow>
+          <LocalOfferIcon
+            sx={{
+              fontSize: "1rem",
+              verticalAlign: "middle",
+              color: "green",
+              cursor: "help",
+            }}
+          />
+        </Tooltip>
       )}{" "}
       <Link
         href={row.link}

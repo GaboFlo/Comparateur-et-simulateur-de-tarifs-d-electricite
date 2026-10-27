@@ -1,10 +1,11 @@
 import hphc_mapping from "../statics/hp_hc.json";
-import { HpHcSlot, OfferType, OptionKey, PowerClass } from "../types";
+import { HpHcSlot, Mapping, OfferType, OptionKey, PowerClass } from "../types";
 import {
   findFirstAndLastDate,
   findMonthlySubscriptionCost,
   getHolidaysBetweenDates,
   getSeason,
+  isDayApplicable,
   isHoliday,
   isHpOrHcSlot,
 } from "./utils";
@@ -169,5 +170,53 @@ describe("Holidays", () => {
     expect(isHoliday(new Date("2025-01-01 02:30:00"))).toBe(true);
     expect(isHoliday(new Date("2025-01-01 23:30:00"))).toBe(true);
     expect(isHoliday(new Date("2025-01-02 00:00:00"))).toBe(true);
+  });
+});
+describe("isDayApplicable", () => {
+  const allDays = [0, 1, 2, 3, 4, 5, 6];
+  const winter = {
+    applicableDays: allDays,
+    applicableMonths: [11, 12, 1, 2, 3],
+  } as Mapping;
+  const summer = {
+    applicableDays: allDays,
+    applicableMonths: [4, 5, 6, 7, 8, 9, 10],
+  } as Mapping;
+  const weekEnd = { applicableDays: [5, 6] } as Mapping;
+
+  it("sans applicableMonths, ne filtre que sur les jours (0 = lundi)", () => {
+    expect(isDayApplicable(weekEnd, new Date("2025-01-03 12:00:00"))).toBe(false); // vendredi
+    expect(isDayApplicable(weekEnd, new Date("2025-01-04 12:00:00"))).toBe(true); // samedi
+    expect(isDayApplicable(weekEnd, new Date("2025-01-05 12:00:00"))).toBe(true); // dimanche
+    expect(isDayApplicable(weekEnd, new Date("2025-01-06 12:00:00"))).toBe(false); // lundi
+  });
+
+  it("rattache le créneau de 00:00 à la veille", () => {
+    expect(isDayApplicable(weekEnd, new Date("2025-01-04 00:00:00"))).toBe(false); // fin de vendredi
+    expect(isDayApplicable(weekEnd, new Date("2025-01-04 00:30:00"))).toBe(true);
+    expect(isDayApplicable(weekEnd, new Date("2025-01-06 00:00:00"))).toBe(true); // fin de dimanche
+    expect(isDayApplicable(weekEnd, new Date("2025-01-06 00:30:00"))).toBe(false);
+  });
+
+  it("filtre par mois", () => {
+    expect(isDayApplicable(winter, new Date("2025-01-15 12:00:00"))).toBe(true);
+    expect(isDayApplicable(winter, new Date("2025-07-15 12:00:00"))).toBe(false);
+    expect(isDayApplicable(summer, new Date("2025-01-15 12:00:00"))).toBe(false);
+    expect(isDayApplicable(summer, new Date("2025-07-15 12:00:00"))).toBe(true);
+  });
+
+  it("gère les frontières de mois", () => {
+    expect(isDayApplicable(summer, new Date("2025-11-01 00:00:00"))).toBe(true); // fin d'octobre
+    expect(isDayApplicable(winter, new Date("2025-11-01 00:00:00"))).toBe(false);
+    expect(isDayApplicable(winter, new Date("2025-11-01 00:30:00"))).toBe(true);
+    expect(isDayApplicable(winter, new Date("2025-04-01 00:00:00"))).toBe(true); // fin de mars
+    expect(isDayApplicable(summer, new Date("2025-04-01 00:30:00"))).toBe(true);
+  });
+
+  it("combine mois et jours", () => {
+    const janWeekEnd = { applicableDays: [5, 6], applicableMonths: [1] } as Mapping;
+    expect(isDayApplicable(janWeekEnd, new Date("2025-01-04 12:00:00"))).toBe(true);
+    expect(isDayApplicable(janWeekEnd, new Date("2025-01-06 12:00:00"))).toBe(false);
+    expect(isDayApplicable(janWeekEnd, new Date("2025-07-05 12:00:00"))).toBe(false);
   });
 });

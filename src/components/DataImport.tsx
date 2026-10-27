@@ -284,6 +284,7 @@ export default function DataImport({ handleNext }: Readonly<Props>) {
           link: option.link,
           hpHcData: formState.hpHcConfig,
           overridingHpHcKey: option.overridingHpHcKey,
+          promoNote: option.promoNote,
         });
 
         newRowSummaries.push(costForOption);

@@ -79,10 +79,13 @@ export interface HpHcConfigParent {
 }
 
 export interface Mapping {
+  // 0 = lundi … 6 = dimanche
   applicableDays: number[];
   price?: number;
   hpHcConfig?: HpHcConfigParent[];
   include_holidays?: boolean;
+  // 1 = janvier … 12 = décembre ; absent = toute l'année
+  applicableMonths?: number[];
 }
 
 export type Season = "Été" | "Hiver" | "Automne" | "Printemps";
@@ -101,6 +104,7 @@ export interface Option {
   mappings: Mapping[];
   tempoMappings?: TempoMapping[];
   overridingHpHcKey?: OverridingHpHcKey;
+  promoNote?: string;
   lastUpdate: string;
 }
 
@@ -137,6 +141,7 @@ export interface ComparisonTableInterfaceRow {
   link: string;
   lastUpdate: string;
   overridingHpHcKey?: string;
+  promoNote?: string;
 }
 
 export const APP_VERSION = (() => {

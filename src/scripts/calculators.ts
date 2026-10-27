@@ -251,6 +251,7 @@ interface FullCalculatePricesInterface {
   lastUpdate: string;
   hpHcData: HpHcSlot[];
   overridingHpHcKey?: OverridingHpHcKey;
+  promoNote?: string;
   provider: ProviderType;
 }
 
@@ -266,6 +267,7 @@ export function calculateRowSummary({
   hpHcData,
   provider,
   overridingHpHcKey,
+  promoNote,
 }: FullCalculatePricesInterface): ComparisonTableInterfaceRow {
   // Validation de sécurité des paramètres
   if (!data || !Array.isArray(data) || data.length === 0) {
@@ -325,6 +327,7 @@ export function calculateRowSummary({
       calculatedData.totalCost / PRICE_COEFF + fullSubscriptionCost
     ),
     overridingHpHcKey,
+    promoNote,
   } as ComparisonTableInterfaceRow;
 }
 
