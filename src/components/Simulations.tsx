@@ -90,6 +90,7 @@ export default function Simulations() {
         link: option.link,
         hpHcData: formState.hpHcConfig ?? [],
         overridingHpHcKey: option.overridingHpHcKey,
+        promoNote: option.promoNote,
       });
 
       newRowSummaries.push(costForOption);

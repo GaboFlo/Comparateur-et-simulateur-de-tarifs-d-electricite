@@ -185,9 +185,18 @@ export function isHoliday(endOfSlotRecorded: Date) {
 }
 
 export function isDayApplicable(mapping: Mapping, endOfSlotRecorded: Date) {
-  return (
-    mapping.applicableDays.includes(endOfSlotRecorded.getDay()) ||
-    (mapping.include_holidays && isHoliday(endOfSlotRecorded))
+  // Un créneau est daté par sa fin : 00:00 appartient donc à la veille
+  const slot = dayjs(endOfSlotRecorded).subtract(1, "minute");
+  if (
+    mapping.applicableMonths &&
+    !mapping.applicableMonths.includes(slot.month() + 1)
+  ) {
+    return false;
+  }
+  const weekday = (slot.day() + 6) % 7; // 0 = lundi … 6 = dimanche
+  return Boolean(
+    mapping.applicableDays.includes(weekday) ||
+      (mapping.include_holidays && isHoliday(endOfSlotRecorded))
   );
 }
 

@@ -1200,47 +1200,47 @@
     },
     {
         "provider": "TotalEnergies",
-        "optionKey": "ECO_BASE",
+        "optionKey": "BASE",
         "optionName": "Base",
-        "lastUpdate": "2026-02-01",
-        "offerType": "HEURES ÉCO",
-        "link": "https://www.totalenergies.fr/particuliers/electricite-et-gaz/grilles-tarifaires#c115104",
+        "link": "https://www.totalenergies.fr/particuliers/electricite-et-gaz/grilles-tarifaires#c135125",
+        "lastUpdate": "2026-10-01",
+        "offerType": "ACCESS",
         "subscriptions": [
             {
                 "powerClass": 3,
-                "monthlyCost": 1203
+                "monthlyCost": 1213
             },
             {
                 "powerClass": 6,
-                "monthlyCost": 1565
+                "monthlyCost": 1586
             },
             {
                 "powerClass": 9,
-                "monthlyCost": 1956
+                "monthlyCost": 1988
             },
             {
                 "powerClass": 12,
-                "monthlyCost": 2332
+                "monthlyCost": 2376
             },
             {
                 "powerClass": 15,
-                "monthlyCost": 2684
+                "monthlyCost": 2740
             },
             {
                 "powerClass": 18,
-                "monthlyCost": 3075
+                "monthlyCost": 3141
             },
             {
                 "powerClass": 24,
-                "monthlyCost": 3859
+                "monthlyCost": 3949
             },
             {
                 "powerClass": 30,
-                "monthlyCost": 4580
+                "monthlyCost": 4692
             },
             {
                 "powerClass": 36,
-                "monthlyCost": 5306
+                "monthlyCost": 5441
             }
         ],
         "mappings": [
@@ -1254,49 +1254,54 @@
                     5,
                     6
                 ],
-                "price": 1927
+                "price": 2001
             }
+        ],
+        "promoNote": "Jusqu'à 10 % de réduction en plus sur le prix HT du kWh pendant 3 ans (non inclus dans cette simulation).",
+        "comments": [
+            "Prix kWh TTC hors remise : 0,2001 € pour 3 et 6 kVA ; 0,1985 € pour 9 kVA et plus (le fichier ne gère qu'un prix par offre).",
+            "Avec la remise de 10 % sur le kWh HT : 0,1837 € (3-6 kVA), 0,1823 € (9 kVA et plus)."
         ]
     },
     {
         "provider": "TotalEnergies",
-        "optionKey": "ECO_HPHC",
+        "optionKey": "HPHC",
         "optionName": "Heures Creuses",
-        "lastUpdate": "2026-02-01",
-        "offerType": "HEURES ÉCO",
-        "link": "https://www.totalenergies.fr/particuliers/electricite-et-gaz/grilles-tarifaires#c115104",
+        "link": "https://www.totalenergies.fr/particuliers/electricite-et-gaz/grilles-tarifaires#c135125",
+        "lastUpdate": "2026-10-01",
+        "offerType": "ACCESS",
         "subscriptions": [
             {
                 "powerClass": 6,
-                "monthlyCost": 1565
+                "monthlyCost": 1586
             },
             {
                 "powerClass": 9,
-                "monthlyCost": 1983
+                "monthlyCost": 2016
             },
             {
                 "powerClass": 12,
-                "monthlyCost": 2393
+                "monthlyCost": 2439
             },
             {
                 "powerClass": 15,
-                "monthlyCost": 2761
+                "monthlyCost": 2818
             },
             {
                 "powerClass": 18,
-                "monthlyCost": 3103
+                "monthlyCost": 3170
             },
             {
                 "powerClass": 24,
-                "monthlyCost": 3897
+                "monthlyCost": 3988
             },
             {
                 "powerClass": 30,
-                "monthlyCost": 4627
+                "monthlyCost": 4740
             },
             {
                 "powerClass": 36,
-                "monthlyCost": 5254
+                "monthlyCost": 5388
             }
         ],
         "mappings": [
@@ -1312,185 +1317,65 @@
                 ],
                 "hpHcConfig": [
                     {
-                        "price": 2065,
+                        "price": 2142,
                         "slotType": "HP"
                     },
                     {
-                        "price": 1579,
+                        "price": 1589,
                         "slotType": "HC"
                     }
                 ]
             }
-        ]
-    },
-    {
-        "provider": "TotalEnergies",
-        "optionKey": "VERT_BASE",
-        "optionName": "Base",
-        "lastUpdate": "2026-02-01",
-        "offerType": "HEURES VERTES",
-        "link": "https://www.totalenergies.fr/particuliers/electricite-et-gaz/grilles-tarifaires#c115352",
-        "subscriptions": [
-            {
-                "powerClass": 3,
-                "monthlyCost": 1203
-            },
-            {
-                "powerClass": 6,
-                "monthlyCost": 1565
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1956
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 2332
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2684
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 3049
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3824
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 4537
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 5254
-            }
         ],
-        "mappings": [
-            {
-                "applicableDays": [
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6
-                ],
-                "price": 1964
-            }
-        ]
-    },
-    {
-        "provider": "TotalEnergies",
-        "optionKey": "VERT_HPHC",
-        "optionName": "Heures Creuses",
-        "lastUpdate": "2026-02-01",
-        "offerType": "HEURES VERTES",
-        "link": "https://www.totalenergies.fr/particuliers/electricite-et-gaz/grilles-tarifaires#c115352",
-        "subscriptions": [
-            {
-                "powerClass": 6,
-                "monthlyCost": 1565
-            },
-            {
-                "powerClass": 9,
-                "monthlyCost": 1956
-            },
-            {
-                "powerClass": 12,
-                "monthlyCost": 2332
-            },
-            {
-                "powerClass": 15,
-                "monthlyCost": 2684
-            },
-            {
-                "powerClass": 18,
-                "monthlyCost": 3049
-            },
-            {
-                "powerClass": 24,
-                "monthlyCost": 3824
-            },
-            {
-                "powerClass": 30,
-                "monthlyCost": 4537
-            },
-            {
-                "powerClass": 36,
-                "monthlyCost": 5254
-            }
-        ],
-        "mappings": [
-            {
-                "applicableDays": [
-                    0,
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6
-                ],
-                "hpHcConfig": [
-                    {
-                        "price": 2105,
-                        "slotType": "HP"
-                    },
-                    {
-                        "price": 1608,
-                        "slotType": "HC"
-                    }
-                ]
-            }
+        "promoNote": "Jusqu'à 10 % de réduction en plus sur le prix HT du kWh pendant 3 ans (non inclus dans cette simulation).",
+        "comments": [
+            "Prix kWh TTC hors remise. Avec la remise de 10 % sur le kWh HT : HP 0,1965 €, HC 0,1467 €.",
+            "Abonnement 36 kVA (53,88 €) à confirmer : valeur identique à celle de la grille Base, probablement une erreur de la grille."
         ]
     },
     {
         "provider": "Engie",
         "optionKey": "Base",
         "optionName": "Base",
-        "lastUpdate": "2025-08-01",
-        "offerType": "ÉLEC RÉFÉRENCE 2 ANS",
-        "link": "https://particuliers.engie.fr/electricite.html",
+        "link": "https://particuliers.engie.fr/electricite/elec-reference.html",
+        "lastUpdate": "2026-10-27",
+        "offerType": "ÉLEC RÉFÉRENCE 3 ANS",
         "subscriptions": [
             {
                 "powerClass": 3,
-                "monthlyCost": 1183
+                "monthlyCost": 1233
             },
             {
                 "powerClass": 6,
-                "monthlyCost": 1567
+                "monthlyCost": 1627
             },
             {
                 "powerClass": 9,
-                "monthlyCost": 1769
+                "monthlyCost": 2020
             },
             {
                 "powerClass": 12,
-                "monthlyCost": 1970
+                "monthlyCost": 2414
             },
             {
                 "powerClass": 15,
-                "monthlyCost": 2757
+                "monthlyCost": 2807
             },
             {
                 "powerClass": 18,
-                "monthlyCost": 3138
+                "monthlyCost": 3201
             },
             {
                 "powerClass": 24,
-                "monthlyCost": 3961
+                "monthlyCost": 3988
             },
             {
                 "powerClass": 30,
-                "monthlyCost": 4747
+                "monthlyCost": 4776
             },
             {
                 "powerClass": 36,
-                "monthlyCost": 5530
+                "monthlyCost": 5563
             }
         ],
         "mappings": [
@@ -1504,25 +1389,26 @@
                     5,
                     6
                 ],
-                "price": 2495
+                "price": 2590
             }
         ],
         "comments": [
             "Abo : (fourniture + acheminement)/12",
-            "Conso: Fourniture + Acheminement + Obligations (max)"
+            "Conso: Fourniture + Acheminement + Obligations (max)",
+            "Prix kWh : 0,2590 € pour 3 et 6 kVA ; 0,2651 € pour 9 kVA et plus (obligations). Date de tarif non affichée : date de relevé."
         ]
     },
     {
         "provider": "Engie",
         "optionKey": "HP_HC",
         "optionName": "Heures Creuses",
-        "lastUpdate": "2025-08-01",
-        "offerType": "ÉLEC RÉFÉRENCE 2 ANS",
-        "link": "https://particuliers.engie.fr/electricite.html",
+        "link": "https://particuliers.engie.fr/electricite/elec-reference.html",
+        "lastUpdate": "2026-10-27",
+        "offerType": "ÉLEC RÉFÉRENCE 3 ANS",
         "subscriptions": [
             {
                 "powerClass": 6,
-                "monthlyCost": 1772
+                "monthlyCost": 1798
             },
             {
                 "powerClass": 9,
@@ -1530,27 +1416,27 @@
             },
             {
                 "powerClass": 12,
-                "monthlyCost": 2771
+                "monthlyCost": 2757
             },
             {
                 "powerClass": 15,
-                "monthlyCost": 3244
+                "monthlyCost": 3237
             },
             {
                 "powerClass": 18,
-                "monthlyCost": 3727
+                "monthlyCost": 3717
             },
             {
                 "powerClass": 24,
-                "monthlyCost": 4738
+                "monthlyCost": 4676
             },
             {
                 "powerClass": 30,
-                "monthlyCost": 5690
+                "monthlyCost": 5635
             },
             {
                 "powerClass": 36,
-                "monthlyCost": 6648
+                "monthlyCost": 6594
             }
         ],
         "mappings": [
@@ -1566,11 +1452,11 @@
                 ],
                 "hpHcConfig": [
                     {
-                        "price": 2540,
+                        "price": 2718,
                         "slotType": "HP"
                     },
                     {
-                        "price": 2111,
+                        "price": 2286,
                         "slotType": "HC"
                     }
                 ]
@@ -1578,52 +1464,122 @@
         ],
         "comments": [
             "Abo : (fourniture + acheminement)/12",
-            "Conso: Fourniture + Acheminement + Obligations (max)"
+            "Conso: Fourniture + Acheminement + Obligations (max)",
+            "Acheminement à 2 plages (MUDT). Date de tarif non affichée : date de relevé."
+        ]
+    },
+    {
+        "provider": "Engie",
+        "optionKey": "WEEK_END",
+        "optionName": "Week-end",
+        "link": "https://particuliers.engie.fr/electricite/happy-week-end.html",
+        "lastUpdate": "2026-10-27",
+        "offerType": "HAPPY WEEK-END",
+        "subscriptions": [
+            {
+                "powerClass": 3,
+                "monthlyCost": 1217
+            },
+            {
+                "powerClass": 6,
+                "monthlyCost": 1595
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 2002
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2394
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2762
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 3141
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3949
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 4692
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 5441
+            }
+        ],
+        "mappings": [
+            {
+                "applicableDays": [
+                    5,
+                    6
+                ],
+                "price": 1745,
+                "include_holidays": true
+            },
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "price": 2335
+            }
+        ],
+        "comments": [
+            "Abo : TTC annuel / 12. Offre réservée aux compteurs Linky. Date de tarif non affichée : date de relevé."
         ]
     },
     {
         "provider": "OctopusEnergy",
         "optionKey": "Base",
         "optionName": "Base",
-        "lastUpdate": "2026-02-01",
-        "offerType": "",
-        "link": "https://www.octopusenergy.fr/offre-electricite-tarifs#:~:text=leur%20budget.-,Nos%20offres,-Premi%C3%A8re%20option%20%3A%20le",
+        "link": "https://www.octopusenergy.fr/offre-electricite-tarifs",
+        "lastUpdate": "2026-08-12",
+        "offerType": "OCTOECO FIXE",
         "subscriptions": [
             {
                 "powerClass": 3,
-                "monthlyCost": 1203
+                "monthlyCost": 1213
             },
             {
                 "powerClass": 6,
-                "monthlyCost": 1565
+                "monthlyCost": 1586
             },
             {
                 "powerClass": 9,
-                "monthlyCost": 1956
+                "monthlyCost": 1988
             },
             {
                 "powerClass": 12,
-                "monthlyCost": 2332
+                "monthlyCost": 2376
             },
             {
                 "powerClass": 15,
-                "monthlyCost": 2684
+                "monthlyCost": 2740
             },
             {
                 "powerClass": 18,
-                "monthlyCost": 3049
+                "monthlyCost": 3114
             },
             {
                 "powerClass": 24,
-                "monthlyCost": 3824
+                "monthlyCost": 3914
             },
             {
                 "powerClass": 30,
-                "monthlyCost": 4537
+                "monthlyCost": 4647
             },
             {
                 "powerClass": 36,
-                "monthlyCost": 5306
+                "monthlyCost": 5388
             }
         ],
         "mappings": [
@@ -1637,49 +1593,81 @@
                     5,
                     6
                 ],
-                "price": 1849
+                "applicableMonths": [
+                    11,
+                    12,
+                    1,
+                    2,
+                    3
+                ],
+                "price": 2245
+            },
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "applicableMonths": [
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                ],
+                "price": 1707
             }
+        ],
+        "comments": [
+            "Prix HTT bloqués 2 ans. Prix hiver (novembre-mars) et été (avril-octobre) pour la tranche 6 kVA.",
+            "Autres tranches (hiver / été) : 1-5 kVA 0,2050 / 0,1919 € ; 7-36 kVA 0,2277 / 0,1743 €."
         ]
     },
     {
         "provider": "OctopusEnergy",
         "optionKey": "HPHC",
         "optionName": "Heures Creuses",
-        "lastUpdate": "2026-02-01",
-        "offerType": "",
-        "link": "https://www.octopusenergy.fr/offre-electricite-tarifs#:~:text=leur%20budget.-,Nos%20offres,-Premi%C3%A8re%20option%20%3A%20le",
+        "link": "https://www.octopusenergy.fr/offre-electricite-tarifs",
+        "lastUpdate": "2026-08-12",
+        "offerType": "OCTOECO FIXE",
         "subscriptions": [
             {
                 "powerClass": 6,
-                "monthlyCost": 1565
+                "monthlyCost": 1586
             },
             {
                 "powerClass": 9,
-                "monthlyCost": 1983
+                "monthlyCost": 1988
             },
             {
                 "powerClass": 12,
-                "monthlyCost": 2368
+                "monthlyCost": 2376
             },
             {
                 "powerClass": 15,
-                "monthlyCost": 2730
+                "monthlyCost": 2740
             },
             {
                 "powerClass": 18,
-                "monthlyCost": 3103
+                "monthlyCost": 3114
             },
             {
                 "powerClass": 24,
-                "monthlyCost": 3897
+                "monthlyCost": 3914
             },
             {
                 "powerClass": 30,
-                "monthlyCost": 4627
+                "monthlyCost": 4647
             },
             {
                 "powerClass": 36,
-                "monthlyCost": 5254
+                "monthlyCost": 5388
             }
         ],
         "mappings": [
@@ -1693,17 +1681,58 @@
                     5,
                     6
                 ],
+                "applicableMonths": [
+                    11,
+                    12,
+                    1,
+                    2,
+                    3
+                ],
                 "hpHcConfig": [
                     {
-                        "price": 1979,
+                        "price": 2409,
                         "slotType": "HP"
                     },
                     {
-                        "price": 1519,
+                        "price": 1773,
+                        "slotType": "HC"
+                    }
+                ]
+            },
+            {
+                "applicableDays": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6
+                ],
+                "applicableMonths": [
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9,
+                    10
+                ],
+                "hpHcConfig": [
+                    {
+                        "price": 1787,
+                        "slotType": "HP"
+                    },
+                    {
+                        "price": 1344,
                         "slotType": "HC"
                     }
                 ]
             }
+        ],
+        "comments": [
+            "Prix HTT bloqués 2 ans. Prix hiver (novembre-mars) et été (avril-octobre) pour la tranche 6 kVA.",
+            "Autres tranches HP/HC hiver, été : 1-5 kVA 0,2195/0,1626, 0,1876/0,1405 € ; 7-36 kVA 0,2461/0,1809, 0,1876/0,1405 €. Heures creuses : grille par défaut."
         ]
     }
 ]
