@@ -16,7 +16,7 @@ export default defineConfig({
       exclude: [/\.(br)$/, /\.(gz)$/],
     }),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt", // la mise à jour est appliquée par useAppUpdate
       includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
       manifest: {
         name: "Simulateur et comparateur de tarifs d'électricité",
