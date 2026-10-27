@@ -26,7 +26,7 @@ export function useAppUpdate() {
           registration.update().catch(() => undefined);
         }
       };
-      setInterval(checkForUpdate, UPDATE_CHECK_INTERVAL_MS);
+      window.setInterval(checkForUpdate, UPDATE_CHECK_INTERVAL_MS);
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState === "visible") checkForUpdate();
       });

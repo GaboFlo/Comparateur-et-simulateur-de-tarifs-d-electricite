@@ -1,7 +1,6 @@
 import { CircularProgress, Paper } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { useEffect, useState } from "react";
 import { useFormContext } from "../context/FormContext";
 import { calculateHpHcSeasonAnalysis } from "../scripts/calculators";
 import { formatKWh } from "../scripts/utils";
@@ -9,15 +8,7 @@ import { HpHcSeasonAnalysis } from "../types";
 
 export default function HpHcSeasonChart() {
   const { formState } = useFormContext();
-  const [isChartReady, setIsChartReady] = useState(false);
-
-  useEffect(() => {
-    if (formState.parsedData && formState.hpHcConfig) {
-      setIsChartReady(true);
-    } else {
-      setIsChartReady(false);
-    }
-  }, [formState.parsedData, formState.hpHcConfig]);
+  const isChartReady = Boolean(formState.parsedData && formState.hpHcConfig);
 
   const valueFormatter = (value: number | null) => {
     if (!value) return "N/A";
