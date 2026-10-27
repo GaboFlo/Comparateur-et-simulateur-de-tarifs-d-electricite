@@ -2,21 +2,12 @@ import { CircularProgress } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { pieArcLabelClasses, PieChart } from "@mui/x-charts";
 import { BarChart } from "@mui/x-charts/BarChart";
-import { useEffect, useState } from "react";
 import { useFormContext } from "../context/FormContext";
 import { formatKWhLarge, getSeasonColor } from "../scripts/utils";
 
 export default function HourlySeasonChart() {
   const { formState } = useFormContext();
-  const [isChartReady, setIsChartReady] = useState(false);
-
-  useEffect(() => {
-    if (formState.seasonHourlyAnalysis) {
-      setIsChartReady(true);
-    } else {
-      setIsChartReady(false);
-    }
-  }, [formState.seasonHourlyAnalysis]);
+  const isChartReady = Boolean(formState.seasonHourlyAnalysis);
 
   const valueFormatter = (value: number | null) => {
     return value ? formatKWhLarge(value) : "N/A";

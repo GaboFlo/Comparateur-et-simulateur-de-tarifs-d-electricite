@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import CurrentOfferForm from "./components/CurrentOfferForm";
 import MyStepper from "./components/Stepper";
 import { useFormContext } from "./context/FormContext";
+import { useAppUpdate } from "./hooks/useAppUpdate";
 import { APP_VERSION, OfferType, OptionKey } from "./types";
 
 import Analyses from "./components/Analyses";
@@ -64,6 +65,7 @@ export default function App() {
   }, [activeStep]);
 
   const { formState, setFormState } = useFormContext();
+  useAppUpdate();
 
   React.useEffect(() => {
     switch (activeStep) {
