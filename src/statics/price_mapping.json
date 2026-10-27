@@ -14,6 +14,34 @@
             {
                 "powerClass": 6,
                 "monthlyCost": 1586
+            },
+            {
+                "powerClass": 9,
+                "monthlyCost": 1956
+            },
+            {
+                "powerClass": 12,
+                "monthlyCost": 2332
+            },
+            {
+                "powerClass": 15,
+                "monthlyCost": 2684
+            },
+            {
+                "powerClass": 18,
+                "monthlyCost": 3049
+            },
+            {
+                "powerClass": 24,
+                "monthlyCost": 3824
+            },
+            {
+                "powerClass": 30,
+                "monthlyCost": 4537
+            },
+            {
+                "powerClass": 36,
+                "monthlyCost": 5254
             }
         ],
         "mappings": [
@@ -29,6 +57,9 @@
                     6
                 ]
             }
+        ],
+        "comments": [
+            "Abonnements 9 à 36 kVA : valeurs non mises à jour (le site indique que ces puissances ne sont plus souscriptibles)."
         ]
     },
     {
